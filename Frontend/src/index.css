@@ -1,0 +1,32 @@
+*{
+  margin: 0;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'poppins';
+  background-color: black;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+:root {
+  --navbar-height: 120px;
+}
+.navbar {
+  height: var(--navbar-height);
+}
+.sidebar {
+  top: var(--navbar-height);
+}
+@media (max-width: 800px) {
+  .main-content {
+    margin-left: 0;    /* ← this is the gap killer */
+    width: 100%;
+  }
+}

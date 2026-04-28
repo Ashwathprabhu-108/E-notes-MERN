@@ -1,0 +1,372 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap');
+
+.upload-root {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #12103a;
+  padding: 2rem 1rem;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.upload-card {
+  background: #1a1750;
+  border: 1px solid #2e2a7a;
+  border-radius: 20px;
+  padding: 2.4rem 2.2rem;
+  width: 100%;
+  max-width: 520px;
+  box-sizing: border-box;
+}
+
+/* Header */
+.upload-header {
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+
+.upload-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6b4fc8, #7c5fd4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.upload-icon img {
+  width: 28px;
+  height: 28px;
+  filter: brightness(0) invert(1);
+}
+
+.upload-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.upload-header p {
+  font-size: 14px;
+  color: #9d8fd4;
+  margin: 0;
+}
+
+/* Form fields */
+.upload-form .field-group {
+  margin-bottom: 1.1rem;
+}
+
+.field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #9d8fd4;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.field-wrap {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #2e2a7a;
+  border-radius: 10px;
+  padding: 0 12px;
+  transition: border-color 0.2s;
+}
+
+.field-wrap:focus-within {
+  border-color: #7c3aed;
+}
+
+.field-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: black;
+  padding: 11px 0;
+}
+
+.field-input::placeholder {
+  color: #6d5fa8;
+}
+
+select.field-input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236d5fa8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  padding-right: 24px;
+}
+
+select.field-input option {
+  color: #1a1750;
+  background: white;
+}
+
+/* Drop zones */
+.drop-zone {
+  border: 2px dashed #3d2b80;
+  border-radius: 12px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: #12103a;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drop-zone:hover {
+  border-color: #7c3aed;
+  background: #1d1a5c;
+}
+
+.drop-zone.drag-active {
+  border-color: #4ade80;
+  background: #0f2e1a;
+}
+
+.drop-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #6d5fa8;
+}
+
+.drop-placeholder svg {
+  width: 36px;
+  height: 36px;
+}
+
+.drop-placeholder span {
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Thumbnail preview */
+.drop-zone.has-preview {
+  padding: 0;
+  overflow: hidden;
+  border-style: solid;
+  border-color: #3d2b80;
+}
+
+.preview-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Document preview */
+.doc-zone.has-doc {
+  border-style: solid;
+  border-color: #14532d;
+  background: #0f2e1a;
+}
+
+.doc-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.doc-preview svg {
+  width: 40px;
+  height: 40px;
+}
+
+.doc-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e2d9f3;
+  word-break: break-all;
+  max-width: 100%;
+}
+
+.doc-meta {
+  font-size: 12px;
+  color: #4ade80;
+}
+
+.file-name {
+  font-size: 12px;
+  color: #9d8fd4;
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* Messages */
+.error-msg {
+  color: #e53e3e;
+  font-size: 0.85rem;
+  text-align: center;
+  margin: -4px 0 10px;
+}
+
+.success-msg {
+  color: #4ade80;
+  font-size: 0.85rem;
+  text-align: center;
+  margin: -4px 0 10px;
+}
+
+/* Submit button */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: #7c3aed;
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  letter-spacing: 0.3px;
+  margin-top: 0.4rem;
+}
+
+.submit-btn:hover {
+  background: #6d28d9;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Auth hint */
+.auth-hint {
+  text-align: center;
+  font-size: 13px;
+  color: #9d8fd4;
+  margin-top: 12px;
+}
+
+.auth-hint a {
+  color: #a78bfa;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-hint a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .upload-card {
+    padding: 1.8rem 1.6rem;
+    border-radius: 16px;
+  }
+
+  .upload-header h2 {
+    font-size: 21px;
+  }
+
+  .upload-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .upload-icon img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .drop-zone {
+    min-height: 120px;
+    padding: 20px 16px;
+  }
+
+  .preview-img {
+    height: 130px;
+  }
+}
+
+@media (max-width: 500px) {
+  .upload-root {
+    padding: 1rem 0.75rem;
+    align-items: flex-start;
+    padding-top: 1.5rem;
+  }
+
+  .upload-card {
+    padding: 1.4rem 1.2rem;
+    border: none;
+    border-radius: 14px;
+  }
+
+  .upload-header h2 {
+    font-size: 19px;
+  }
+
+  .upload-header p {
+    font-size: 13px;
+  }
+
+  .field-input {
+    font-size: 13px;
+    padding: 10px 0;
+  }
+
+  .field-wrap {
+    border-radius: 8px;
+    padding: 0 10px;
+  }
+
+  .drop-zone {
+    min-height: 110px;
+    padding: 16px 12px;
+    border-radius: 10px;
+  }
+
+  .drop-placeholder svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .drop-placeholder span {
+    font-size: 12px;
+  }
+
+  .preview-img {
+    height: 110px;
+  }
+
+  .doc-preview svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .doc-name {
+    font-size: 13px;
+  }
+
+  .submit-btn {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 8px;
+  }
+}
