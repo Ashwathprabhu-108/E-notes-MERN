@@ -36,7 +36,11 @@ export const upload = multer({ storage, fileFilter });
 const uploadToCloudinary = (fileBuffer, folder, resourceType = "auto") => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
-      { folder, resource_type: resourceType },
+      { 
+        folder, 
+        resource_type: resourceType,
+        type: "upload", // Ensure it's a public upload
+      },
       (error, result) => {
         if (error) reject(error);
         else resolve(result);
@@ -104,9 +108,41 @@ export const getFiles = async (req, res) => {
   try {
     const files = await File.find()
       .populate("uploadedBy", "username")
-      .sort({ createdAt: -1 });
+      .sort({ downloadCount: -1, createdAt: -1 });
     res.status(200).json(files);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch files.", error: error.message });
+  }
+};
+
+export const downloadFile = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+
+    // Increment download count
+    const file = await File.findByIdAndUpdate(
+      fileId,
+      { $inc: { downloadCount: 1 } },
+      { returnDocument: 'after' }
+    );
+
+    if (!file || !file.document) {
+      return res.status(404).json({ message: "File not found." });
+    }
+
+    // Reconstruct the URL for raw file type (documents) instead of image
+    // Original: https://res.cloudinary.com/dxwayqkqy/image/upload/v1777386547/enotes/documents/apupue6fdemmcakz2wve.pdf
+    // Should be: https://res.cloudinary.com/dxwayqkqy/raw/upload/v1777386547/enotes/documents/apupue6fdemmcakz2wve.pdf?dl=true
+    const originalUrl = file.document.url;
+    const downloadUrl = originalUrl.replace('/image/upload/', '/raw/upload/') + '?dl=true';
+
+    res.status(200).json({
+      success: true,
+      downloadUrl: downloadUrl,
+      fileName: file.document.name,
+    });
+  } catch (error) {
+    console.error("Download error:", error);
+    res.status(500).json({ message: "Download failed.", error: error.message });
   }
 };

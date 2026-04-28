@@ -1,0 +1,293 @@
+.home-container {
+  padding: 2rem;
+  margin: 0 auto;
+  background: #12103a;
+  min-height: 100vh;
+}
+
+.home-header {
+  margin-bottom: 2rem;
+}
+
+.home-header h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0;
+}
+
+.home-header p {
+  font-size: 0.95rem;
+  color: #9d8fd4;
+  margin: 0.5rem 0 0 0;
+}
+
+.loading,
+.error-message,
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+  color: #9d8fd4;
+}
+
+.error-message {
+  color: #fca5a5;
+  background-color: rgba(220, 38, 38, 0.1);
+  border: 1px solid #dc2626;
+  border-radius: 0.5rem;
+  padding: 2rem;
+}
+
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.file-card {
+  background: #1a1750;
+  border: 1px solid #2e2a7a;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.file-thumbnail {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #2e2a7a;
+}
+
+.file-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.file-card:hover .file-thumbnail img {
+  transform: scale(1.05);
+}
+
+.no-thumbnail {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2e2a7a 0%, #1f1a5c 100%);
+  color: #9d8fd4;
+  font-weight: 500;
+}
+
+.file-info {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.file-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 0.75rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.file-meta {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.category-badge {
+  display: inline-block;
+  background-color: #6b4fc8;
+  color: #e9d5ff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.file-tags {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #2e2a7a;
+  color: #c4b5fd;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.upload-info {
+  margin-bottom: 0.75rem;
+}
+
+.uploaded-by {
+  font-size: 0.85rem;
+  color: #d1c4f2;
+  margin: 0 0 0.25rem 0;
+}
+
+.uploaded-date {
+  font-size: 0.8rem;
+  color: #9d8fd4;
+  margin: 0;
+}
+
+.download-stats {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #2e2a7a;
+}
+
+.download-count {
+  font-size: 0.9rem;
+  color: #a5f3fc;
+  font-weight: 500;
+}
+
+.file-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.download-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #6b4fc8, #7c5fd4);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.download-btn:hover {
+  background: linear-gradient(135deg, #7c5fd4, #8d6fe0);
+  transform: scale(1.02);
+}
+
+.download-btn:active {
+  transform: scale(0.98);
+}
+
+.icon-btn {
+  padding: 0.75rem;
+  background-color: #2e2a7a;
+  color: #c4b5fd;
+  border: 1px solid #3d3a8f;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+}
+
+.icon-btn:hover {
+  background-color: #3d3a8f;
+  border-color: #4d4a9f;
+  transform: scale(1.05);
+}
+
+.icon-btn:active {
+  transform: scale(0.95);
+}
+
+.icon-btn.save-later {
+  /* Placeholder for save later icon */
+}
+
+.icon-btn.saved-files {
+  /* Placeholder for saved files icon */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .home-container {
+    padding: 1rem;
+  }
+
+  .home-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .files-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .file-info {
+    padding: 1rem;
+  }
+
+  .file-title {
+    font-size: 1rem;
+  }
+
+  .file-actions {
+    gap: 0.5rem;
+  }
+
+  .download-btn {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .icon-btn {
+    padding: 0.6rem;
+    min-width: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .files-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .file-thumbnail {
+    height: 150px;
+  }
+
+  .file-actions {
+    flex-direction: column;
+  }
+
+  .download-btn {
+    width: 100%;
+  }
+}
