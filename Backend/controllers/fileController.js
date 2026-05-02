@@ -7,10 +7,10 @@ const storage = multer.memoryStorage();
 
 const ALLOWED_DOC_MIMES = new Set([
   "application/pdf",
-  "application/msword",                                                        // .doc
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",  // .docx
-  "application/vnd.ms-powerpoint",                                             // .ppt
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
 ]);
 
 const fileFilter = (req, file, cb) => {
@@ -33,13 +33,27 @@ const fileFilter = (req, file, cb) => {
 
 export const upload = multer({ storage, fileFilter });
 
+// ✅ Helper — must be defined before downloadFile
+const getContentType = (format) => {
+  const contentTypeMap = {
+    pdf: "application/pdf",
+    doc: "application/msword",
+    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ppt: "application/vnd.ms-powerpoint",
+    pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    txt: "text/plain",
+  };
+  return contentTypeMap[format?.toLowerCase()] || "application/octet-stream";
+};
+
 const uploadToCloudinary = (fileBuffer, folder, resourceType = "auto") => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
-      { 
-        folder, 
+      {
+        folder,
         resource_type: resourceType,
-        type: "upload", // Ensure it's a public upload
+        type: "upload",
+        access_mode: "public",
       },
       (error, result) => {
         if (error) reject(error);
@@ -68,11 +82,10 @@ export const uploadFile = async (req, res) => {
       "image"
     );
 
-    // "raw" works for all supported doc types — Cloudinary treats non-image/video as raw
     const docResult = await uploadToCloudinary(
       documentFile.buffer,
       "enotes/documents",
-      "auto"
+      "raw"
     );
 
     const parsedTags = tags.split(",").map((t) => t.trim()).filter(Boolean);
@@ -119,30 +132,45 @@ export const downloadFile = async (req, res) => {
   try {
     const { fileId } = req.params;
 
-    // Increment download count
-    const file = await File.findByIdAndUpdate(
-      fileId,
-      { $inc: { downloadCount: 1 } },
-      { returnDocument: 'after' }
-    );
-
-    if (!file || !file.document) {
+    const file = await File.findById(fileId);
+    if (!file || !file.document?.url) {
       return res.status(404).json({ message: "File not found." });
     }
 
-    // Reconstruct the URL for raw file type (documents) instead of image
-    // Original: https://res.cloudinary.com/dxwayqkqy/image/upload/v1777386547/enotes/documents/apupue6fdemmcakz2wve.pdf
-    // Should be: https://res.cloudinary.com/dxwayqkqy/raw/upload/v1777386547/enotes/documents/apupue6fdemmcakz2wve.pdf?dl=true
-    const originalUrl = file.document.url;
-    const downloadUrl = originalUrl.replace('/image/upload/', '/raw/upload/') + '?dl=true';
+    File.findByIdAndUpdate(fileId, { $inc: { downloadCount: 1 } }).catch(console.error);
 
-    res.status(200).json({
-      success: true,
-      downloadUrl: downloadUrl,
-      fileName: file.document.name,
-    });
+    const fileName = file.document.name || "download";
+    const format = file.document.format;
+    const contentType = getContentType(format);
+
+    console.log("[Download] URL:", file.document.url);
+    console.log("[Download] format:", format);
+
+    const cloudinaryResponse = await fetch(file.document.url);
+    console.log("[Download] Cloudinary status:", cloudinaryResponse.status);
+
+    if (!cloudinaryResponse.ok) {
+      const errText = await cloudinaryResponse.text();
+      console.error("[Download] Cloudinary error:", errText);
+      return res.status(502).json({ message: "Failed to retrieve file from storage." });
+    }
+
+    res.setHeader("Content-Type", contentType);
+    res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(fileName)}"`);
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+
+    const contentLength = cloudinaryResponse.headers.get("content-length");
+    if (contentLength) res.setHeader("Content-Length", contentLength);
+
+    const buffer = await cloudinaryResponse.arrayBuffer();
+    res.end(Buffer.from(buffer));
+
   } catch (error) {
-    console.error("Download error:", error);
-    res.status(500).json({ message: "Download failed.", error: error.message });
+    console.error("[Download] CRASH:", error.message);
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Download failed.", error: error.message });
+    }
   }
 };

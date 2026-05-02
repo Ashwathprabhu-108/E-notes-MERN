@@ -36,23 +36,36 @@ const Home = () => {
   }, []);
 
   const handleDownload = async (fileId, fileName) => {
-    try {
-      // Get download URL from backend (which increments download count)
-      const response = await fetch(`http://localhost:5000/api/files/download/${fileId}`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to get download link');
-      }
+  try {
+    const token = localStorage.getItem('token');
 
-      const { downloadUrl, fileName: backendFileName } = await response.json();
-      
-      // Open download URL in new tab - lets browser/Cloudinary handle the download
-      window.open(downloadUrl, '_blank');
-    } catch (error) {
-      console.error('Download error:', error);
-      alert('Failed to download file. Please try again.');
+    const response = await fetch(`http://localhost:5000/api/files/download/${fileId}`, {
+      method: 'GET',
+      headers: {
+        ...(token && { 'Authorization': `Bearer ${token}` }),
+      },
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      console.error('Download failed:', response.status, errData);
+      throw new Error(errData.message || 'Failed to download file');
     }
-  };
+
+    const blob = await response.blob();
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName || 'document';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+
+  } catch (error) {
+    console.error('Download error:', error);
+    alert(`Failed to download: ${error.message}`);
+  }
+};
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };

@@ -18,5 +18,12 @@ router.get("/", getFiles);
 
 router.get("/download/:fileId", downloadFile);
 
+// TEMP DEBUG ROUTE - remove after
+router.get("/debug/:fileId", async (req, res) => {
+  const File = (await import("../models/File.js")).default;
+  const file = await File.findById(req.params.fileId);
+  res.json(file?.document || { error: "not found" });
+});
+
 export default router;
 
