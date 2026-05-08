@@ -86,3 +86,28 @@ export const signIn = async (req, res) => {
         res.status(500).json({ message: "Server error.", error: error.message });
     }
 };
+
+// ─── GET CURRENT USER ──────────────────────────────────────────────
+export const getCurrentUser = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const user = await User.findById(userId)
+            .populate('savedFiles', 'title category thumbnail')
+            .select('-password');
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        res.status(200).json({
+            id: user._id.toString(),
+            username: user.username,
+            email: user.email,
+            savedFiles: user.savedFiles.map(file => file._id.toString()),
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: "Server error.", error: error.message });
+    }
+};

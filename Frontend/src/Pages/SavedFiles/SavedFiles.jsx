@@ -1,27 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import './Home.css';
-import Saved from "../../assets/saved-icon.svg";
+import './SavedFiles.css';
+import saved from "../../assets/saved-icon.svg";
 import Save_later from "../../assets/saved-bookmark-icon.svg";
 
-const Home = () => {
-  const [files, setFiles] = useState([]);
+const SavedFiles = () => {
+  const [savedFilesData, setSavedFilesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [savedFiles, setSavedFiles] = useState([]);
-  const [authToken, setAuthToken] = useState(localStorage.getItem('token'));
-  const isAuthenticated = !!authToken;
 
   useEffect(() => {
-    const fetchFilesAndSavedStatus = async () => {
+    const fetchSavedFiles = async () => {
       try {
         const token = localStorage.getItem('token');
 
-        // Fetch all files
+        if (!token) {
+          setError('Please log in to view saved files');
+          setLoading(false);
+          return;
+        }
+
+        // Fetch user data with saved files
+        const userResponse = await fetch('http://localhost:5000/api/auth/me', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!userResponse.ok) {
+          if (userResponse.status === 401) {
+            localStorage.removeItem('token');
+            throw new Error('Session expired. Please log in again.');
+          }
+          throw new Error('Failed to fetch saved files');
+        }
+
+        const userData = await userResponse.json();
+        const savedFileIds = userData.savedFiles || [];
+
+        // Fetch all files to get complete details
         const filesResponse = await fetch('http://localhost:5000/api/files', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            ...(token && { 'Authorization': `Bearer ${token}` }),
+            'Authorization': `Bearer ${token}`,
           },
         });
 
@@ -29,42 +52,23 @@ const Home = () => {
           throw new Error('Failed to fetch files');
         }
 
-        const filesData = await filesResponse.json();
-        setFiles(filesData);
+        const allFiles = await filesResponse.json();
 
-        // Fetch saved files if user is authenticated
-        if (token) {
-          try {
-            const userResponse = await fetch('http://localhost:5000/api/auth/me', {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-              },
-            });
+        // Filter files that are in the saved list
+        const savedFiles = allFiles.filter(file =>
+          savedFileIds.some(id => String(id) === String(file._id))
+        );
 
-            if (userResponse.ok) {
-              const userData = await userResponse.json();
-              setSavedFiles(userData.savedFiles || []);
-            } else if (userResponse.status === 401) {
-              // Token is invalid or expired, clear it
-              localStorage.removeItem('token');
-              setAuthToken(null);
-              console.warn('Token expired, please log in again');
-            }
-          } catch (err) {
-            console.error('Error fetching saved files:', err);
-          }
-        }
+        setSavedFilesData(savedFiles);
       } catch (err) {
-        console.error('Error fetching files:', err);
-        setError('Failed to load files. Please try again later.');
+        console.error('Error fetching saved files:', err);
+        setError(err.message || 'Failed to load saved files.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFilesAndSavedStatus();
+    fetchSavedFiles();
   }, []);
 
   const handleDownload = async (fileId, fileName) => {
@@ -99,21 +103,16 @@ const Home = () => {
     }
   };
 
-  const handleSaveLater = async (fileId) => {
+  const handleUnsave = async (fileId) => {
     try {
-      const token = authToken;
+      const token = localStorage.getItem('token');
 
       if (!token) {
         alert('Please log in to save files');
         return;
       }
 
-      const fileIdString = String(fileId);
-      const isSaved = savedFiles.some(id => String(id) === fileIdString);
-      const endpoint = isSaved ? 'unsave' : 'save';
-      const url = `http://localhost:5000/api/files/${endpoint}/${fileId}`;
-
-      const response = await fetch(url, {
+      const response = await fetch(`http://localhost:5000/api/files/unsave/${fileId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -123,17 +122,13 @@ const Home = () => {
 
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.message || 'Failed to update save status');
+        throw new Error(errData.message || 'Failed to unsave file');
       }
 
-      // Update local state
-      if (isSaved) {
-        setSavedFiles(savedFiles.filter(id => String(id) !== fileIdString));
-      } else {
-        setSavedFiles([...savedFiles, fileIdString]);
-      }
+      // Remove from local state
+      setSavedFilesData(savedFilesData.filter(file => String(file._id) !== String(fileId)));
     } catch (error) {
-      console.error('Save/Unsave error:', error);
+      console.error('Unsave error:', error);
       alert(`Failed to update: ${error.message}`);
     }
   };
@@ -145,39 +140,43 @@ const Home = () => {
 
   if (loading) {
     return (
-      <div className="home-container">
-        <div className="loading">Loading files...</div>
+      <div className="saved-files-container">
+        <div className="loading">Loading saved files...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="home-container">
+      <div className="saved-files-container">
         <div className="error-message">{error}</div>
       </div>
     );
   }
 
-  if (files.length === 0) {
+  if (savedFilesData.length === 0) {
     return (
-      <div className="home-container">
+      <div className="saved-files-container">
+        <div className="saved-files-header">
+          <h1>Saved Files</h1>
+          <p>Your collection of saved documents</p>
+        </div>
         <div className="empty-state">
-          <p>No files available yet.</p>
+          <p>No saved files yet. Start saving files from the Home page!</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="home-container">
-      <div className="home-header">
-        <h1>All Files</h1>
-        <p>Sorted by downloads and recent uploads</p>
+    <div className="saved-files-container">
+      <div className="saved-files-header">
+        <h1>Saved Files</h1>
+        <p>You have {savedFilesData.length} saved file{savedFilesData.length !== 1 ? 's' : ''}</p>
       </div>
 
       <div className="files-grid">
-        {files.map((file) => (
+        {savedFilesData.map((file) => (
           <div key={file._id} className="file-card">
             {/* Thumbnail */}
             <div className="file-thumbnail">
@@ -231,17 +230,13 @@ const Home = () => {
                   Download
                 </button>
 
-                {/* Save Later Icon Placeholder */}
+                {/* Remove from saved */}
                 <button
-                  className="icon-btn save-later"
-                  title={savedFiles.some(id => String(id) === String(file._id)) ? "Remove from saved" : "Save for later"}
-                  onClick={() => handleSaveLater(file._id)}
+                  className="icon-btn unsave-btn"
+                  title="Remove from saved"
+                  onClick={() => handleUnsave(file._id)}
                 >
-                  {savedFiles.some(id => String(id) === String(file._id)) ? (
-                    <img src={Save_later} alt="Saved" width="16" height="16" />
-                  ) : (
-                    <img src={Saved} alt="Save for later" width="16" height="16" />
-                  )}
+                  <img src={Save_later} alt="Remove from saved" width="16" height="16" />
                 </button>
               </div>
             </div>
@@ -252,4 +247,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default SavedFiles;

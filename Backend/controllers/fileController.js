@@ -174,3 +174,57 @@ export const downloadFile = async (req, res) => {
     }
   }
 };
+
+export const saveFile = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    const userId = req.user.id;
+
+    const file = await File.findById(fileId);
+    if (!file) {
+      return res.status(404).json({ message: "File not found." });
+    }
+
+    const User = (await import("../models/User.js")).default;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    if (!user.savedFiles.some(id => id.toString() === fileId)) {
+      user.savedFiles.push(fileId);
+      await user.save();
+    }
+
+    res.status(200).json({ message: "File saved successfully.", isSaved: true });
+  } catch (error) {
+    console.error("Save file error:", error);
+    res.status(500).json({ message: "Failed to save file.", error: error.message });
+  }
+};
+
+export const unsaveFile = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    const userId = req.user.id;
+
+    const file = await File.findById(fileId);
+    if (!file) {
+      return res.status(404).json({ message: "File not found." });
+    }
+
+    const User = (await import("../models/User.js")).default;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    user.savedFiles = user.savedFiles.filter(id => id.toString() !== fileId);
+    await user.save();
+
+    res.status(200).json({ message: "File unsaved successfully.", isSaved: false });
+  } catch (error) {
+    console.error("Unsave file error:", error);
+    res.status(500).json({ message: "Failed to unsave file.", error: error.message });
+  }
+};

@@ -1,13 +1,17 @@
 import express from "express";
 import passport from "../config/passport.js";
 import jwt from "jsonwebtoken";
-import { signUp, signIn } from "../controllers/userController.js";
+import { signUp, signIn, getCurrentUser } from "../controllers/userController.js";
+import protect from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // Normal auth
 router.post("/signup", signUp);
 router.post("/signin", signIn);
+
+// Get current user
+router.get("/me", protect, getCurrentUser);
 
 // Google OAuth
 router.get("/google", passport.authenticate("google", {
