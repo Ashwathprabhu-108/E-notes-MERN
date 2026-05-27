@@ -6,7 +6,7 @@ import SearchIcon from "../../assets/Search.svg";
 import UploadIcon from "../../assets/FileUpload.svg";
 
 const Navbar = () => {
-  const categories = ["All","Science", "Technology", "Entertainment", "Economy", "Politics", "Cooking", "Health", "Travel", "Education", "Sports", "Art", "History"];
+  const categories = ["All", "Academic", "Technology", "Business", "Science", "Arts & Humanities", "Law", "Medical", "Other"];
 
   return (
     <nav className="navbar">
@@ -24,24 +24,24 @@ const Navbar = () => {
         ))}
       </ul>
 
-    <div className="navbar__actions">
-      <div className="navbar__search-wrapper">
-        <input
-        type="text"
-        className="navbar__search"
-        placeholder="Search..."
-        />
-       <button className="navbar__search-btn" aria-label="Search">
-        <img src={SearchIcon} alt="Search" width="16" height="16" />
-       </button>
-       </div>
+      <div className="navbar__actions">
+        <div className="navbar__search-wrapper">
+          <input
+            type="text"
+            className="navbar__search"
+            placeholder="Search..."
+          />
+          <button className="navbar__search-btn" aria-label="Search">
+            <img src={SearchIcon} alt="Search" width="16" height="16" />
+          </button>
+        </div>
 
-       <Link to="/upload">
-       <button className="navbar__upload-btn">
-        <img src={UploadIcon} alt="Upload" width="16" height="16" />
-        Upload
-       </button>
-       </Link>
+        <Link className="upload_link" to="/upload">
+          <button className="navbar__upload-btn">
+            <img src={UploadIcon} alt="Upload" width="16" height="16" />
+            Upload
+          </button>
+        </Link>
       </div>
     </nav>
   );

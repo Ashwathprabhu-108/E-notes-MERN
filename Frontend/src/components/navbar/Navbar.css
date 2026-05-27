@@ -16,6 +16,10 @@
   gap: 8px;
 }
 
+.upload_link {
+  text-decoration: none !important;
+}
+
 .navbar h1 {
   color: white;
   font-size: 35px;

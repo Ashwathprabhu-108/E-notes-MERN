@@ -67,7 +67,7 @@ export default function LoginSignup() {
         return setError(data.message || 'Something went wrong.');
       }
 
-      login(data.token, data.user);   // ← REPLACE the two localStorage lines with this
+      login(data.token, data.user); 
       navigate('/');
 
     } catch (err) {
@@ -110,7 +110,7 @@ export default function LoginSignup() {
                   <img src={UsernameIcon} alt="" className="icon-img" />
                 </span>
                 <input className="field-input" type="text" name="username"
-                  placeholder="Enter your username" value={form.username} onChange={handleChange} />
+                  placeholder="Enter your username" value={form.username} onChange={handleChange} required/>
               </div>
             </div>
 

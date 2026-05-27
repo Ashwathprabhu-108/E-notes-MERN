@@ -1,5 +1,5 @@
 import express from "express";
-import { upload, uploadFile, getFiles, downloadFile, saveFile, unsaveFile } from "../controllers/fileController.js";
+import { upload, uploadFile, getFiles, downloadFile, saveFile, unsaveFile, getMyFiles, deleteFile, updateFile, getMyDownloads } from "../controllers/fileController.js";
 import protect from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -16,11 +16,19 @@ router.post(
 
 router.get("/", getFiles);
 
+router.get("/my-files", protect, getMyFiles);
+
+router.get("/my-downloads", protect, getMyDownloads);
+
 router.get("/download/:fileId", downloadFile);
 
 router.post("/save/:fileId", protect, saveFile);
 
 router.post("/unsave/:fileId", protect, unsaveFile);
+
+router.delete("/:fileId", protect, deleteFile);
+
+router.put("/:fileId", protect, updateFile);
 
 // TEMP DEBUG ROUTE - remove after
 router.get("/debug/:fileId", async (req, res) => {

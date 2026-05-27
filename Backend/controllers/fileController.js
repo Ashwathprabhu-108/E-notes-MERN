@@ -107,6 +107,10 @@ export const uploadFile = async (req, res) => {
       uploadedBy: userId,
     });
 
+    // Add file to user's myFiles
+    const User = (await import("../models/User.js")).default;
+    await User.findByIdAndUpdate(userId, { $push: { myFiles: newFile._id } });
+
     res.status(201).json({
       message: "File uploaded successfully.",
       file: newFile,
@@ -131,6 +135,7 @@ export const getFiles = async (req, res) => {
 export const downloadFile = async (req, res) => {
   try {
     const { fileId } = req.params;
+    const userId = req.user?.id;
 
     const file = await File.findById(fileId);
     if (!file || !file.document?.url) {
@@ -138,6 +143,15 @@ export const downloadFile = async (req, res) => {
     }
 
     File.findByIdAndUpdate(fileId, { $inc: { downloadCount: 1 } }).catch(console.error);
+
+    // Track download for authenticated users (add if not already present)
+    if (userId) {
+      const User = (await import("../models/User.js")).default;
+      User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { downloads: fileId } }
+      ).catch(console.error);
+    }
 
     const fileName = file.document.name || "download";
     const format = file.document.format;
@@ -226,5 +240,128 @@ export const unsaveFile = async (req, res) => {
   } catch (error) {
     console.error("Unsave file error:", error);
     res.status(500).json({ message: "Failed to unsave file.", error: error.message });
+  }
+};
+
+export const getMyFiles = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const files = await File.find({ uploadedBy: userId })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(files);
+  } catch (error) {
+    console.error("Get my files error:", error);
+    res.status(500).json({ message: "Failed to fetch your files.", error: error.message });
+  }
+};
+
+export const deleteFile = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    const userId = req.user.id;
+
+    const file = await File.findById(fileId);
+    if (!file) {
+      return res.status(404).json({ message: "File not found." });
+    }
+
+    // Check if user owns this file
+    if (file.uploadedBy.toString() !== userId) {
+      return res.status(403).json({ message: "You do not have permission to delete this file." });
+    }
+
+    // Delete from Cloudinary
+    if (file.thumbnail?.public_id) {
+      try {
+        await cloudinary.uploader.destroy(file.thumbnail.public_id);
+      } catch (err) {
+        console.error("Error deleting thumbnail from Cloudinary:", err);
+      }
+    }
+
+    if (file.document?.public_id) {
+      try {
+        await cloudinary.uploader.destroy(file.document.public_id);
+      } catch (err) {
+        console.error("Error deleting document from Cloudinary:", err);
+      }
+    }
+
+    // Delete from database
+    await File.findByIdAndDelete(fileId);
+
+    // Remove from user's myFiles and savedFiles
+    const User = (await import("../models/User.js")).default;
+    await User.updateMany(
+      { myFiles: fileId },
+      { $pull: { myFiles: fileId } }
+    );
+    await User.updateMany(
+      { savedFiles: fileId },
+      { $pull: { savedFiles: fileId } }
+    );
+
+    res.status(200).json({ message: "File deleted successfully." });
+  } catch (error) {
+    console.error("Delete file error:", error);
+    res.status(500).json({ message: "Failed to delete file.", error: error.message });
+  }
+};
+
+export const updateFile = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+    const { title, tags, category } = req.body;
+    const userId = req.user.id;
+
+    const file = await File.findById(fileId);
+    if (!file) {
+      return res.status(404).json({ message: "File not found." });
+    }
+
+    // Check if user owns this file
+    if (file.uploadedBy.toString() !== userId) {
+      return res.status(403).json({ message: "You do not have permission to edit this file." });
+    }
+
+    const parsedTags = tags ? tags.split(",").map((t) => t.trim()).filter(Boolean) : file.tags;
+
+    const updatedFile = await File.findByIdAndUpdate(
+      fileId,
+      {
+        title: title || file.title,
+        tags: parsedTags,
+        category: category || file.category,
+      },
+      { returnDocument: 'after' }
+    );
+
+    res.status(200).json({
+      message: "File updated successfully.",
+      file: updatedFile,
+    });
+  } catch (error) {
+    console.error("Update file error:", error);
+    res.status(500).json({ message: "Failed to update file.", error: error.message });
+  }
+};
+
+export const getMyDownloads = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const User = (await import("../models/User.js")).default;
+    const user = await User.findById(userId).populate('downloads');
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    res.status(200).json(user.downloads || []);
+  } catch (error) {
+    console.error("Get downloads error:", error);
+    res.status(500).json({ message: "Failed to fetch downloads.", error: error.message });
   }
 };
