@@ -1,6 +1,6 @@
 import express from "express";
 import { upload, uploadFile, getFiles, downloadFile, saveFile, unsaveFile, getMyFiles, deleteFile, updateFile, getMyDownloads } from "../controllers/fileController.js";
-import protect from "../middleware/authMiddleware.js";
+import protect, { optionalAuth } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.get("/my-files", protect, getMyFiles);
 
 router.get("/my-downloads", protect, getMyDownloads);
 
-router.get("/download/:fileId", downloadFile);
+router.get("/download/:fileId", optionalAuth, downloadFile);
 
 router.post("/save/:fileId", protect, saveFile);
 
