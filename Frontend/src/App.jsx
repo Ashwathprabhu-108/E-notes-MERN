@@ -11,6 +11,7 @@ import LoginSignup from "./Pages/LoginSignup/LoginSignup";
 import AuthCallback from "./Pages/AuthCallback";
 import MyFiles from "./Pages/MyFiles/MyFiles";
 import Downloads from "./Pages/Downloads/Downloads";
+import PreviewFile from "./components/PreviewFile/PreviewFile";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route path='/downloads' element={<Downloads/>}/>
               <Route path='/login' element={<LoginSignup/>}/>
               <Route path='/saved-files' element={<SavedFiles/>}/>
+              <Route path='/preview/:fileId' element={<PreviewFile/>}/>
             </Routes>
           </main>
         </div>

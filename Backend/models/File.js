@@ -41,6 +41,11 @@ const fileSchema = new mongoose.Schema({
         default: 0,
     },
 
+    summary: {
+        content: { type: String, default: null },
+        generatedAt: { type: Date, default: null }
+    },
+
 }, { timestamps: true })
 
 export default mongoose.model("File", fileSchema);

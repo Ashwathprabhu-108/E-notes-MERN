@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import Saved from "../../assets/saved-icon.svg";
 import Save_later from "../../assets/saved-bookmark-icon.svg";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -180,7 +182,12 @@ const Home = () => {
         {files.map((file) => (
           <div key={file._id} className="file-card">
             {/* Thumbnail */}
-            <div className="file-thumbnail">
+            <div 
+              className="file-thumbnail"
+              onClick={() => navigate(`/preview/${file._id}`)}
+              style={{ cursor: 'pointer' }}
+              title="Click to preview"
+            >
               {file.thumbnail?.url ? (
                 <img src={file.thumbnail.url} alt={file.title} />
               ) : (

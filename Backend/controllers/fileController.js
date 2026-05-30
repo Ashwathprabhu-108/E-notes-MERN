@@ -2,6 +2,38 @@
 import { v2 as cloudinary } from "cloudinary";
 import File from "../models/File.js";
 import multer from "multer";
+import mammoth from "mammoth";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import fs from "fs";
+import path from "path";
+import os from "os";
+import { createRequire } from "module";
+
+
+const require = createRequire(import.meta.url);
+const officeparser = require("officeparser");
+
+// officeparser: use parseOffice (callback-based), wrap in promise
+const parseOfficeToPText = async (filePath) => {
+  const ast = await officeparser.parseOffice(filePath);
+  return ast.toText() || "";
+};
+
+// pdf-parse: the actual parse function is pdfParseLib.PDFParse
+const parsePdf = (buffer) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const PdfReader = pdfParseLib.PDFParse;
+      const instance = new PdfReader({ verbosity: -1 });
+      instance.load({ data: new Uint8Array(buffer) })
+        .then(() => instance.getText())
+        .then(text => resolve({ text: text || "" }))
+        .catch(reject);
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 
 const storage = multer.memoryStorage();
 
@@ -33,7 +65,6 @@ const fileFilter = (req, file, cb) => {
 
 export const upload = multer({ storage, fileFilter });
 
-// ✅ Helper — must be defined before downloadFile
 const getContentType = (format) => {
   const contentTypeMap = {
     pdf: "application/pdf",
@@ -62,6 +93,14 @@ const uploadToCloudinary = (fileBuffer, folder, resourceType = "auto") => {
     );
     stream.end(fileBuffer);
   });
+};
+
+const formatMap = {
+  "application/pdf": "pdf",
+  "application/msword": "doc",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+  "application/vnd.ms-powerpoint": "ppt",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx",
 };
 
 export const uploadFile = async (req, res) => {
@@ -102,12 +141,11 @@ export const uploadFile = async (req, res) => {
         url: docResult.secure_url,
         public_id: docResult.public_id,
         name: documentFile.originalname,
-        format: docResult.format || documentFile.mimetype.split("/").pop(),
+        format: formatMap[documentFile.mimetype] || "pdf",
       },
       uploadedBy: userId,
     });
 
-    // Add file to user's myFiles
     const User = (await import("../models/User.js")).default;
     await User.findByIdAndUpdate(userId, { $push: { myFiles: newFile._id } });
 
@@ -144,13 +182,9 @@ export const downloadFile = async (req, res) => {
 
     File.findByIdAndUpdate(fileId, { $inc: { downloadCount: 1 } }).catch(console.error);
 
-    // Track download for authenticated users (add if not already present)
     if (userId) {
       const User = (await import("../models/User.js")).default;
-      User.findByIdAndUpdate(
-        userId,
-        { $addToSet: { downloads: fileId } }
-      ).catch(console.error);
+      User.findByIdAndUpdate(userId, { $addToSet: { downloads: fileId } }).catch(console.error);
     }
 
     const fileName = file.document.name || "download";
@@ -180,7 +214,6 @@ export const downloadFile = async (req, res) => {
 
     const buffer = await cloudinaryResponse.arrayBuffer();
     res.end(Buffer.from(buffer));
-
   } catch (error) {
     console.error("[Download] CRASH:", error.message);
     if (!res.headersSent) {
@@ -195,17 +228,13 @@ export const saveFile = async (req, res) => {
     const userId = req.user.id;
 
     const file = await File.findById(fileId);
-    if (!file) {
-      return res.status(404).json({ message: "File not found." });
-    }
+    if (!file) return res.status(404).json({ message: "File not found." });
 
     const User = (await import("../models/User.js")).default;
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
+    if (!user) return res.status(404).json({ message: "User not found." });
 
-    if (!user.savedFiles.some(id => id.toString() === fileId)) {
+    if (!user.savedFiles.some((id) => id.toString() === fileId)) {
       user.savedFiles.push(fileId);
       await user.save();
     }
@@ -223,17 +252,13 @@ export const unsaveFile = async (req, res) => {
     const userId = req.user.id;
 
     const file = await File.findById(fileId);
-    if (!file) {
-      return res.status(404).json({ message: "File not found." });
-    }
+    if (!file) return res.status(404).json({ message: "File not found." });
 
     const User = (await import("../models/User.js")).default;
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
+    if (!user) return res.status(404).json({ message: "User not found." });
 
-    user.savedFiles = user.savedFiles.filter(id => id.toString() !== fileId);
+    user.savedFiles = user.savedFiles.filter((id) => id.toString() !== fileId);
     await user.save();
 
     res.status(200).json({ message: "File unsaved successfully.", isSaved: false });
@@ -246,10 +271,7 @@ export const unsaveFile = async (req, res) => {
 export const getMyFiles = async (req, res) => {
   try {
     const userId = req.user.id;
-
-    const files = await File.find({ uploadedBy: userId })
-      .sort({ createdAt: -1 });
-
+    const files = await File.find({ uploadedBy: userId }).sort({ createdAt: -1 });
     res.status(200).json(files);
   } catch (error) {
     console.error("Get my files error:", error);
@@ -263,45 +285,24 @@ export const deleteFile = async (req, res) => {
     const userId = req.user.id;
 
     const file = await File.findById(fileId);
-    if (!file) {
-      return res.status(404).json({ message: "File not found." });
-    }
+    if (!file) return res.status(404).json({ message: "File not found." });
 
-    // Check if user owns this file
     if (file.uploadedBy.toString() !== userId) {
       return res.status(403).json({ message: "You do not have permission to delete this file." });
     }
 
-    // Delete from Cloudinary
     if (file.thumbnail?.public_id) {
-      try {
-        await cloudinary.uploader.destroy(file.thumbnail.public_id);
-      } catch (err) {
-        console.error("Error deleting thumbnail from Cloudinary:", err);
-      }
+      try { await cloudinary.uploader.destroy(file.thumbnail.public_id); } catch (err) { console.error(err); }
     }
-
     if (file.document?.public_id) {
-      try {
-        await cloudinary.uploader.destroy(file.document.public_id);
-      } catch (err) {
-        console.error("Error deleting document from Cloudinary:", err);
-      }
+      try { await cloudinary.uploader.destroy(file.document.public_id); } catch (err) { console.error(err); }
     }
 
-    // Delete from database
     await File.findByIdAndDelete(fileId);
 
-    // Remove from user's myFiles and savedFiles
     const User = (await import("../models/User.js")).default;
-    await User.updateMany(
-      { myFiles: fileId },
-      { $pull: { myFiles: fileId } }
-    );
-    await User.updateMany(
-      { savedFiles: fileId },
-      { $pull: { savedFiles: fileId } }
-    );
+    await User.updateMany({ myFiles: fileId }, { $pull: { myFiles: fileId } });
+    await User.updateMany({ savedFiles: fileId }, { $pull: { savedFiles: fileId } });
 
     res.status(200).json({ message: "File deleted successfully." });
   } catch (error) {
@@ -317,11 +318,8 @@ export const updateFile = async (req, res) => {
     const userId = req.user.id;
 
     const file = await File.findById(fileId);
-    if (!file) {
-      return res.status(404).json({ message: "File not found." });
-    }
+    if (!file) return res.status(404).json({ message: "File not found." });
 
-    // Check if user owns this file
     if (file.uploadedBy.toString() !== userId) {
       return res.status(403).json({ message: "You do not have permission to edit this file." });
     }
@@ -335,13 +333,10 @@ export const updateFile = async (req, res) => {
         tags: parsedTags,
         category: category || file.category,
       },
-      { returnDocument: 'after' }
+      { returnDocument: "after" }
     );
 
-    res.status(200).json({
-      message: "File updated successfully.",
-      file: updatedFile,
-    });
+    res.status(200).json({ message: "File updated successfully.", file: updatedFile });
   } catch (error) {
     console.error("Update file error:", error);
     res.status(500).json({ message: "Failed to update file.", error: error.message });
@@ -351,17 +346,194 @@ export const updateFile = async (req, res) => {
 export const getMyDownloads = async (req, res) => {
   try {
     const userId = req.user.id;
-
     const User = (await import("../models/User.js")).default;
-    const user = await User.findById(userId).populate('downloads');
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
-
+    const user = await User.findById(userId).populate("downloads");
+    if (!user) return res.status(404).json({ message: "User not found." });
     res.status(200).json(user.downloads || []);
   } catch (error) {
     console.error("Get downloads error:", error);
     res.status(500).json({ message: "Failed to fetch downloads.", error: error.message });
+  }
+};
+
+export const getFilePreview = async (req, res) => {
+  try {
+    const { fileId } = req.params;
+
+    // STEP 1: Fetch file from MongoDB
+    const file = await File.findById(fileId).populate("uploadedBy", "username");
+    if (!file || !file.document?.url) {
+      return res.status(404).json({ message: "File not found." });
+    }
+
+    const format = file.document.format?.toLowerCase() || "pdf";
+
+    // STEP 2: Return cached summary if exists
+    if (file.summary?.content) {
+      try {
+        const parsedSummary = JSON.parse(file.summary.content);
+        return res.status(200).json({
+          fileId: file._id,
+          title: file.title,
+          format,
+          uploadedBy: file.uploadedBy?.username,
+          downloadCount: file.downloadCount,
+          summary: {
+            overview: parsedSummary.overview || "Preview not available for this file.",
+            mainTopics: parsedSummary.mainTopics || [],
+            keyPoints: parsedSummary.keyPoints || [],
+            difficultyLevel: parsedSummary.difficultyLevel || "Unknown",
+          },
+          isCached: true,
+        });
+      } catch (parseErr) {
+        console.warn("Could not parse cached summary:", parseErr.message);
+      }
+    }
+
+    // STEP 3: Fetch file buffer from Cloudinary
+    let extractedText = "";
+    try {
+      const cloudinaryResponse = await fetch(file.document.url);
+      if (!cloudinaryResponse.ok) throw new Error("Failed to fetch file from Cloudinary");
+      const fileBuffer = Buffer.from(await cloudinaryResponse.arrayBuffer());
+
+      // STEP 4: Extract text based on format
+      if (format === "pdf") {
+        const tempFilePath = path.join(os.tmpdir(), `enotes_${Date.now()}.pdf`);
+        try {
+          console.log("[Preview] Attempting PDF extraction...");
+          fs.writeFileSync(tempFilePath, fileBuffer);
+          const ast = await officeparser.parseOffice(tempFilePath);
+          extractedText = (ast.toText() || "").trim();
+          console.log("[Preview] PDF extracted:", extractedText.length, "characters");
+        } catch (pdfErr) {
+          console.warn("PDF text extraction failed:", pdfErr.message);
+        } finally {
+          if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath);
+        }
+      } else if (format === "docx" || format === "doc") {
+        try {
+          console.log("[Preview] Attempting DOCX/DOC extraction...");
+          const result = await mammoth.extractRawText({ buffer: fileBuffer });
+          extractedText = (result.value || "").trim();
+          console.log("[Preview] DOCX/DOC extracted:", extractedText.length, "characters");
+        } catch (docErr) {
+          console.warn("DOCX/DOC text extraction failed:", docErr.message);
+        }
+      } else if (format === "pptx" || format === "ppt") {
+        const tempFilePath = path.join(os.tmpdir(), `enotes_${Date.now()}.pptx`);
+        try {
+          console.log("[Preview] Attempting PPT/PPTX extraction...");
+          fs.writeFileSync(tempFilePath, fileBuffer);
+          extractedText = (await parseOfficeToPText(tempFilePath)).trim();
+          console.log("[Preview] PPT/PPTX extracted:", extractedText.length, "characters");
+        } catch (pptErr) {
+          console.warn("PPT/PPTX text extraction failed:", pptErr.message);
+        } finally {
+          if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath);
+        }
+      }
+
+      // Limit to 3000 characters
+      extractedText = extractedText.substring(0, 3000).trim();
+      console.log("[Preview] Final extracted text:", extractedText.length, "characters");
+
+      if (!extractedText) {
+        throw new Error("No text could be extracted from the file");
+      }
+
+      // STEP 5: Send to Gemini
+      const geminiApiKey = process.env.GEMINI_API_KEY;
+      if (!geminiApiKey) throw new Error("GEMINI_API_KEY is not configured");
+
+      const genAI = new GoogleGenerativeAI(geminiApiKey);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+      const prompt = `You are a helpful study assistant. Analyze these academic notes and provide:
+1. A brief overview (2-3 sentences)
+2. Main topics covered (as a list)
+3. Key points to remember (5-7 bullet points)
+4. Difficulty level (Beginner/Intermediate/Advanced)
+
+Format your response as JSON with these exact keys:
+overview, mainTopics (array), keyPoints (array), difficultyLevel
+
+Notes content: ${extractedText}`;
+
+      const result = await model.generateContent(prompt);
+      const responseText = result.response.text();
+
+      let summaryData = {
+        overview: "Preview not available for this file.",
+        mainTopics: [],
+        keyPoints: [],
+        difficultyLevel: "Unknown",
+      };
+
+      try {
+        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsedResponse = JSON.parse(jsonMatch[0]);
+          summaryData = {
+            overview: parsedResponse.overview || summaryData.overview,
+            mainTopics: Array.isArray(parsedResponse.mainTopics) ? parsedResponse.mainTopics : [],
+            keyPoints: Array.isArray(parsedResponse.keyPoints) ? parsedResponse.keyPoints : [],
+            difficultyLevel: parsedResponse.difficultyLevel || summaryData.difficultyLevel,
+          };
+        }
+      } catch (jsonErr) {
+        console.warn("Could not parse Gemini response as JSON:", jsonErr.message);
+      }
+
+      // STEP 6: Cache summary in MongoDB
+      file.summary = {
+        content: JSON.stringify(summaryData),
+        generatedAt: new Date(),
+      };
+      await file.save();
+
+      // STEP 7: Return response
+      return res.status(200).json({
+        fileId: file._id,
+        title: file.title,
+        format,
+        uploadedBy: file.uploadedBy?.username,
+        downloadCount: file.downloadCount,
+        summary: summaryData,
+        isCached: false,
+      });
+    } catch (textExtractionErr) {
+      console.warn("Text extraction or Gemini call failed:", textExtractionErr.message);
+
+      return res.status(200).json({
+        fileId: file._id,
+        title: file.title,
+        format,
+        uploadedBy: file.uploadedBy?.username,
+        downloadCount: file.downloadCount,
+        summary: {
+          overview: "Preview not available for this file.",
+          mainTopics: [],
+          keyPoints: [],
+          difficultyLevel: "Unknown",
+        },
+        isCached: false,
+      });
+    }
+  } catch (error) {
+    console.error("Get preview error:", error);
+    return res.status(200).json({
+      fileId: req.params.fileId || "unknown",
+      title: "Unknown",
+      format: "unknown",
+      summary: {
+        overview: "Preview not available for this file.",
+        mainTopics: [],
+        keyPoints: [],
+        difficultyLevel: "Unknown",
+      },
+      isCached: false,
+    });
   }
 };

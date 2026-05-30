@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './MyFiles.css';
 import { useAuth } from '../../context/AuthContext';
 
 const MyFiles = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -197,7 +199,12 @@ const MyFiles = () => {
         {files.map((file) => (
           <div key={file._id} className="file-card">
             {/* Thumbnail */}
-            <div className="file-thumbnail">
+            <div 
+              className="file-thumbnail"
+              onClick={() => navigate(`/preview/${file._id}`)}
+              style={{ cursor: 'pointer' }}
+              title="Click to preview"
+            >
               {file.thumbnail?.url ? (
                 <img src={file.thumbnail.url} alt={file.title} />
               ) : (
