@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import Saved from "../../assets/saved-icon.svg";
 import Save_later from "../../assets/saved-bookmark-icon.svg";
+import { useSearchFilter } from '../../context/SearchFilterContext';
 
 const Home = () => {
   const navigate = useNavigate();
+  const { searchQuery, selectedCategory, resetFilters } = useSearchFilter();
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -145,6 +147,21 @@ const Home = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  // Filter files based on search query and selected category
+  const filteredFiles = files.filter(file => {
+    const matchesCategory = selectedCategory === 'All' || file.category === selectedCategory;
+
+    const searchLower = searchQuery.toLowerCase();
+    const matchesSearch = !searchLower || (
+      file.title.toLowerCase().includes(searchLower) ||
+      (file.tags && file.tags.some(tag => tag.toLowerCase().includes(searchLower))) ||
+      file.document?.format?.toLowerCase().includes(searchLower) ||
+      file.uploadedBy?.username?.toLowerCase().includes(searchLower)
+    );
+
+    return matchesCategory && matchesSearch;
+  });
+
   if (loading) {
     return (
       <div className="home-container">
@@ -171,6 +188,16 @@ const Home = () => {
     );
   }
 
+  if (filteredFiles.length === 0) {
+    return (
+      <div className="home-container">
+        <div className="no-files-found">
+          <p>No files found matching your search or filter.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="home-container">
       <div className="home-header">
@@ -179,10 +206,10 @@ const Home = () => {
       </div>
 
       <div className="files-grid">
-        {files.map((file) => (
+        {filteredFiles.map((file) => (
           <div key={file._id} className="file-card">
             {/* Thumbnail */}
-            <div 
+            <div
               className="file-thumbnail"
               onClick={() => navigate(`/preview/${file._id}`)}
               style={{ cursor: 'pointer' }}

@@ -12,29 +12,46 @@ import AuthCallback from "./Pages/AuthCallback";
 import MyFiles from "./Pages/MyFiles/MyFiles";
 import Downloads from "./Pages/Downloads/Downloads";
 import PreviewFile from "./components/PreviewFile/PreviewFile";
+import { SearchFilterProvider } from "./context/SearchFilterContext";
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="app">
-        <Navbar />
-        <div style={{ display: "flex" }}>
-          <Sidebar />
-          <main className="main-content">
-            <Routes>
-              <Route path='/' element={<Home/>}/>
-              <Route path='/auth/callback' element={<AuthCallback />} />
-              <Route path='/about' element={<About/>}/>
-              <Route path='/my-files' element={<MyFiles/>}/>
-              <Route path='/upload' element={<Upload/>}/>
-              <Route path='/downloads' element={<Downloads/>}/>
-              <Route path='/login' element={<LoginSignup/>}/>
-              <Route path='/saved-files' element={<SavedFiles/>}/>
-              <Route path='/preview/:fileId' element={<PreviewFile/>}/>
-            </Routes>
-          </main>
+      <SearchFilterProvider>
+        <div className="app">
+          <Navbar />
+          <div style={{ display: "flex" }}>
+            <Sidebar />
+            <main className="main-content">
+              <Routes>
+                <Route path='/' element={<Home/>}/>
+                <Route path='/auth/callback' element={<AuthCallback />} />
+                <Route path='/about' element={<About/>}/>
+                <Route path='/my-files' element={<MyFiles/>}/>
+                <Route path='/upload' element={<Upload/>}/>
+                <Route path='/downloads' element={<Downloads/>}/>
+                <Route path='/login' element={<LoginSignup/>}/>
+                <Route path='/saved-files' element={<SavedFiles/>}/>
+                <Route path='/preview/:fileId' element={<PreviewFile/>}/>
+              </Routes>
+            </main>
+            <aside className="ad-sidebar">
+              <div className="ad-slot-wrapper">
+                <div className="ad-label">Advertisement</div>
+                <div className="ad-slot" id="ad-slot-1">
+                  {/* Google Ad will go here */}
+                </div>
+              </div>
+              <div className="ad-slot-wrapper">
+                <div className="ad-label">Advertisement</div>
+                <div className="ad-slot" id="ad-slot-2">
+                  {/* Google Ad will go here */}
+                </div>
+              </div>
+            </aside>
+          </div>
         </div>
-      </div>
+      </SearchFilterProvider>
     </BrowserRouter>
   );
 }

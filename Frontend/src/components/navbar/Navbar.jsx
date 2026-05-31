@@ -4,9 +4,20 @@ import "./Navbar.css";
 import logo from "../../assets/E-Notes.png";
 import SearchIcon from "../../assets/Search.svg";
 import UploadIcon from "../../assets/FileUpload.svg";
+import { useSearchFilter } from "../../context/SearchFilterContext";
 
 const Navbar = () => {
   const categories = ["All", "Academic", "Technology", "Business", "Science", "Arts & Humanities", "Law", "Medical", "Other"];
+  const { searchQuery, setSearchQuery, selectedCategory, setSelectedCategory } = useSearchFilter();
+
+  const handleCategoryClick = (e, category) => {
+    e.preventDefault();
+    setSelectedCategory(category);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <nav className="navbar">
@@ -19,7 +30,13 @@ const Navbar = () => {
       <ul className="navbar__categories">
         {categories.map((cat) => (
           <li key={cat}>
-            <a href="#" className="navbar__cat-link">{cat}</a>
+            <a 
+              href="#" 
+              className={`navbar__cat-link ${selectedCategory === cat ? 'navbar__cat-link--active' : ''}`}
+              onClick={(e) => handleCategoryClick(e, cat)}
+            >
+              {cat}
+            </a>
           </li>
         ))}
       </ul>
@@ -30,6 +47,8 @@ const Navbar = () => {
             type="text"
             className="navbar__search"
             placeholder="Search..."
+            value={searchQuery}
+            onChange={handleSearchChange}
           />
           <button className="navbar__search-btn" aria-label="Search">
             <img src={SearchIcon} alt="Search" width="16" height="16" />

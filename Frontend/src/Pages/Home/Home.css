@@ -24,7 +24,8 @@
 
 .loading,
 .error-message,
-.empty-state {
+.empty-state,
+.no-files-found {
   text-align: center;
   padding: 3rem;
   font-size: 1.1rem;

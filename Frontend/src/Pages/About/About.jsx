@@ -1,7 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './About.css';
 
+
+
 const About = () => {
+  const [stats, setStats] = useState({ totalFiles: 0, totalDownloads: 0 });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/files');
+        const files = await res.json();
+        const totalFiles = files.length;
+        const totalDownloads = files.reduce((sum, f) => sum + (f.downloadCount || 0), 0);
+        setStats({ totalFiles, totalDownloads });
+      } catch (err) {
+        console.error("Stats fetch failed:", err);
+      }
+    };
+    fetchStats();
+  }, []);
+
   return (
     <div className="enotes-wrap">
 
@@ -12,20 +31,12 @@ const About = () => {
         <p>A community-driven platform where students, teachers, and learners upload, discover, and download notes on any topic — completely free.</p>
         <div className="hero-stats">
           <div className="stat">
-            <div className="stat-num">500+</div>
+            <div className="stat-num">{stats.totalFiles}</div>
             <div className="stat-label">Notes Uploaded</div>
           </div>
           <div className="stat">
-            <div className="stat-num">1200+</div>
+            <div className="stat-num">{stats.totalDownloads}</div>
             <div className="stat-label">Downloads</div>
-          </div>
-          <div className="stat">
-            <div className="stat-num">300+</div>
-            <div className="stat-label">Active Users</div>
-          </div>
-          <div className="stat">
-            <div className="stat-num">50+</div>
-            <div className="stat-label">Topics Covered</div>
           </div>
         </div>
       </div>
@@ -81,8 +92,8 @@ const About = () => {
                 <line x1="3" y1="9" x2="21" y2="9" />
               </svg>
             </div>
-            <h3>PDF Preview</h3>
-            <p>Read the full PDF content inline before choosing to download it.</p>
+            <h3>File Preview</h3>
+            <p>Get an AI-generated summary of any file before downloading it.</p>
           </div>
 
           <div className="feat-card">
@@ -105,17 +116,6 @@ const About = () => {
             <h3>Save Files</h3>
             <p>Bookmark your favourite notes and access them anytime from Saved Files.</p>
           </div>
-
-          <div className="feat-card">
-            <div className="feat-icon icon-green">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-              </svg>
-            </div>
-            <h3>Ratings & Reviews</h3>
-            <p>Rate files and read community reviews to find the best quality notes.</p>
-          </div>
-
         </div>
       </div>
 
@@ -216,38 +216,28 @@ const About = () => {
 
           <div className="contact-card">
             <div className="contact-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#ea4335" strokeWidth="2">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                 <polyline points="22,6 12,13 2,6" />
               </svg>
             </div>
             <div>
-              <h4>Email</h4>
-              <p>support@enotes.com</p>
+              <h4>Gmail</h4>
+              <p>support@gmail.com</p>
             </div>
           </div>
 
           <div className="contact-card">
             <div className="contact-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2">
-                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="#e1306c" strokeWidth="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="#e1306c" />
               </svg>
             </div>
             <div>
-              <h4>Twitter / X</h4>
+              <h4>Instagram</h4>
               <p>@enotesapp</p>
-            </div>
-          </div>
-
-          <div className="contact-card">
-            <div className="contact-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2">
-                <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
-              </svg>
-            </div>
-            <div>
-              <h4>Feedback</h4>
-              <p>Share suggestions</p>
             </div>
           </div>
 
