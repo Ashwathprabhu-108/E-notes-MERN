@@ -26,7 +26,15 @@ code {
 }
 @media (max-width: 800px) {
   .main-content {
-    margin-left: 0;    /* ← this is the gap killer */
+    margin-left: 0; 
+    margin-right: 0;  
+    width: 100%;
+  }
+}
+@media (max-width: 500px) {
+  .main-content {
+    margin-left: 0;
+    margin-right: 0;
     width: 100%;
   }
 }

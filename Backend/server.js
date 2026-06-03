@@ -6,6 +6,8 @@ import connectCloudinary from './config/cloudinary.js'
 import passport from "./config/passport.js"
 import authRoutes from "./routes/authRoutes.js"
 import fileRoutes from "./routes/files.js"
+import reportRoutes from "./routes/reportRoutes.js"
+import adminRoutes from "./routes/adminRoutes.js"
 
 // App config
 const app = express()
@@ -25,6 +27,8 @@ app.get('/', (req, res) => {
 app.use(passport.initialize());
 app.use("/api/auth", authRoutes);
 app.use("/api/files", fileRoutes);
+app.use("/api", reportRoutes);
+app.use("/api", adminRoutes);
 
 // Start the server
 app.listen(port, () => {

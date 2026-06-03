@@ -40,6 +40,11 @@ const userSchema = new mongoose.Schema({
         ref: "File" 
     }],
 
+    isDisabled: {
+        type: Boolean,
+        default: false,
+    },
+
 }, { timestamps: true })
 
 export default mongoose.model("User", userSchema);

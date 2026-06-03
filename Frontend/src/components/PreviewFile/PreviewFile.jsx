@@ -8,6 +8,11 @@ const PreviewFile = () => {
   const [preview, setPreview] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [showReportModal, setShowReportModal] = useState(false)
+  const [reportReason, setReportReason] = useState("")
+  const [reportDescription, setReportDescription] = useState("")
+  const [reportMessage, setReportMessage] = useState(null)
+  const [reportLoading, setReportLoading] = useState(false)
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"
   const token = localStorage.getItem('token')
 
@@ -60,6 +65,61 @@ const PreviewFile = () => {
         console.error("Download error:", err)
         alert('Failed to download file')
       }
+    }
+  }
+
+  const handleReportClick = () => {
+    if (!token) {
+      setReportMessage({ type: 'login', text: 'Please login to report this file' })
+      setTimeout(() => setReportMessage(null), 3000)
+      return
+    }
+    setShowReportModal(true)
+  }
+
+  const handleSubmitReport = async () => {
+    if (!reportReason) {
+      setReportMessage({ type: 'error', text: 'Please select a reason' })
+      return
+    }
+
+    setReportLoading(true)
+    try {
+      const response = await fetch(`${API_URL}/api/reports`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          fileId,
+          reason: reportReason,
+          description: reportDescription || undefined
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        if (response.status === 400 && data.message?.includes('already reported')) {
+          setShowReportModal(false)
+          setReportMessage({ type: 'warning', text: 'You have already reported this file.' })
+          setTimeout(() => setReportMessage(null), 3000)
+        } else {
+          setReportMessage({ type: 'error', text: data.message || 'Failed to submit report. Try again.' })
+        }
+      } else {
+        setShowReportModal(false)
+        setReportReason("")
+        setReportDescription("")
+        setReportMessage({ type: 'success', text: '✅ Report submitted successfully. Our team will review it.' })
+        setTimeout(() => setReportMessage(null), 4000)
+      }
+    } catch (err) {
+      console.error("Report submission error:", err)
+      setReportMessage({ type: 'error', text: 'Failed to submit report. Try again.' })
+    } finally {
+      setReportLoading(false)
     }
   }
 
@@ -131,11 +191,21 @@ const PreviewFile = () => {
           </div>
         </div>
         <div className="header-right">
+          <button className="report-btn" onClick={handleReportClick}>
+            🚩 Report
+          </button>
           <button className="download-btn" onClick={handleDownload}>
             ⬇️ Download Full File
           </button>
         </div>
       </div>
+
+      {/* Report Message */}
+      {reportMessage && (
+        <div className={`report-message report-message-${reportMessage.type}`}>
+          {reportMessage.text}
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="preview-content">
@@ -216,13 +286,103 @@ const PreviewFile = () => {
               {preview.isCached ? '⚡ Instant Preview' : '🔄 Freshly Generated'}
             </p>
           </div>
-
-          {/* Download Button */}
-          <button className="download-full-btn" onClick={handleDownload}>
-            📥 Download Now
-          </button>
         </div>
       </div>
+
+      {/* Report Modal */}
+      {showReportModal && (
+        <div className="report-modal-overlay" onClick={() => !reportLoading && setShowReportModal(false)}>
+          <div className="report-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Report File</h2>
+            <p className="subtitle">{preview.title}</p>
+
+            <div className="report-reasons">
+              <label className="report-reason-option">
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Inappropriate content"
+                  checked={reportReason === "Inappropriate content"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Inappropriate content</span>
+              </label>
+              <label className="report-reason-option">
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Copyright violation"
+                  checked={reportReason === "Copyright violation"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Copyright violation</span>
+              </label>
+              <label className="report-reason-option">
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Wrong category"
+                  checked={reportReason === "Wrong category"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Wrong category</span>
+              </label>
+              <label className="report-reason-option">
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Spam"
+                  checked={reportReason === "Spam"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Spam</span>
+              </label>
+              <label className="report-reason-option">
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Other"
+                  checked={reportReason === "Other"}
+                  onChange={(e) => setReportReason(e.target.value)}
+                />
+                <span>Other</span>
+              </label>
+            </div>
+
+            {reportReason === "Other" && (
+              <div className="report-description">
+                <textarea
+                  placeholder="Please describe the issue..."
+                  value={reportDescription}
+                  onChange={(e) => setReportDescription(e.target.value)}
+                  rows="4"
+                />
+              </div>
+            )}
+
+            {reportMessage && reportMessage.type === 'error' && (
+              <div className="report-modal-error">{reportMessage.text}</div>
+            )}
+
+            <div className="report-modal-buttons">
+              <button
+                className="cancel-btn"
+                onClick={() => setShowReportModal(false)}
+                disabled={reportLoading}
+              >
+                Cancel
+              </button>
+              <button
+                className="submit-report-btn"
+                onClick={handleSubmitReport}
+                disabled={!reportReason || reportLoading}
+              >
+                {reportLoading ? 'Submitting...' : 'Submit Report'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

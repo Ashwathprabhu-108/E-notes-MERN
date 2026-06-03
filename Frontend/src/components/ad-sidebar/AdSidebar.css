@@ -1,0 +1,88 @@
+.ad-sidebar {
+  width: 160px;
+  min-height: calc(100vh - var(--navbar-height));
+  background-color: #12122a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0 28px 0;
+  box-sizing: border-box;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  border-left: 1px solid #2e2a7a;
+  overflow-y: auto;
+}
+
+.ad-slot-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.ad-label {
+  font-size: 0.7rem;
+  color: #6b6283;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.ad-slot {
+  width: 130px;
+  flex: 1;  
+  height: 90%;
+  background: #1e1b4b;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9d8fd4;
+  font-size: 0.8rem;
+  border: 1px solid #2e2a7a;
+}
+
+/* ── 1280px ── */
+@media (max-width: 1280px) {
+  .ad-sidebar {
+    width: 140px;
+  }
+
+  .ad-slot {
+    width: 115px;
+    height: 260px;
+  }
+}
+
+/* ── 1024px ── */
+@media (max-width: 1024px) {
+  .ad-sidebar {
+    width: 120px;
+  }
+
+  .ad-slot {
+    width: 100px;
+    height: 220px;
+  }
+}
+
+@media (max-width: 800px) {
+  .ad-sidebar {
+    width: 100px;
+    overflow: hidden;
+  }
+
+  .ad-slot {
+    width: 80px;
+  }
+}
+
+@media (max-width: 500px) {
+  .ad-sidebar {
+    display: none;
+  }
+}

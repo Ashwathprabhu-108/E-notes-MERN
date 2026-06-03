@@ -13,6 +13,7 @@ const Home = () => {
   const [error, setError] = useState('');
   const [savedFiles, setSavedFiles] = useState([]);
   const [authToken, setAuthToken] = useState(localStorage.getItem('token'));
+  const [hoverTooltip, setHoverTooltip] = useState(null);
   const isAuthenticated = !!authToken;
 
   useEffect(() => {
@@ -72,13 +73,18 @@ const Home = () => {
   }, []);
 
   const handleDownload = async (fileId, fileName) => {
-    try {
-      const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      navigate('/login');
+      return;
+    }
 
+    try {
       const response = await fetch(`http://localhost:5000/api/files/download/${fileId}`, {
         method: 'GET',
         headers: {
-          ...(token && { 'Authorization': `Bearer ${token}` }),
+          'Authorization': `Bearer ${token}`,
         },
       });
 
@@ -104,14 +110,14 @@ const Home = () => {
   };
 
   const handleSaveLater = async (fileId) => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
     try {
-      const token = authToken;
-
-      if (!token) {
-        alert('Please log in to save files');
-        return;
-      }
-
       const fileIdString = String(fileId);
       const isSaved = savedFiles.some(id => String(id) === fileIdString);
       const endpoint = isSaved ? 'unsave' : 'save';
@@ -211,7 +217,14 @@ const Home = () => {
             {/* Thumbnail */}
             <div
               className="file-thumbnail"
-              onClick={() => navigate(`/preview/${file._id}`)}
+              onClick={() => {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                  navigate('/login');
+                } else {
+                  navigate(`/preview/${file._id}`);
+                }
+              }}
               style={{ cursor: 'pointer' }}
               title="Click to preview"
             >
@@ -257,26 +270,40 @@ const Home = () => {
 
               {/* Action Buttons */}
               <div className="file-actions">
-                <button
-                  className="download-btn"
-                  onClick={() => handleDownload(file._id, file.document.name)}
-                  title="Download this file"
-                >
-                  Download
-                </button>
+                <div className="action-button-wrapper">
+                  <button
+                    className="download-btn"
+                    onClick={() => handleDownload(file._id, file.document.name)}
+                    title="Download this file"
+                    onMouseEnter={() => !isAuthenticated && setHoverTooltip(`download-${file._id}`)}
+                    onMouseLeave={() => setHoverTooltip(null)}
+                  >
+                    Download
+                  </button>
+                  {!isAuthenticated && hoverTooltip === `download-${file._id}` && (
+                    <div className="login-tooltip">Login to download</div>
+                  )}
+                </div>
 
                 {/* Save Later Icon Placeholder */}
-                <button
-                  className="icon-btn save-later"
-                  title={savedFiles.some(id => String(id) === String(file._id)) ? "Remove from saved" : "Save for later"}
-                  onClick={() => handleSaveLater(file._id)}
-                >
-                  {savedFiles.some(id => String(id) === String(file._id)) ? (
-                    <img src={Save_later} alt="Saved" width="16" height="16" />
-                  ) : (
-                    <img src={Saved} alt="Save for later" width="16" height="16" />
+                <div className="action-button-wrapper">
+                  <button
+                    className="icon-btn save-later"
+                    title={savedFiles.some(id => String(id) === String(file._id)) ? "Remove from saved" : "Save for later"}
+                    onClick={() => handleSaveLater(file._id)}
+                    onMouseEnter={() => !isAuthenticated && setHoverTooltip(`save-${file._id}`)}
+                    onMouseLeave={() => setHoverTooltip(null)}
+                  >
+                    {savedFiles.some(id => String(id) === String(file._id)) ? (
+                      <img src={Save_later} alt="Saved" width="16" height="16" />
+                    ) : (
+                      <img src={Saved} alt="Save for later" width="16" height="16" />
+                    )}
+                  </button>
+                  {!isAuthenticated && hoverTooltip === `save-${file._id}` && (
+                    <div className="login-tooltip">Login to save</div>
                   )}
-                </button>
+                </div>
               </div>
             </div>
           </div>

@@ -237,6 +237,47 @@
   /* Placeholder for saved files icon */
 }
 
+/* Action Button Wrapper with Tooltip */
+.action-button-wrapper {
+  position: relative;
+  display: flex;
+  flex: 1;
+}
+
+.action-button-wrapper .download-btn {
+  width: 100%;
+}
+
+.login-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2e2a7a;
+  color: #9d8fd4;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-bottom: 0.5rem;
+  border: 1px solid #3d3a8f;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: tooltipSlideUp 0.2s ease-out;
+  z-index: 10;
+}
+
+@keyframes tooltipSlideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .home-container {

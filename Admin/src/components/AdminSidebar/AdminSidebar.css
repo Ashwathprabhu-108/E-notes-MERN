@@ -1,0 +1,223 @@
+.sidebar {
+  width: 200px;
+  min-height: calc(95vh - var(--navbar-height));
+  background-color: #12122a;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 0 28px 0;
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  transition: width 0.3s ease, transform 0.3s ease;
+  z-index: 100;
+}
+
+.sidebar__nav {
+  flex: 1;
+}
+
+.sidebar__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar__links li {
+  width: 100%;
+}
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  color: #ccc;
+  text-decoration: none;
+  font-size: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 400;
+  transition: color 0.2s, background 0.2s;
+  border-left: 3px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar__link:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar__link--active {
+  color: #5dc46a;
+  border-left: 3px solid #5dc46a;
+  font-weight: 500;
+}
+
+.sidebar__footer {
+  padding: 0 20px;
+}
+
+.sidebar__signin-btn {
+  width: 100%;
+  background-color: #6b4fc8;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+  transition: background 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar__signin-btn:hover {
+  background-color: #7d62d8;
+}
+
+.sidebar__username {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: #ccc;         /* adjust to match your theme */
+  text-align: center;
+}
+
+.sidebar__signin-btn.logout {
+  background-color: #e53e3e;  /* red for logout */
+}
+
+.sidebar__signin-btn.logout:hover {
+  background-color: #c53030;
+}
+
+/* ── 1280px ── */
+@media (max-width: 1280px) {
+  .sidebar {
+    width: 180px;
+  }
+
+  .sidebar__link {
+    font-size: 18px;
+    padding: 13px 24px;
+  }
+
+  .sidebar__footer {
+    padding: 0 18px;
+  }
+
+  .sidebar__signin-btn {
+    font-size: 13px;
+    padding: 11px 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 160px;
+  }
+
+  .sidebar__link {
+    font-size: 16px;
+    padding: 12px 20px;
+    gap: 8px;
+  }
+
+  .sidebar__footer {
+    padding: 0 14px;
+  }
+
+  .sidebar__signin-btn {
+    font-size: 13px;
+    padding: 10px 0;
+    border-radius: 7px;
+  }
+}
+
+@media (max-width: 800px) {
+  .sidebar {
+    width: 100px;
+    top: 120px;
+  }
+
+  .sidebar__link {
+    padding: 14px 8px;
+    justify-content: center;
+    font-size: 11px;
+    text-align: center;
+    gap: 0;
+    white-space: normal;
+    line-height: 1.2;
+  }
+
+  .sidebar__footer {
+    padding: 0 8px;
+  }
+
+  .sidebar__signin-btn {
+    font-size: 10px;
+    padding: 10px 4px;
+    border-radius: 6px;
+    letter-spacing: 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    height: 56px;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 10px;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .sidebar__nav {
+    flex: 1;
+  }
+
+  .sidebar__links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  .sidebar__links li {
+    width: auto;
+  }
+
+  .sidebar__link {
+    padding: 8px 10px;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    font-size: 9px;
+    justify-content: center;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .sidebar__link--active {
+    border-left: none;
+    border-bottom: 3px solid #5dc46a;
+  }
+
+  .sidebar__footer {
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .sidebar__signin-btn {
+    width: auto;
+    padding: 8px 10px;
+    font-size: 9px;
+    border-radius: 6px;
+  }
+}

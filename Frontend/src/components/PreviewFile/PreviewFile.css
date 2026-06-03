@@ -406,54 +406,6 @@
   align-items: center;
   gap: 8px;
 }
-
-.ai-icon {
-  font-size: 18px;
-}
-
-.ai-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #7c3aed;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.ai-badge {
-  font-size: 12px;
-  color: #9d5dff;
-  margin: 8px 0 0 0;
-  padding: 6px 10px;
-  background: rgba(124, 58, 237, 0.15);
-  border-radius: 4px;
-  text-align: center;
-}
-
-/* ========== DOWNLOAD BUTTON ========== */
-.download-full-btn {
-  padding: 12px 16px;
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s;
-  width: 100%;
-  margin-top: auto;
-}
-
-.download-full-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.3);
-}
-
-.download-full-btn:active {
-  transform: translateY(0);
-}
-
-/* ========== RESPONSIVE DESIGN ========== */
 @media (max-width: 1024px) {
   .preview-content {
     gap: 16px;
@@ -644,11 +596,6 @@
   .ai-badge {
     font-size: 11px;
   }
-
-  .download-full-btn {
-    padding: 10px 14px;
-    font-size: 13px;
-  }
 }
 
 /* ========== SCROLLBAR STYLING ========== */
@@ -666,5 +613,283 @@
 }
 
 .preview-content::-webkit-scrollbar-thumb:hover {
+  background: #6d28d9;
+}
+
+/* ========== REPORT BUTTON ========== */
+.report-btn {
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.report-btn:hover {
+  background: #ef4444;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* ========== REPORT MESSAGE ========== */
+.report-message {
+  padding: 12px 24px;
+  margin: 12px 24px 0;
+  border-radius: 6px;
+  font-size: 14px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.report-message-success {
+  background: #10b981;
+  color: white;
+}
+
+.report-message-error {
+  background: #ef4444;
+  color: white;
+}
+
+.report-message-warning {
+  background: #f59e0b;
+  color: white;
+}
+
+.report-message-login {
+  background: #ef4444;
+  color: white;
+  font-size: 13px;
+}
+
+/* ========== REPORT MODAL ========== */
+.report-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.report-modal {
+  background: #1a1a2e;
+  border: 1px solid #2d2d44;
+  border-radius: 8px;
+  padding: 28px;
+  max-width: 450px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.report-modal h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px 0;
+}
+
+.report-modal .subtitle {
+  font-size: 14px;
+  color: #888;
+  margin: 0 0 24px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ========== REPORT REASONS ========== */
+.report-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.report-reason-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.report-reason-option:hover {
+  background: rgba(124, 58, 237, 0.1);
+  border-color: #7c3aed;
+}
+
+.report-reason-option input[type="radio"] {
+  cursor: pointer;
+  accent-color: #ef4444;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.report-reason-option span {
+  font-size: 14px;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.report-reason-option input[type="radio"]:checked + span {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ========== REPORT DESCRIPTION ========== */
+.report-description {
+  margin-bottom: 20px;
+}
+
+.report-description textarea {
+  width: 100%;
+  padding: 12px;
+  background: #0d0d1a;
+  border: 1px solid #2d2d44;
+  border-radius: 6px;
+  color: #ccc;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: all 0.2s;
+}
+
+.report-description textarea:focus {
+  outline: none;
+  border-color: #7c3aed;
+  background: #1a1a2e;
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+/* ========== REPORT MODAL ERROR ========== */
+.report-modal-error {
+  background: #ef4444;
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* ========== REPORT MODAL BUTTONS ========== */
+.report-modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancel-btn {
+  padding: 10px 20px;
+  background: #2d2d44;
+  color: #ccc;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: #3d3d54;
+  color: #fff;
+}
+
+.cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submit-report-btn {
+  padding: 10px 20px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.submit-report-btn:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.submit-report-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ========== MODAL SCROLLBAR ========== */
+.report-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.report-modal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.report-modal::-webkit-scrollbar-thumb {
+  background: #7c3aed;
+  border-radius: 3px;
+}
+
+.report-modal::-webkit-scrollbar-thumb:hover {
   background: #6d28d9;
 }
