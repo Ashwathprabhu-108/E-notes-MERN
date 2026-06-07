@@ -20,7 +20,7 @@ router.get("/my-files", protect, getMyFiles);
 
 router.get("/my-downloads", protect, getMyDownloads);
 
-router.get("/preview/:fileId", getFilePreview);
+router.get("/preview/:fileId", optionalAuth, getFilePreview);
 
 router.get("/download/:fileId", optionalAuth, downloadFile);
 

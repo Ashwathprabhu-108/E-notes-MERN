@@ -7,5 +7,15 @@ export default defineConfig({
   server: {
     port: 5174,
     host: 'localhost'
-  }
+  },
+  optimizeDeps: {
+    include: [
+      'recharts',
+      'recharts/es6/component/ResponsiveContainer',
+      'victory-vendor/d3-scale',
+      'victory-vendor/d3-shape',
+      'victory-vendor/d3-path',
+    ],
+  },
 })
+

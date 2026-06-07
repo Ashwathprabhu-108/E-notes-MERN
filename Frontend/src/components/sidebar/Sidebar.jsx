@@ -24,18 +24,20 @@ const Sidebar = () => {
     <aside className="sidebar">
       <nav className="sidebar__nav">
         <ul className="sidebar__links">
-          {navLinks.map((link) => (
-            <li key={link.label}>
-              <NavLink
-                to={link.to}
-                className={({ isActive }) =>
-                  `sidebar__link ${isActive ? "sidebar__link--active" : ""}`
-                }
-              >
-                {link.label}
-              </NavLink>
-            </li>
-          ))}
+          {navLinks
+            .filter(link => !user?.isDisabled || link.to === "/" || link.to === "/about")
+            .map((link) => (
+              <li key={link.label}>
+                <NavLink
+                  to={link.to}
+                  className={({ isActive }) =>
+                    `sidebar__link ${isActive ? "sidebar__link--active" : ""}`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              </li>
+            ))}
         </ul>
       </nav>
 

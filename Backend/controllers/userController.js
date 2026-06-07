@@ -27,7 +27,7 @@ export const signUp = async (req, res) => {
         });
 
         const token = jwt.sign(
-            { id: newUser._id, username: newUser.username },
+            { id: newUser._id, username: newUser.username, isDisabled: newUser.isDisabled },
             process.env.JWT_SECRET,
             { expiresIn: "7d" }
         );
@@ -39,6 +39,7 @@ export const signUp = async (req, res) => {
                 id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
+                isDisabled: newUser.isDisabled,
             },
         });
 
@@ -67,7 +68,7 @@ export const signIn = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user._id, username: user.username },
+            { id: user._id, username: user.username, isDisabled: user.isDisabled },
             process.env.JWT_SECRET,
             { expiresIn: "7d" }
         );
@@ -79,6 +80,7 @@ export const signIn = async (req, res) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
+                isDisabled: user.isDisabled,
             },
         });
 
@@ -105,6 +107,7 @@ export const getCurrentUser = async (req, res) => {
             username: user.username,
             email: user.email,
             savedFiles: user.savedFiles.map(file => file._id.toString()),
+            isDisabled: user.isDisabled,
         });
 
     } catch (error) {

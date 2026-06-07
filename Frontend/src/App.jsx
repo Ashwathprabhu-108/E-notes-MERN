@@ -12,14 +12,19 @@ import AuthCallback from "./Pages/AuthCallback";
 import MyFiles from "./Pages/MyFiles/MyFiles";
 import Downloads from "./Pages/Downloads/Downloads";
 import PreviewFile from "./components/PreviewFile/PreviewFile";
+import ResetPassword from "./Pages/ResetPassword/ResetPassword";
 import { SearchFilterProvider } from "./context/SearchFilterContext";
 import AdSidebar from "./components/ad-sidebar/AdSidebar";
+import { useAuth } from "./context/AuthContext";
 
-// Protected Route Component
 const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
   const token = localStorage.getItem('token');
   if (!token) {
     return <Navigate to="/login" replace />;
+  }
+  if (user?.isDisabled) {
+    return <Navigate to="/" replace />;
   }
   return children;
 };
@@ -43,6 +48,7 @@ function App() {
                 <Route path='/login' element={<LoginSignup/>}/>
                 <Route path='/saved-files' element={<ProtectedRoute><SavedFiles/></ProtectedRoute>}/>
                 <Route path='/preview/:fileId' element={<ProtectedRoute><PreviewFile/></ProtectedRoute>}/>
+                <Route path='/reset-password/:token' element={<ResetPassword/>}/>
               </Routes>
             </main>
             <AdSidebar />

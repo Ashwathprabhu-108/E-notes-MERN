@@ -4,9 +4,11 @@ import './Home.css';
 import Saved from "../../assets/saved-icon.svg";
 import Save_later from "../../assets/saved-bookmark-icon.svg";
 import { useSearchFilter } from '../../context/SearchFilterContext';
+import { useAuth } from '../../context/AuthContext';
 
 const Home = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { searchQuery, selectedCategory, resetFilters } = useSearchFilter();
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -73,6 +75,10 @@ const Home = () => {
   }, []);
 
   const handleDownload = async (fileId, fileName) => {
+    if (user?.isDisabled) {
+      alert("Your account has been disabled. Contact support.");
+      return;
+    }
     const token = localStorage.getItem('token');
     
     if (!token) {
@@ -110,6 +116,10 @@ const Home = () => {
   };
 
   const handleSaveLater = async (fileId) => {
+    if (user?.isDisabled) {
+      alert("Your account has been disabled. Contact support.");
+      return;
+    }
     const token = localStorage.getItem('token');
 
     if (!token) {
@@ -221,6 +231,8 @@ const Home = () => {
                 const token = localStorage.getItem('token');
                 if (!token) {
                   navigate('/login');
+                } else if (user?.isDisabled) {
+                  alert("Your account has been disabled. Contact support.");
                 } else {
                   navigate(`/preview/${file._id}`);
                 }

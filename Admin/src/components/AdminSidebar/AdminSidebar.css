@@ -1,6 +1,6 @@
 .sidebar {
-  width: 200px;
-  min-height: calc(95vh - var(--navbar-height));
+  width: var(--sidebar-width, 200px);
+  height: calc(100vh - var(--navbar-height, 70px));
   background-color: #12122a;
   display: flex;
   flex-direction: column;
@@ -9,9 +9,11 @@
   box-sizing: border-box;
   position: fixed;
   left: 0;
-  bottom: 0;
-  transition: width 0.3s ease, transform 0.3s ease;
+  top: var(--navbar-height, 70px);
+  border-right: 1px solid #1e1c4a;
+  transition: width 0.3s ease;
   z-index: 100;
+  overflow-y: auto;
 }
 
 .sidebar__nav {
@@ -59,9 +61,9 @@
   padding: 0 20px;
 }
 
-.sidebar__signin-btn {
+.logout-btn {
   width: 100%;
-  background-color: #6b4fc8;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -70,37 +72,24 @@
   font-weight: 600;
   cursor: pointer;
   font-family: 'Segoe UI', sans-serif;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
   white-space: nowrap;
   overflow: hidden;
+  letter-spacing: 0.3px;
 }
 
-.sidebar__signin-btn:hover {
-  background-color: #7d62d8;
+.logout-btn:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
 }
 
-.sidebar__username {
-  display: block;
-  font-size: 0.85rem;
-  margin-bottom: 8px;
-  color: #ccc;         /* adjust to match your theme */
-  text-align: center;
-}
-
-.sidebar__signin-btn.logout {
-  background-color: #e53e3e;  /* red for logout */
-}
-
-.sidebar__signin-btn.logout:hover {
-  background-color: #c53030;
+.logout-btn:active {
+  transform: scale(0.98);
 }
 
 /* ── 1280px ── */
 @media (max-width: 1280px) {
-  .sidebar {
-    width: 180px;
-  }
-
   .sidebar__link {
     font-size: 18px;
     padding: 13px 24px;
@@ -117,10 +106,6 @@
 }
 
 @media (max-width: 1024px) {
-  .sidebar {
-    width: 160px;
-  }
-
   .sidebar__link {
     font-size: 16px;
     padding: 12px 20px;
@@ -139,11 +124,6 @@
 }
 
 @media (max-width: 800px) {
-  .sidebar {
-    width: 100px;
-    top: 120px;
-  }
-
   .sidebar__link {
     padding: 14px 8px;
     justify-content: center;
@@ -169,7 +149,6 @@
 @media (max-width: 500px) {
   .sidebar {
     width: 100%;
-    min-height: auto;
     height: 56px;
     flex-direction: row;
     align-items: center;
@@ -178,6 +157,8 @@
     bottom: 0;
     left: 0;
     right: 0;
+    border-right: none;
+    border-top: 1px solid #1e1c4a;
   }
 
   .sidebar__nav {
@@ -206,7 +187,7 @@
 
   .sidebar__link--active {
     border-left: none;
-    border-bottom: 3px solid #5dc46a;
+    border-bottom: 3px solid #7c3aed;
   }
 
   .sidebar__footer {
@@ -214,7 +195,7 @@
     flex-shrink: 0;
   }
 
-  .sidebar__signin-btn {
+  .logout-btn {
     width: auto;
     padding: 8px 10px;
     font-size: 9px;

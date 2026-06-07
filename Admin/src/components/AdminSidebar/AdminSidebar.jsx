@@ -9,11 +9,12 @@ const navLinks = [
   { label: "Reports", to: "/admin/reports" },
 ];
 
-const AdminSidebar = () => {
+const AdminSidebar = ({ onLogout }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
+    if (onLogout) onLogout();
     navigate("/admin/login", { replace: true });
   };
 

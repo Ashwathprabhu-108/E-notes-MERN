@@ -35,12 +35,14 @@ const AdminReports = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        `http://localhost:5000/api/admin/reports/${reportId}/resolve`,
+        `http://localhost:5000/api/admin/reports/${reportId}/status`,
         {
           method: "PATCH",
           headers: {
             "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
+          body: JSON.stringify({ status: "reviewed" }),
         }
       );
 
@@ -48,7 +50,7 @@ const AdminReports = () => {
       
       setReports(
         reports.map((r) =>
-          r._id === reportId ? { ...r, resolved: true } : r
+          r._id === reportId ? { ...r, status: "reviewed" } : r
         )
       );
     } catch (err) {
@@ -115,11 +117,11 @@ const AdminReports = () => {
         ) : (
           <div className="reports-list">
             {reports.map((report) => (
-              <div key={report._id} className={`report-card ${report.resolved ? "resolved" : "pending"}`}>
+              <div key={report._id} className={`report-card ${report.status === "reviewed" || report.status === "dismissed" ? "resolved" : "pending"}`}>
                 <div className="report-header">
                   <div className="report-title">
-                    <h3>{report.subject || "Report"}</h3>
-                    {getStatusBadge(report.resolved)}
+                    <h3>{report.reportedFile?.title || "Unknown File"}</h3>
+                    {getStatusBadge(report.status === "reviewed" || report.status === "dismissed")}
                   </div>
                   <span className="report-date">{formatDate(report.createdAt)}</span>
                 </div>
@@ -127,7 +129,11 @@ const AdminReports = () => {
                 <div className="report-details">
                   <div className="detail-row">
                     <span className="label">Reported File:</span>
-                    <span className="value">{report.fileId?.filename || "Unknown"}</span>
+                    <span className="value">{report.reportedFile?.title || "Unknown"}</span>
+                  </div>
+                  <div className="detail-row">
+                    <span className="label">File Owner:</span>
+                    <span className="value">{report.reportedFile?.uploadedBy?.username || "Unknown"} ({report.reportedFile?.uploadedBy?.email || "no email"})</span>
                   </div>
                   <div className="detail-row">
                     <span className="label">Reported By:</span>
@@ -144,7 +150,7 @@ const AdminReports = () => {
                 </div>
 
                 <div className="report-actions">
-                  {!report.resolved && (
+                  {report.status === "pending" && (
                     <button
                       className="resolve-btn"
                       onClick={() => handleMarkResolved(report._id)}

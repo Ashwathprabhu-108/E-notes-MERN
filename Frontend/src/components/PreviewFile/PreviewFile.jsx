@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import "./PreviewFile.css"
+import { useAuth } from '../../context/AuthContext'
 
 const PreviewFile = () => {
   const { fileId } = useParams()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [preview, setPreview] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -23,9 +25,14 @@ const PreviewFile = () => {
   const fetchPreview = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`${API_URL}/api/files/preview/${fileId}`)
+      const headers = {}
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+      const response = await fetch(`${API_URL}/api/files/preview/${fileId}`, { headers })
       if (!response.ok) {
-        throw new Error('Failed to load preview')
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.message || 'Failed to load preview')
       }
       const data = await response.json()
       setPreview(data)
@@ -38,6 +45,10 @@ const PreviewFile = () => {
   }
 
   const handleDownload = async () => {
+    if (user?.isDisabled) {
+      alert("Your account has been disabled. Contact support.");
+      return;
+    }
     if (preview) {
       try {
         const headers = {}
@@ -69,6 +80,10 @@ const PreviewFile = () => {
   }
 
   const handleReportClick = () => {
+    if (user?.isDisabled) {
+      alert("Your account has been disabled. Contact support.");
+      return;
+    }
     if (!token) {
       setReportMessage({ type: 'login', text: 'Please login to report this file' })
       setTimeout(() => setReportMessage(null), 3000)

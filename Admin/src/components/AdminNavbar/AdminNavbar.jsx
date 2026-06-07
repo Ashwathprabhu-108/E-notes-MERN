@@ -2,11 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminNavbar.css";
 
-const AdminNavbar = () => {
+const AdminNavbar = ({ onLogout }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
+    if (onLogout) onLogout();
     navigate("/admin/login", { replace: true });
   };
 

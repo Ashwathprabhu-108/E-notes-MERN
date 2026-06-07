@@ -254,6 +254,108 @@ router.patch("/admin/reports/:reportId/status", verifyAdminToken, async (req, re
   }
 });
 
+// ========== GET ALL FILES ==========
+router.get("/admin/files", verifyAdminToken, async (req, res) => {
+  try {
+    const files = await File.find()
+      .populate("uploadedBy", "username email")
+      .select("_id title category thumbnail document downloadCount uploadedBy createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    // Attach report count for each file
+    const filesWithReports = await Promise.all(
+      files.map(async (file) => {
+        const reportCount = await Report.countDocuments({ reportedFile: file._id });
+        return {
+          _id: file._id,
+          title: file.title,
+          category: file.category,
+          format: file.document?.format || "unknown",
+          thumbnail: file.thumbnail?.url || null,
+          downloadCount: file.downloadCount || 0,
+          uploadedBy: file.uploadedBy?.username || "Unknown",
+          uploaderEmail: file.uploadedBy?.email || "",
+          reportCount,
+          createdAt: file.createdAt,
+        };
+      })
+    );
+
+    return res.status(200).json(filesWithReports);
+  } catch (error) {
+    console.error("Get all files error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// ========== GET ALL REPORTS ==========
+router.get("/admin/reports", verifyAdminToken, async (req, res) => {
+  try {
+    const reports = await Report.find()
+      .populate({
+        path: "reportedFile",
+        select: "title uploadedBy",
+        populate: { path: "uploadedBy", select: "username email" },
+      })
+      .populate("reportedBy", "username email")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return res.status(200).json(reports);
+  } catch (error) {
+    console.error("Get all reports error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// ========== DELETE REPORT ==========
+router.delete("/admin/reports/:reportId", verifyAdminToken, async (req, res) => {
+  try {
+    const { reportId } = req.params;
+    const report = await Report.findByIdAndDelete(reportId);
+    if (!report) return res.status(404).json({ message: "Report not found" });
+    return res.status(200).json({ message: "Report deleted successfully" });
+  } catch (error) {
+    console.error("Delete report error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// ========== GET CHART STATS (last 6 months) ==========
+router.get("/admin/chart-stats", verifyAdminToken, async (req, res) => {
+  try {
+    const months = [];
+    const now = new Date();
+
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const start = new Date(date.getFullYear(), date.getMonth(), 1);
+      const end   = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
+
+      const label = date.toLocaleString("default", { month: "short", year: "2-digit" });
+
+      const [uploads, newUsers, reports] = await Promise.all([
+        File.countDocuments({ createdAt: { $gte: start, $lte: end } }),
+        User.countDocuments({ createdAt: { $gte: start, $lte: end } }),
+        Report.countDocuments({ createdAt: { $gte: start, $lte: end } }),
+      ]);
+
+      // Sum downloads for files uploaded this month
+      const filesThisMonth = await File.find({ createdAt: { $gte: start, $lte: end } })
+        .select("downloadCount").lean();
+      const downloads = filesThisMonth.reduce((sum, f) => sum + (f.downloadCount || 0), 0);
+
+      months.push({ month: label, uploads, downloads, newUsers, reports });
+    }
+
+    return res.status(200).json(months);
+  } catch (error) {
+    console.error("Chart stats error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // ========== GET ADMIN STATS ==========
 router.get("/admin/stats", verifyAdminToken, async (req, res) => {
   try {
@@ -262,22 +364,34 @@ router.get("/admin/stats", verifyAdminToken, async (req, res) => {
     const totalReports = await Report.countDocuments();
     const pendingReports = await Report.countDocuments({ status: "pending" });
 
-    // Calculate total downloads
     const filesWithDownloads = await File.find().select("downloadCount").lean();
     const totalDownloads = filesWithDownloads.reduce(
-      (sum, file) => sum + (file.downloadCount || 0),
-      0
+      (sum, file) => sum + (file.downloadCount || 0), 0
     );
 
-    return res.status(200).json({
-      totalUsers,
-      totalFiles,
-      totalDownloads,
-      totalReports,
-      pendingReports,
-    });
+    return res.status(200).json({ totalUsers, totalFiles, totalDownloads, totalReports, pendingReports });
   } catch (error) {
     console.error("Get admin stats error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// ========== GET CATEGORY DISTRIBUTION ==========
+router.get("/admin/category-stats", verifyAdminToken, async (req, res) => {
+  try {
+    const result = await File.aggregate([
+      { $group: { _id: "$category", count: { $sum: 1 }, downloads: { $sum: "$downloadCount" } } },
+      { $sort: { count: -1 } },
+      { $limit: 8 },
+    ]);
+    const data = result.map((r) => ({
+      name: r._id || "Uncategorized",
+      files: r.count,
+      downloads: r.downloads || 0,
+    }));
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error("Category stats error:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 });

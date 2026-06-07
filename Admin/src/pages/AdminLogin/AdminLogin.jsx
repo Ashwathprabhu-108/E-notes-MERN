@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminLogin.css";
 
-const AdminLogin = () => {
+const AdminLogin = ({ onLogin }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,11 +10,9 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // If already logged in, redirect to dashboard
-    const token = localStorage.getItem("adminToken");
-    if (token) {
-      navigate("/admin/dashboard", { replace: true });
-    }
+    // Clear any stale token so login page always shows fresh
+    // (do not auto-redirect, let user explicitly log in)
+    return () => {};
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -40,6 +38,7 @@ const AdminLogin = () => {
 
       // Store token and redirect
       localStorage.setItem("adminToken", data.token);
+      if (onLogin) onLogin();
       navigate("/admin/dashboard", { replace: true });
     } catch (err) {
       console.error("Login error:", err);

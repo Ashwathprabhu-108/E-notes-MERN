@@ -8,181 +8,256 @@ const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [search, setSearch] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
+  const [togglingId, setTogglingId] = useState(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  useEffect(() => { fetchUsers(); }, []);
 
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const response = await fetch("http://localhost:5000/api/admin/users", {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        },
+      const res = await fetch("http://localhost:5000/api/admin/users", {
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      if (!response.ok) throw new Error("Failed to fetch users");
-      const data = await response.json();
-      setUsers(data);
+      if (!res.ok) throw new Error("Failed to fetch users");
+      setUsers(await res.json());
     } catch (err) {
-      console.error("Fetch users error:", err);
-      setError("Failed to load users");
+      setError("Failed to load users. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleToggleDisable = async (userId, currentStatus) => {
+    setTogglingId(userId);
     try {
       const token = localStorage.getItem("adminToken");
-      const response = await fetch(
-        `http://localhost:5000/api/admin/users/${userId}/disable`,
-        {
-          method: "PATCH",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to update user");
-      const updatedUser = await response.json();
-      
-      setUsers(
-        users.map((u) =>
-          u._id === userId ? updatedUser.user : u
-        )
-      );
-    } catch (err) {
-      console.error("Toggle disable error:", err);
+      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/disable`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error();
+      const updated = await res.json();
+      setUsers(users.map((u) => (u._id === userId ? updated.user : u)));
+    } catch {
       alert("Failed to update user status");
+    } finally {
+      setTogglingId(null);
     }
   };
 
   const handleDeleteUser = async (userId) => {
+    setDeletingId(userId);
     try {
       const token = localStorage.getItem("adminToken");
-      const response = await fetch(
-        `http://localhost:5000/api/admin/users/${userId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to delete user");
-      
+      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error();
       setUsers(users.filter((u) => u._id !== userId));
       setConfirmDelete(null);
-    } catch (err) {
-      console.error("Delete user error:", err);
+    } catch {
       alert("Failed to delete user");
+    } finally {
+      setDeletingId(null);
     }
   };
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "short", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+  const formatDate = (d) =>
+    new Date(d).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+
+  const getInitials = (name = "") =>
+    name.slice(0, 2).toUpperCase();
+
+  // Avatar colour from username hash
+  const avatarColor = (name = "") => {
+    const colors = ["#7c3aed", "#4f46e5", "#0ea5e9", "#10b981", "#f59e0b", "#ef4444", "#ec4899"];
+    let hash = 0;
+    for (let c of name) hash = c.charCodeAt(0) + ((hash << 5) - hash);
+    return colors[Math.abs(hash) % colors.length];
   };
 
-  if (loading) {
+  const highlightMatch = (text, query) => {
+    if (!query) return text;
+    const idx = text.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return text;
     return (
-      <div className="admin-users">
-        <div className="loading">Loading users...</div>
-      </div>
+      <>
+        {text.slice(0, idx)}
+        <mark className="search-highlight">{text.slice(idx, idx + query.length)}</mark>
+        {text.slice(idx + query.length)}
+      </>
     );
-  }
+  };
+
+  const filteredUsers = users.filter((u) => {
+    const q = search.toLowerCase();
+    return u.username.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+  });
+
+  const activeCount   = users.filter((u) => !u.isDisabled).length;
+  const disabledCount = users.filter((u) =>  u.isDisabled).length;
+
+  if (loading) return (
+    <div className="au-root">
+      <div className="au-loader">
+        <div className="au-spinner" />
+        <p>Loading users…</p>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="admin-users">
-      <div className="users-container">
-        <h1>Manage Users</h1>
-        <p className="subtitle">Total Users: {users.length}</p>
+    <div className="au-root">
+      <div className="au-container">
 
-        {error && <div className="error-message">{error}</div>}
+        {/* ── Page Header ───────────────────────────────────── */}
+        <div className="au-page-header">
+          <div className="au-page-title">
+            <div className="au-title-icon">👥</div>
+            <div>
+              <h1>Manage Users</h1>
+              <p className="au-breadcrumb">Admin Panel · User Management</p>
+            </div>
+          </div>
 
-        <div className="users-table-wrapper">
-          <table className="users-table">
+          {/* Quick Stats Pills */}
+          <div className="au-stat-pills">
+            <div className="au-pill au-pill-total">
+              <span className="au-pill-num">{users.length}</span>
+              <span className="au-pill-label">Total</span>
+            </div>
+            <div className="au-pill au-pill-active">
+              <span className="au-pill-num">{activeCount}</span>
+              <span className="au-pill-label">Active</span>
+            </div>
+            <div className="au-pill au-pill-disabled">
+              <span className="au-pill-num">{disabledCount}</span>
+              <span className="au-pill-label">Disabled</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Toolbar ───────────────────────────────────────── */}
+        <div className="au-toolbar">
+          <div className="au-search-wrap">
+            <svg className="au-search-icon" viewBox="0 0 20 20" fill="none">
+              <circle cx="9" cy="9" r="6" stroke="#7c3aed" strokeWidth="1.8"/>
+              <path d="M13.5 13.5L17 17" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round"/>
+            </svg>
+            <input
+              className="au-search-input"
+              type="text"
+              placeholder="Search by username or email…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <button className="au-search-clear" onClick={() => setSearch("")}>✕</button>
+            )}
+          </div>
+          <div className="au-result-count">
+            {search
+              ? `${filteredUsers.length} result${filteredUsers.length !== 1 ? "s" : ""} for "${search}"`
+              : `Showing all ${users.length} users`}
+          </div>
+        </div>
+
+        {error && <div className="au-error">{error}</div>}
+
+        {/* ── Table ─────────────────────────────────────────── */}
+        <div className="au-table-card">
+          <table className="au-table">
             <thead>
               <tr>
-                <th>Username</th>
+                <th>User</th>
                 <th>Email</th>
+                <th>Files</th>
                 <th>Joined</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
-                <tr key={user._id}>
-                  <td className="user-name">{user.username}</td>
-                  <td>{user.email}</td>
-                  <td>{formatDate(user.createdAt)}</td>
-                  <td>
-                    <span
-                      className={`status-badge ${
-                        user.isDisabled ? "disabled" : "active"
-                      }`}
-                    >
-                      {user.isDisabled ? "Disabled" : "Active"}
-                    </span>
-                  </td>
-                  <td className="action-buttons">
-                    <button
-                      className={`btn-small ${
-                        user.isDisabled ? "btn-enable" : "btn-disable"
-                      }`}
-                      title={user.isDisabled ? "Enable" : "Disable"}
-                      onClick={() =>
-                        handleToggleDisable(user._id, user.isDisabled)
-                      }
-                    >
-                      {user.isDisabled ? "Enable" : "Disable"}
-                    </button>
-
-                    <button
-                      className="btn-small btn-delete"
-                      title="Delete user"
-                      onClick={() => setConfirmDelete(user._id)}
-                    >
-                      🗑
-                    </button>
+              {filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="au-empty">
+                    <div className="au-empty-inner">
+                      <span className="au-empty-icon">🔍</span>
+                      <p>{search ? `No users found for "${search}"` : "No users yet"}</p>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filteredUsers.map((user) => (
+                  <tr key={user._id} className={user.isDisabled ? "au-row-disabled" : ""}>
+                    {/* Avatar + Username */}
+                    <td>
+                      <div className="au-user-cell">
+                        <div className="au-avatar" style={{ background: avatarColor(user.username) }}>
+                          {getInitials(user.username)}
+                        </div>
+                        <span className="au-username">{highlightMatch(user.username, search)}</span>
+                      </div>
+                    </td>
+
+                    <td className="au-email">{highlightMatch(user.email, search)}</td>
+                    <td className="au-files-count">{user.filesCount ?? 0}</td>
+                    <td className="au-date">{formatDate(user.createdAt)}</td>
+
+                    <td>
+                      <span className={`au-badge ${user.isDisabled ? "au-badge-disabled" : "au-badge-active"}`}>
+                        <span className="au-badge-dot" />
+                        {user.isDisabled ? "Disabled" : "Active"}
+                      </span>
+                    </td>
+
+                    <td>
+                      <div className="au-actions">
+                        <button
+                          className={`au-btn ${user.isDisabled ? "au-btn-enable" : "au-btn-disable"}`}
+                          onClick={() => handleToggleDisable(user._id, user.isDisabled)}
+                          disabled={togglingId === user._id}
+                          title={user.isDisabled ? "Enable user" : "Disable user"}
+                        >
+                          {togglingId === user._id ? "…" : user.isDisabled ? "✓ Enable" : "⊘ Disable"}
+                        </button>
+                        <button
+                          className="au-btn au-btn-delete"
+                          onClick={() => setConfirmDelete(user._id)}
+                          title="Delete user"
+                        >
+                          🗑
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
-
-        {users.length === 0 && (
-          <div className="empty-state">No users found</div>
-        )}
       </div>
 
-      {/* Confirmation Dialog */}
+      {/* ── Delete Confirmation Modal ──────────────────────── */}
       {confirmDelete && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div className="au-modal-overlay" onClick={() => setConfirmDelete(null)}>
+          <div className="au-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="au-modal-icon">⚠️</div>
             <h3>Delete User?</h3>
-            <p>
-              Are you sure? This will delete the user and all their files
-              permanently.
-            </p>
-            <div className="modal-actions">
-              <button
-                className="btn-cancel"
-                onClick={() => setConfirmDelete(null)}
-              >
+            <p>This will permanently delete the user and <strong>all their files</strong>. This action cannot be undone.</p>
+            <div className="au-modal-actions">
+              <button className="au-modal-cancel" onClick={() => setConfirmDelete(null)}>
                 Cancel
               </button>
               <button
-                className="btn-confirm"
+                className="au-modal-confirm"
                 onClick={() => handleDeleteUser(confirmDelete)}
+                disabled={!!deletingId}
               >
-                Delete
+                {deletingId ? "Deleting…" : "Yes, Delete"}
               </button>
             </div>
           </div>

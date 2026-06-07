@@ -1,144 +1,294 @@
+/* ── AdminFiles.css ── */
+
 .admin-files {
-  flex: 1;
-  padding: 24px;
-  overflow-y: auto;
-  background: linear-gradient(135deg, #12103a 0%, #0d0d1a 100%);
-  min-height: calc(100vh - 70px);
+  width: 100%;
 }
 
-.files-container {
-  max-width: 1400px;
-  margin: 0 auto;
+/* ── Header ── */
+.files-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
 }
 
-.admin-files h1 {
-  color: #ffffff;
-  font-size: 28px;
+.files-header h1 {
+  font-size: 1.8rem;
   font-weight: 700;
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
+  color: #fff;
+  margin: 0 0 4px 0;
 }
 
-.admin-files .subtitle {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 14px;
-  margin-bottom: 24px;
+.files-header .subtitle {
+  color: #a0a0c0;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.search-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 16px;
+  color: #fff;
+  font-size: 0.9rem;
+  width: 300px;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.search-input::placeholder {
+  color: #6b6b8a;
+}
+
+.search-input:focus {
+  border-color: #7c5fd4;
+  background: rgba(124, 95, 212, 0.08);
+}
+
+/* ── Loading / Error / Empty ── */
+.loading {
+  text-align: center;
+  padding: 60px 0;
+  color: #a0a0c0;
+  font-size: 1.1rem;
 }
 
 .error-message {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.12);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
-  padding: 12px 16px;
-  border-radius: 8px;
+  color: #f87171;
+  border-radius: 10px;
+  padding: 14px 18px;
   margin-bottom: 20px;
-  font-size: 13px;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 16px;
 }
 
 .empty-state {
-  background: rgba(107, 79, 200, 0.05);
-  border: 1px dashed rgba(107, 79, 200, 0.3);
-  border-radius: 12px;
-  padding: 40px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  padding: 60px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  color: #6b6b8a;
+  font-size: 1rem;
 }
 
+/* ── Table ── */
 .files-table-wrapper {
-  background: rgba(18, 18, 42, 0.8);
-  border: 1px solid rgba(107, 79, 200, 0.2);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .files-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  min-width: 900px;
 }
 
 .files-table thead {
-  background: linear-gradient(135deg, rgba(107, 79, 200, 0.2) 0%, rgba(124, 95, 212, 0.2) 100%);
-  border-bottom: 2px solid rgba(107, 79, 200, 0.3);
+  background: rgba(124, 95, 212, 0.15);
+  border-bottom: 1px solid rgba(124, 95, 212, 0.25);
 }
 
 .files-table th {
   padding: 14px 16px;
   text-align: left;
-  color: #b4a7ff;
+  font-size: 0.78rem;
   font-weight: 600;
+  color: #a08de8;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
 }
 
 .files-table tbody tr {
-  border-bottom: 1px solid rgba(107, 79, 200, 0.1);
-  transition: background-color 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.15s;
+}
+
+.files-table tbody tr:last-child {
+  border-bottom: none;
 }
 
 .files-table tbody tr:hover {
-  background: rgba(107, 79, 200, 0.1);
+  background: rgba(124, 95, 212, 0.06);
 }
 
 .files-table td {
   padding: 14px 16px;
-  color: rgba(255, 255, 255, 0.8);
+  color: #d0d0e8;
+  font-size: 0.88rem;
+  vertical-align: middle;
 }
 
-.file-name {
+/* ── Thumbnail ── */
+.thumbnail-cell {
+  width: 60px;
+}
+
+.file-thumbnail {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.no-thumbnail {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-weight: 500;
-  color: #b4a7ff;
-}
-
-.file-icon {
-  font-size: 16px;
-}
-
-.download-count {
-  background: rgba(93, 196, 106, 0.15);
-  color: #5dc46a;
-  padding: 4px 8px;
-  border-radius: 4px;
+  justify-content: center;
+  font-size: 0.55rem;
+  color: #6b6b8a;
   text-align: center;
-  font-weight: 500;
 }
 
-.delete-btn {
-  padding: 6px 12px;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.8), rgba(248, 113, 113, 0.8));
-  color: white;
-  border: 1px solid rgba(239, 68, 68, 0.5);
+/* ── File Title ── */
+.file-title-cell {
+  max-width: 220px;
+}
+
+.file-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: #e8e8ff;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* ── Category Badge ── */
+.category-badge {
+  display: inline-block;
+  background: rgba(124, 95, 212, 0.2);
+  color: #b89af0;
+  border: 1px solid rgba(124, 95, 212, 0.3);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ── Format Badges ── */
+.format-badge {
+  display: inline-block;
   border-radius: 6px;
-  font-size: 12px;
+  padding: 3px 9px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.badge-pdf {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.badge-docx {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.badge-pptx {
+  background: rgba(251, 146, 60, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(251, 146, 60, 0.25);
+}
+
+.badge-other {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+/* ── Uploader ── */
+.uploader-cell {
+  min-width: 130px;
+}
+
+.uploader-name {
+  font-weight: 500;
+  color: #d0d0e8;
+}
+
+.uploader-email {
+  font-size: 0.75rem;
+  color: #6b6b8a;
+  margin-top: 2px;
+}
+
+/* ── Download count ── */
+.download-count {
+  white-space: nowrap;
+  font-weight: 600;
+  color: #60a5fa;
+}
+
+/* ── Report badge ── */
+.report-badge {
+  display: inline-block;
+  background: rgba(251, 146, 60, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(251, 146, 60, 0.25);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.no-reports {
+  color: #4a4a6a;
+}
+
+/* ── Date ── */
+.date-cell {
+  white-space: nowrap;
+  color: #8888a8;
+  font-size: 0.82rem;
+}
+
+/* ── Delete Button ── */
+.delete-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  white-space: nowrap;
 }
 
 .delete-btn:hover {
-  background: linear-gradient(135deg, #ef4444, #f87171);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-  transform: translateY(-2px);
+  background: rgba(239, 68, 68, 0.22);
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.25);
+  transform: translateY(-1px);
 }
 
+.delete-btn:active {
+  transform: scale(0.97);
+}
+
+/* ── Confirm Delete Modal ── */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -147,26 +297,33 @@
 }
 
 .modal {
-  background: rgba(18, 18, 42, 0.95);
-  border: 1px solid rgba(107, 79, 200, 0.3);
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 400px;
+  background: #1a1a35;
+  border: 1px solid rgba(124, 95, 212, 0.3);
+  border-radius: 20px;
+  padding: 36px 32px;
+  max-width: 440px;
   width: 90%;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .modal h2 {
-  color: #ffffff;
-  margin-bottom: 12px;
-  font-size: 18px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 12px 0;
 }
 
 .modal p {
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 24px;
-  font-size: 14px;
-  line-height: 1.5;
+  color: #a0a0c0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0 0 28px 0;
 }
 
 .modal-actions {
@@ -176,58 +333,50 @@
 }
 
 .btn-cancel {
-  padding: 8px 16px;
-  background: rgba(107, 79, 200, 0.2);
-  color: #b4a7ff;
-  border: 1px solid rgba(107, 79, 200, 0.3);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #c0c0d8;
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-size: 0.9rem;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  transition: background 0.2s;
 }
 
 .btn-cancel:hover {
-  background: rgba(107, 79, 200, 0.3);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .btn-delete {
-  padding: 8px 16px;
-  background: linear-gradient(135deg, #ef4444, #f87171);
-  color: white;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-size: 0.9rem;
   font-weight: 600;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
 }
 
 .btn-delete:hover {
-  background: linear-gradient(135deg, #dc2626, #ef4444);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
 }
 
-@media (max-width: 768px) {
-  .admin-files {
-    padding: 16px;
+.btn-delete:active {
+  transform: scale(0.98);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .files-header {
+    flex-direction: column;
+    gap: 14px;
   }
 
-  .files-table {
-    font-size: 12px;
-  }
-
-  .files-table th,
-  .files-table td {
-    padding: 10px 8px;
-  }
-
-  .file-name {
-    gap: 6px;
-  }
-
-  .delete-btn {
-    padding: 4px 8px;
-    font-size: 11px;
+  .search-input {
+    width: 100%;
   }
 }

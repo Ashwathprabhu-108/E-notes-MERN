@@ -5,10 +5,12 @@ import logo from "../../assets/E-Notes.png";
 import SearchIcon from "../../assets/Search.svg";
 import UploadIcon from "../../assets/FileUpload.svg";
 import { useSearchFilter } from "../../context/SearchFilterContext";
+import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
   const categories = ["All", "Academic", "Technology", "Business", "Science", "Arts & Humanities", "Law", "Medical", "Other"];
   const { searchQuery, setSearchQuery, selectedCategory, setSelectedCategory } = useSearchFilter();
+  const { user } = useAuth();
 
   const handleCategoryClick = (e, category) => {
     e.preventDefault();
@@ -55,12 +57,14 @@ const Navbar = () => {
           </button>
         </div>
 
-        <Link className="upload_link" to="/upload">
-          <button className="navbar__upload-btn">
-            <img src={UploadIcon} alt="Upload" width="16" height="16" />
-            Upload
-          </button>
-        </Link>
+        {!user?.isDisabled && (
+          <Link className="upload_link" to="/upload">
+            <button className="navbar__upload-btn">
+              <img src={UploadIcon} alt="Upload" width="16" height="16" />
+              Upload
+            </button>
+          </Link>
+        )}
       </div>
     </nav>
   );

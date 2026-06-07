@@ -439,3 +439,216 @@
     height: 16px;
   }
 }
+
+/* ─── Forgot Password Modal ─────────────────────────────── */
+.fp-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 8, 40, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fpFadeIn 0.2s ease;
+}
+
+@keyframes fpFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.fp-modal {
+  position: relative;
+  background: #1a1750;
+  border: 1px solid #3b2f8a;
+  border-radius: 20px;
+  padding: 2rem 1.8rem;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  animation: fpSlideUp 0.25s ease;
+}
+
+@keyframes fpSlideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.fp-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #6d5fa8;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.fp-close:hover { color: #c4b5fd; }
+
+.fp-icon {
+  font-size: 36px;
+  margin-bottom: 0.5rem;
+}
+
+.fp-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: #e2d9f3;
+  margin: 0 0 6px;
+}
+
+.fp-desc {
+  font-size: 13px;
+  color: #6d5fa8;
+  margin: 0 0 1.4rem;
+  line-height: 1.5;
+}
+
+.fp-error {
+  color: #fc8181;
+  font-size: 12px;
+  margin: -6px 0 10px;
+  background: rgba(252, 129, 129, 0.08);
+  border-radius: 8px;
+  padding: 7px 10px;
+}
+
+.fp-btn {
+  width: 100%;
+  padding: 11px;
+  background: #7c3aed;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.fp-btn:hover   { background: #6d28d9; }
+.fp-btn:active  { transform: scale(0.98); }
+.fp-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.fp-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  gap: 10px;
+}
+
+.fp-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.fp-success-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e2d9f3;
+  margin: 0;
+}
+
+.fp-success-sub {
+  font-size: 13px;
+  color: #6d5fa8;
+  margin: 0;
+}
+
+/* Step indicator dots */
+.fp-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 1.2rem;
+}
+
+.fp-step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #3b2f8a;
+  background: #12103a;
+  color: #6d5fa8;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.fp-step-dot.active {
+  border-color: #7c3aed;
+  background: #7c3aed;
+  color: #fff;
+}
+
+.fp-step-dot.done {
+  border-color: #4f46e5;
+  background: #4f46e5;
+  color: #fff;
+}
+
+/* Line connector between step dots */
+.fp-step-line {
+  flex: 1;
+  height: 2px;
+  background: #3b2f8a;
+  border-radius: 2px;
+  max-width: 40px;
+}
+
+
+/* OTP code input */
+.fp-otp-input {
+  font-size: 22px !important;
+  font-weight: 800;
+  letter-spacing: 10px;
+  text-align: center;
+  font-family: monospace !important;
+  color: #7c3aed !important;
+}
+
+.fp-otp-input::placeholder {
+  letter-spacing: 6px;
+  font-size: 18px;
+  color: #3b2f8a !important;
+}
+
+/* Resend / back link */
+.fp-resend {
+  background: none;
+  border: none;
+  color: #7c3aed;
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  margin-top: 10px;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.fp-resend:hover {
+  color: #a78bfa;
+  text-decoration: underline;
+}
+

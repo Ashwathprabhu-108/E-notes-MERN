@@ -5,6 +5,8 @@
   font-weight: 400;
   color: #fff;
   background-color: #0d0d1a;
+  --navbar-height: 70px;
+  --sidebar-width: 200px;
 }
 
 * {
@@ -23,33 +25,53 @@ body {
   min-height: 100vh;
 }
 
+/* The outer app wrapper only holds the page below the navbar */
 .app {
+  display: flex;
   min-height: 100vh;
 }
-  @media (max-width: 1024px) {
-    .app {
-      padding: 0 16px;
-    }
+
+/* Main content is pushed right of sidebar and below navbar */
+.main-content {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--navbar-height);
+  padding: 32px 28px;
+  flex: 1;
+  min-height: calc(100vh - var(--navbar-height));
 }
 
-.ticks {
-  position: relative;
-  width: 100%;
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
+@media (max-width: 1280px) {
+  :root {
+    --sidebar-width: 180px;
   }
+}
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 160px;
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+  .main-content {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  :root {
+    --sidebar-width: 100px;
+  }
+  .main-content {
+    padding: 20px 14px;
+  }
+}
+
+@media (max-width: 500px) {
+  :root {
+    --navbar-height: 60px;
+    --sidebar-width: 0px;
+  }
+  .main-content {
+    margin-left: 0;
+    padding: 16px 12px;
+    padding-bottom: 72px; /* space for bottom nav on mobile */
   }
 }

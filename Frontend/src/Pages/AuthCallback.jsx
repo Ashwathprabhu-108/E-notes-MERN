@@ -13,7 +13,7 @@ export default function AuthCallback() {
     if (token) {
       // Decode the token payload to get user info
       const payload = JSON.parse(atob(token.split('.')[1]));
-      login(token, { id: payload.id, username: payload.username });
+      login(token, { id: payload.id, username: payload.username, isDisabled: payload.isDisabled });
       navigate('/');
     } else {
       navigate('/login');
