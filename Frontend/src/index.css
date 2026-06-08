@@ -1,40 +1,108 @@
-*{
+/* =====================================================
+   index.css — Global Reset + CSS Variables Only
+   NO layout rules here (App.css owns layout)
+   ===================================================== */
+
+/* ── Hard reset ────────────────────────────────────── */
+*, *::before, *::after {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
+/* ── CSS Custom Properties (device breakpoints) ─────
+   All layout-critical sizes live here as tokens so
+   every component reads the SAME value.
+   ─────────────────────────────────────────────────── */
+:root {
+  /* Navbar */
+  --navbar-height: 120px;
+
+  /* Sidebars */
+  --sidebar-width:    200px;
+  --ad-sidebar-width: 160px;
+
+  /* Colors */
+  --bg:              #0d0d1a;
+  --surface:         #12122a;
+  --primary:         #6b4fc8;
+  --primary-hover:   #7d62d8;
+  --accent:          #5dc46a;
+  --text:            #e0e0e0;
+  --muted:           #aaaaaa;
+  --border:          rgba(255,255,255,0.08);
+
+  /* Typography */
+  --font-main: 'Segoe UI', 'Roboto', 'Poppins', -apple-system, sans-serif;
+}
+
+/* ── Surface Pro 7 / Nest Hub Max / Asus Zenbook  ≤ 1368px ── */
+@media (max-width: 1368px) {
+  :root {
+    --navbar-height:    110px;
+    --sidebar-width:    180px;
+    --ad-sidebar-width: 140px;
+  }
+}
+
+/* ── Asus Zenbook Fold  ≤ 1280px ── */
+@media (max-width: 1280px) {
+  :root {
+    --navbar-height:    108px;
+    --sidebar-width:    175px;
+    --ad-sidebar-width: 130px;
+  }
+}
+
+/* ── iPad Pro / Nest Hub / Galaxy Z Fold 5  ≤ 1024px ── */
+@media (max-width: 1024px) {
+  :root {
+    --navbar-height:    100px;
+    --sidebar-width:    160px;
+    --ad-sidebar-width: 120px;
+  }
+}
+
+/* ── iPad Mini / iPad Air / Surface Duo  ≤ 820px ── */
+@media (max-width: 820px) {
+  :root {
+    --navbar-height:    auto;  /* wrapping navbar */
+    --sidebar-width:    100px;
+    --ad-sidebar-width: 0px;
+  }
+}
+
+/* ── Samsung Galaxy A51/71 / Z Fold inner  ≤ 600px ── */
+@media (max-width: 600px) {
+  :root {
+    --sidebar-width: 80px;
+  }
+}
+
+/* ── All phones  ≤ 430px ── */
+@media (max-width: 430px) {
+  :root {
+    --sidebar-width:    0px;
+    --ad-sidebar-width: 0px;
+  }
+}
+
+/* ── Body base ─────────────────────────────────────── */
+html {
+  /* No height or overflow constraints */
+}
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  width: 100%;
+  /* Body does NOT scroll — .main-content is the scroll container */
+  overflow: hidden;
+  font-family: var(--font-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'poppins';
-  background-color: black;
+  background-color: var(--bg);
+  color: var(--text);
 }
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-:root {
-  --navbar-height: 120px;
-}
-.navbar {
-  height: var(--navbar-height);
-}
-.sidebar {
-  top: var(--navbar-height);
-}
-@media (max-width: 800px) {
-  .main-content {
-    margin-left: 0; 
-    margin-right: 0;  
-    width: 100%;
-  }
-}
-@media (max-width: 500px) {
-  .main-content {
-    margin-left: 0;
-    margin-right: 0;
-    width: 100%;
-  }
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

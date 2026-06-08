@@ -35,7 +35,8 @@ function App() {
       <SearchFilterProvider>
         <div className="app">
           <Navbar />
-          <div style={{ display: "flex" }}>
+          {/* Removed inline style — layout is fully controlled by App.css */}
+          <div className="app__body">
             <Sidebar />
             <main className="main-content">
               <Routes>
