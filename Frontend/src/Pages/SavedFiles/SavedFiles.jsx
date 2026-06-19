@@ -161,7 +161,6 @@ const SavedFiles = () => {
       <div className="saved-files-container">
         <div className="saved-files-header">
           <h1>Saved Files</h1>
-          <p>Your collection of saved documents</p>
         </div>
         <div className="empty-state">
           <p>No saved files yet. Start saving files from the Home page!</p>
@@ -174,7 +173,6 @@ const SavedFiles = () => {
     <div className="saved-files-container">
       <div className="saved-files-header">
         <h1>Saved Files</h1>
-        <p>You have {savedFilesData.length} saved file{savedFilesData.length !== 1 ? 's' : ''}</p>
       </div>
 
       <div className="files-grid">

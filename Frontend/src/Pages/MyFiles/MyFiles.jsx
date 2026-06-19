@@ -192,7 +192,6 @@ const MyFiles = () => {
     <div className="myfiles-container">
       <div className="myfiles-header">
         <h1>My Files</h1>
-        <p>Manage your uploaded files</p>
       </div>
 
       <div className="files-grid">

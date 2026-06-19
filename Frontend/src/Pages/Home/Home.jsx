@@ -218,7 +218,6 @@ const Home = () => {
     <div className="home-container">
       <div className="home-header">
         <h1>All Files</h1>
-        <p>Sorted by downloads and recent uploads</p>
       </div>
 
       <div className="files-grid">

@@ -98,7 +98,7 @@ const Downloads = () => {
   return (
     <div className="downloads-main">
       <h2>My Downloads</h2>
-      <p className="downloads-subtitle">All your downloaded files</p>
+      
       <div className="downloads-container">
         {downloads.map(file => (
           <div key={file._id} className="download-card">

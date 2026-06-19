@@ -26,17 +26,6 @@
   margin-bottom: 1.8rem;
 }
 
-.upload-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #6b4fc8, #7c5fd4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 14px;
-}
-
 .upload-icon img {
   width: 28px;
   height: 28px;
@@ -48,12 +37,6 @@
   font-size: 24px;
   color: #ffffff;
   margin-bottom: 6px;
-}
-
-.upload-header p {
-  font-size: 14px;
-  color: #9d8fd4;
-  margin: 0;
 }
 
 /* Form fields */
@@ -285,11 +268,6 @@ select.field-input option {
     font-size: 21px;
   }
 
-  .upload-icon {
-    width: 48px;
-    height: 48px;
-  }
-
   .upload-icon img {
     width: 24px;
     height: 24px;
@@ -320,10 +298,6 @@ select.field-input option {
 
   .upload-header h2 {
     font-size: 19px;
-  }
-
-  .upload-header p {
-    font-size: 13px;
   }
 
   .field-input {

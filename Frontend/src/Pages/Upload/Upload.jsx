@@ -179,11 +179,7 @@ const Upload = () => {
     <div className="upload-root">
       <div className="upload-card">
         <div className="upload-header">
-          <div className="upload-icon">
-            <img src={UploadIcon} alt="Upload" />
-          </div>
           <h2>Upload Notes</h2>
-          <p>Share your knowledge with the community</p>
         </div>
 
         <div className="upload-form">

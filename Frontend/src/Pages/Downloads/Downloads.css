@@ -9,12 +9,6 @@
   margin-bottom: 5px;
 }
 
-.downloads-subtitle {
-  color: #999;
-  font-size: 14px;
-  margin-bottom: 30px;
-}
-
 .downloads-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

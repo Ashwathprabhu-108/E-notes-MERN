@@ -18,12 +18,6 @@
   margin: 0;
 }
 
-.saved-files-header p {
-  font-size: 0.95rem;
-  color: #9d8fd4;
-  margin: 0.5rem 0 0 0;
-}
-
 .loading,
 .error-message,
 .empty-state {

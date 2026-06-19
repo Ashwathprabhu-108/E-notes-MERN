@@ -16,12 +16,6 @@
   margin: 0;
 }
 
-.home-header p {
-  font-size: 0.95rem;
-  color: #9d8fd4;
-  margin: 0.5rem 0 0 0;
-}
-
 .loading,
 .error-message,
 .empty-state,
@@ -227,14 +221,6 @@
 
 .icon-btn:active {
   transform: scale(0.95);
-}
-
-.icon-btn.save-later {
-  /* Placeholder for save later icon */
-}
-
-.icon-btn.saved-files {
-  /* Placeholder for saved files icon */
 }
 
 /* Action Button Wrapper with Tooltip */

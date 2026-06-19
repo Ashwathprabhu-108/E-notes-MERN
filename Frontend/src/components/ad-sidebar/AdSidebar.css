@@ -36,16 +36,6 @@
   padding: 0 10px;
 }
 
-.ad-label {
-  font-size: 0.68rem;
-  color: #6b6283;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  text-align: center;
-  margin-top: 8px;
-}
-
 .ad-slot {
   width: 100%;
   flex: 1;
@@ -103,10 +93,6 @@
     padding: 0 6px;
     gap: 6px;
   }
-  .ad-label {
-    font-size: 0.58rem;
-    letter-spacing: 0.5px;
-  }
   .ad-slot {
     font-size: 0.65rem;
     border-radius: 8px;
@@ -120,9 +106,6 @@
     top: 115px;
     min-height: calc(100vh - 115px);
     padding: 16px 0 20px;
-  }
-  .ad-label {
-    font-size: 0.55rem;
   }
   .ad-slot {
     font-size: 0.6rem;
@@ -140,9 +123,6 @@
   .ad-slot-wrapper {
     padding: 0 4px;
   }
-  .ad-label {
-    font-size: 0.5rem;
-  }
 }
 
 /* ── Galaxy A51/71 / Galaxy Z Fold inner  ≤ 600px ── */
@@ -152,10 +132,6 @@
     top: 100px;
     min-height: calc(100vh - 100px);
     padding: 12px 0 16px;
-  }
-  .ad-label {
-    font-size: 0.48rem;
-    letter-spacing: 0.3px;
   }
   .ad-slot {
     font-size: 0.55rem;
@@ -201,13 +177,6 @@
     margin-top: 0;
   }
 
-  .ad-label {
-    font-size: 0.6rem;
-    margin-top: 0;
-    white-space: nowrap;
-    letter-spacing: 0.4px;
-  }
-
   .ad-slot {
     flex: 1;
     height: 30px;
@@ -249,9 +218,6 @@
     padding: 0 8px;
     bottom: 56px; /* matches 56px tab bar on SE */
   }
-  .ad-label {
-    font-size: 0.55rem;
-  }
   .ad-slot {
     height: 24px;
     font-size: 0.55rem;
@@ -265,9 +231,7 @@
     padding: 0 6px;
     bottom: 54px; /* matches 54px tab bar on S8+ */
   }
-  .ad-label {
-    display: none; /* too small — hide label, keep ad slot */
-  }
+
   .ad-slot {
     height: 24px;
     font-size: 0.52rem;
