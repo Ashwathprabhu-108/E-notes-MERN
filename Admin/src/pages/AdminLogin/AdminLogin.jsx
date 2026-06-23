@@ -12,7 +12,7 @@ const AdminLogin = ({ onLogin }) => {
   useEffect(() => {
     // Clear any stale token so login page always shows fresh
     // (do not auto-redirect, let user explicitly log in)
-    return () => {};
+    return () => { };
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -62,7 +62,6 @@ const AdminLogin = ({ onLogin }) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@enotes.com"
               required
             />
           </div>
@@ -74,7 +73,6 @@ const AdminLogin = ({ onLogin }) => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
               required
             />
           </div>
@@ -85,8 +83,6 @@ const AdminLogin = ({ onLogin }) => {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-
-        <p className="demo-text">Demo credentials: admin@enotes.com / admin123</p>
       </div>
     </div>
   );
