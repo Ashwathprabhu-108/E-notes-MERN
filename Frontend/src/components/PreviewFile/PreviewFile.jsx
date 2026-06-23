@@ -194,26 +194,6 @@ const PreviewFile = () => {
 
   return (
     <div className="preview-container">
-      {/* Header */}
-      <div className="preview-header">
-        <div className="header-left">
-          <button className="back-btn" onClick={() => navigate(-1)}>
-            ← Back
-          </button>
-          <div className="file-info">
-            <h1>{preview.title}</h1>
-            <span className="format-badge">{formatSafe.toUpperCase()}</span>
-          </div>
-        </div>
-        <div className="header-right">
-          <button className="report-btn" onClick={handleReportClick}>
-            🚩 Report
-          </button>
-          <button className="download-btn" onClick={handleDownload}>
-            ⬇️ Download Full File
-          </button>
-        </div>
-      </div>
 
       {/* Report Message */}
       {reportMessage && (
@@ -224,9 +204,51 @@ const PreviewFile = () => {
 
       {/* Main Content */}
       <div className="preview-content">
-        {/* Left Column - Summary Content */}
         <div className="content-main">
-          {/* Overview Card */}
+
+          {/* Header Card */}
+          <div className="preview-header-card">
+            <div className="header-left">
+              <button className="back-btn" onClick={() => navigate(-1)}>← Back</button>
+              <div className="file-info">
+                <h1>{preview.title}</h1>
+                <span className="format-badge">{formatSafe.toUpperCase()}</span>
+              </div>
+            </div>
+            <div className="header-right">
+              <button className="report-btn" onClick={handleReportClick}>🚩 Report</button>
+              <button className="download-btn" onClick={handleDownload}>⬇ Download Full File</button>
+            </div>
+          </div>
+
+          {/* File Details */}
+          <div className="file-details-card">
+            <h2>File Details</h2>
+            <div className="file-details-row">
+              <div className="file-detail-item">
+                <span className="detail-label">Format</span>
+                <span className="detail-value">{formatSafe.toUpperCase()}</span>
+              </div>
+              <div className="file-detail-item">
+                <span className="detail-label">Uploaded by</span>
+                <span className="detail-value">{preview.uploadedBy || 'Unknown'}</span>
+              </div>
+              <div className="file-detail-item">
+                <span className="detail-label">Downloads</span>
+                <span className="detail-value">{preview.downloadCount || 0}</span>
+              </div>
+              {summarySafe.difficultyLevel && (
+                <div className="file-detail-item">
+                  <span className="detail-label">Difficulty</span>
+                  <span className={`difficulty-badge ${getDifficultyColor(summarySafe.difficultyLevel)}`}>
+                    {summarySafe.difficultyLevel}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Overview */}
           <div className="overview-card">
             <h2>Overview</h2>
             <p>{summarySafe.overview || 'No overview available'}</p>
@@ -261,46 +283,6 @@ const PreviewFile = () => {
             </div>
           )}
 
-          {/* Difficulty Level */}
-          {summarySafe.difficultyLevel && (
-            <div className="difficulty-section">
-              <span className="difficulty-label">Difficulty Level</span>
-              <span className={`difficulty-badge ${getDifficultyColor(summarySafe.difficultyLevel)}`}>
-                {summarySafe.difficultyLevel}
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Right Column - Sidebar */}
-        <div className="content-sidebar">
-          {/* File Details */}
-          <div className="sidebar-card">
-            <h3>📄 File Details</h3>
-            <div className="detail-item">
-              <span className="label">Format</span>
-              <span className="value">{formatSafe.toUpperCase()}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Uploaded by</span>
-              <span className="value">{preview.uploadedBy || 'Unknown'}</span>
-            </div>
-            <div className="detail-item">
-              <span className="label">Downloads</span>
-              <span className="value">{preview.downloadCount || 0}</span>
-            </div>
-          </div>
-
-          {/* AI Summary Info */}
-          <div className="sidebar-card ai-info">
-            <div className="ai-header">
-              <span className="ai-icon">✨</span>
-              <span className="ai-label">AI Generated Summary</span>
-            </div>
-            <p className="ai-badge">
-              {preview.isCached ? '⚡ Instant Preview' : '🔄 Freshly Generated'}
-            </p>
-          </div>
         </div>
       </div>
 
