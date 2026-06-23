@@ -105,13 +105,6 @@
   cursor: not-allowed;
 }
 
-.demo-text {
-  color: #6b5b95;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 20px;
-}
-
 @media (max-width: 480px) {
   .login-card {
     padding: 24px;

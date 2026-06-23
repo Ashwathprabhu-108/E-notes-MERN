@@ -1,6 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import verifyAdminToken from "../middleware/adminMiddleware.js";
+import Admin from "../models/Admin.js";
 import User from "../models/User.js";
 import File from "../models/File.js";
 import Report from "../models/Report.js";
@@ -13,16 +15,24 @@ router.post("/admin/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check credentials against .env
-    if (
-      email !== process.env.ADMIN_EMAIL ||
-      password !== process.env.ADMIN_PASSWORD
-    ) {
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    // Look up admin in MongoDB Atlas
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Compare provided password with the hashed password in DB
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
     // Generate JWT token
-    const token = jwt.sign({ role: "admin" }, process.env.ADMIN_JWT_SECRET, {
+    const token = jwt.sign({ role: "admin", adminId: admin._id }, process.env.ADMIN_JWT_SECRET, {
       expiresIn: "24h",
     });
 
