@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="100%" height="100%">
+  <!-- Left/Back Book (Green) -->
+  <g transform="rotate(-5 24 32)">
+    <rect x="14" y="16" width="14" height="34" rx="2" fill="#48BB78" />
+    <rect x="17" y="16" width="3" height="34" fill="#38A169" />
+    <path d="M14,46 L28,46 L28,50 L14,50 Z" fill="#E2E8F0" />
+  </g>
+  
+  <!-- Middle Book (Pink/Red) -->
+  <g transform="rotate(5 34 32)">
+    <rect x="26" y="14" width="14" height="36" rx="2" fill="#F687B3" />
+    <rect x="29" y="14" width="3" height="36" fill="#ED64A6" />
+    <path d="M26,47 L40,47 L40,50 L26,50 Z" fill="#E2E8F0" />
+  </g>
+  
+  <!-- Right/Front Book (Blue) -->
+  <g transform="translate(4, 2)">
+    <rect x="34" y="18" width="14" height="32" rx="2" fill="#4299E1" />
+    <rect x="34" y="21" width="14" height="4" fill="#3182CE" />
+    <path d="M34,47 L48,47 L48,50 L34,50 Z" fill="#E2E8F0" />
+    <!-- Book Bookmark/Tag -->
+    <polygon points="40,18 44,18 42,26" fill="#F6E05E" />
+  </g>
+</svg>

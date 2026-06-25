@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="100%" height="100%">
+  <defs>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF3C4" />
+      <stop offset="40%" stop-color="#ECC94B" />
+      <stop offset="100%" stop-color="#D69E2E" />
+    </linearGradient>
+  </defs>
+  <!-- Glow Background (Optional subtle pop) -->
+  <circle cx="32" cy="26" r="18" fill="#ECC94B" opacity="0.15" filter="blur(2px)" />
+  
+  <!-- Bulb Glass -->
+  <path d="M32,8 C20,8 14,18 14,28 C14,35 19,41 23,45 L23,49 C23,50 24,51 25,51 L39,51 C40,51 41,50 41,49 L41,45 C45,41 50,35 50,28 C50,18 44,8 32,8 Z" fill="url(#glow)" />
+  
+  <!-- Reflection Highlight -->
+  <path d="M20,20 C17,24 18,30 20,33 C19,30 18,24 21,20 C22,18 24,17 24,17 C24,17 21,18 20,20 Z" fill="#FFFFFF" opacity="0.6" />
+  
+  <!-- Filament (Inside) -->
+  <path d="M27,34 L29,24 L32,27 L35,24 L37,34" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  
+  <!-- Metallic Base -->
+  <path d="M23,49 L41,49 L40,53 L24,53 Z" fill="#A0AEC0" />
+  <path d="M25,53 L39,53 L37,56 L27,56 Z" fill="#718096" />
+  <path d="M28,56 L36,56 L34,59 L30,59 Z" fill="#4A5568" />
+  
+  <!-- Base Highlights -->
+  <line x1="26" y1="51" x2="38" y2="51" stroke="#CBD5E0" stroke-width="1" />
+</svg>

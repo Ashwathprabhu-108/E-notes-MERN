@@ -1,256 +1,212 @@
 import React, { useState, useEffect } from 'react';
 import './About.css';
+import Save       from '../../assets/saved-bookmark-icon.svg';
+import UploadIcon from '../../assets/Upload.svg';
+import FileIcon   from '../../assets/file_preview.svg';
+import SearchIcon from '../../assets/Search.svg';
+import DlIcon     from '../../assets/download.svg';
+import StudentIco from '../../assets/student.svg';
+import TeacherIco from '../../assets/teachers.svg';
+import LearnerIco from '../../assets/self_learners.svg';
+import ProIco     from '../../assets/Professionals.svg';
+import CreatorIco from '../../assets/content_creators.svg';
+import EmailIco   from '../../assets/Email.svg';
+import InstaIco   from '../../assets/Instagram.svg';
 
+const FEATURES = [
+  { icon: UploadIcon, color: '#7c6af7', bg: 'rgba(124,106,247,0.12)', label: 'Upload Notes',     desc: 'Share PDFs and notes with anyone, instantly. No size limits, no paywalls.' },
+  { icon: DlIcon,     color: '#34d399', bg: 'rgba(52,211,153,0.12)',  label: 'Download Files',   desc: 'One-click downloads. No account required for browsing or downloading.' },
+  { icon: FileIcon,   color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  label: 'Smart Preview',    desc: 'AI-generated summaries let you judge a file before you commit to downloading.' },
+  { icon: SearchIcon, color: '#60a5fa', bg: 'rgba(96,165,250,0.12)',  label: 'Instant Search',   desc: 'Find notes by topic, subject, or contributor name in milliseconds.' },
+  { icon: Save,       color: '#f472b6', bg: 'rgba(244,114,182,0.12)', label: 'Save for Later',   desc: 'Bookmark anything to your personal library and access it from any device.' },
+];
 
+const AUDIENCE = [
+  { icon: StudentIco, label: 'Students',         sub: 'Exam prep & revision' },
+  { icon: TeacherIco, label: 'Teachers',          sub: 'Share course material' },
+  { icon: LearnerIco, label: 'Self-Learners',     sub: 'Curiosity without limits' },
+  { icon: ProIco,     label: 'Professionals',     sub: 'Upskill on the job' },
+  { icon: CreatorIco, label: 'Content Creators',  sub: 'Research & references' },
+];
 
-const About = () => {
-  const [stats, setStats] = useState({ totalFiles: 0, totalDownloads: 0 });
+const STEPS = [
+  { n: '01', title: 'Create an account',   body: 'Sign up in seconds with your email or Google. It is completely free.' },
+  { n: '02', title: 'Browse or upload',    body: 'Explore the library or contribute your own notes and study material.' },
+  { n: '03', title: 'Preview content',     body: 'Read the full PDF inside the built-in viewer before downloading.' },
+  { n: '04', title: 'Download & bookmark', body: 'Save offline copies or pin files to your personal bookmark list.' },
+];
+
+export default function About() {
+  const [stats, setStats] = useState({ files: 0, downloads: 0 });
 
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await fetch('http://localhost:5000/api/files');
-        const files = await res.json();
-        const totalFiles = files.length;
-        const totalDownloads = files.reduce((sum, f) => sum + (f.downloadCount || 0), 0);
-        setStats({ totalFiles, totalDownloads });
-      } catch (err) {
-        console.error("Stats fetch failed:", err);
-      }
-    };
-    fetchStats();
+    fetch('http://localhost:5000/api/files')
+      .then(r => r.json())
+      .then(files => setStats({
+        files: files.length,
+        downloads: files.reduce((s, f) => s + (f.downloadCount || 0), 0),
+      }))
+      .catch(() => {});
   }, []);
 
   return (
-    <div className="enotes-wrap">
+    <div className="ab-root">
 
-      {/* HERO */}
-      <div className="hero">
-        <div className="hero-badge">About E-Notes</div>
-        <h1>Knowledge, <span>Shared Freely</span></h1>
-        <p>A community-driven platform where students, teachers, and learners upload, discover, and download notes on any topic — completely free.</p>
-        <div className="hero-stats">
-          <div className="stat">
-            <div className="stat-num">{stats.totalFiles}</div>
-            <div className="stat-label">Notes Uploaded</div>
-          </div>
-          <div className="stat">
-            <div className="stat-num">{stats.totalDownloads}</div>
-            <div className="stat-label">Downloads</div>
-          </div>
-        </div>
-      </div>
-
-      <hr className="divider" />
-
-      {/* WHAT IS E-NOTES */}
-      <div className="section">
-        <div className="section-title">What is <span>E-Notes?</span></div>
-        <div className="section-line"></div>
-        <p className="section-text">
-          E-Notes is a free, community-powered knowledge sharing platform. Anyone can upload their study material, notes, or reference PDFs on any topic. Other users can browse, preview the content before downloading, and save files for later — all without paying a rupee. Whether you're preparing for exams, teaching a class, or just love learning, E-Notes is built for you.
+      {/* ── HERO ─────────────────────────────────────────── */}
+      <section className="ab-hero">
+        <span className="ab-eyebrow">About E-Notes</span>
+        <h1 className="ab-hero-h1">
+          Knowledge that<br />
+          <em>flows freely.</em>
+        </h1>
+        <p className="ab-hero-sub">
+          A community-powered platform where anyone can upload, discover,
+          and download notes on any topic — no cost, no catch.
         </p>
-      </div>
-
-      <hr className="divider" />
-
-      {/* FEATURES */}
-      <div className="section">
-        <div className="section-title">Key <span>Features</span></div>
-        <div className="section-line"></div>
-        <div className="features-grid">
-
-          <div className="feat-card">
-            <div className="feat-icon icon-purple">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-            </div>
-            <h3>Upload Notes</h3>
-            <p>Share your notes and PDFs on any topic with the community in seconds.</p>
+        <div className="ab-stat-row">
+          <div className="ab-stat-pill">
+            <span className="ab-stat-n">{stats.files.toLocaleString()}</span>
+            <span className="ab-stat-l">Notes uploaded</span>
           </div>
-
-          <div className="feat-card">
-            <div className="feat-icon icon-green">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-            </div>
-            <h3>Download Files</h3>
-            <p>Download any notes easily, free, with no account required for basic access.</p>
+          <div className="ab-stat-divider" />
+          <div className="ab-stat-pill">
+            <span className="ab-stat-n">{stats.downloads.toLocaleString()}</span>
+            <span className="ab-stat-l">Total downloads</span>
           </div>
-
-          <div className="feat-card">
-            <div className="feat-icon icon-amber">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <line x1="9" y1="3" x2="9" y2="21" />
-                <line x1="3" y1="9" x2="21" y2="9" />
-              </svg>
-            </div>
-            <h3>File Preview</h3>
-            <p>Get an AI-generated summary of any file before downloading it.</p>
-          </div>
-
-          <div className="feat-card">
-            <div className="feat-icon icon-blue">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </div>
-            <h3>Search & Discover</h3>
-            <p>Find notes by topic, subject, or uploader name instantly.</p>
-          </div>
-
-          <div className="feat-card">
-            <div className="feat-icon icon-purple">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2">
-                <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
-              </svg>
-            </div>
-            <h3>Save Files</h3>
-            <p>Bookmark your favourite notes and access them anytime from Saved Files.</p>
+          <div className="ab-stat-divider" />
+          <div className="ab-stat-pill">
+            <span className="ab-stat-n">100%</span>
+            <span className="ab-stat-l">Free forever</span>
           </div>
         </div>
-      </div>
+      </section>
 
-      <hr className="divider" />
-
-      {/* HOW IT WORKS */}
-      <div className="section">
-        <div className="section-title">How It <span>Works</span></div>
-        <div className="section-line"></div>
-        <div className="steps">
-          <div className="step">
-            <div className="step-num">1</div>
-            <h3>Sign Up Free</h3>
-            <p>Create your account in under a minute to unlock uploads and saving.</p>
-          </div>
-          <div className="step">
-            <div className="step-num">2</div>
-            <h3>Browse or Upload</h3>
-            <p>Explore thousands of notes or contribute your own files to the community.</p>
-          </div>
-          <div className="step">
-            <div className="step-num">3</div>
-            <h3>Preview Content</h3>
-            <p>Read the PDF fully inside the viewer before deciding to download.</p>
-          </div>
-          <div className="step">
-            <div className="step-num">4</div>
-            <h3>Download & Save</h3>
-            <p>Download for offline use or bookmark it to your Saved Files library.</p>
+      {/* ── WHAT IS E-NOTES ──────────────────────────────── */}
+      <section className="ab-section ab-what">
+        <div className="ab-what-text">
+          <span className="ab-label">What is E-Notes?</span>
+          <h2>Built for learners,<br />by learners.</h2>
+          <p>
+            E-Notes started with a simple frustration: great study material exists,
+            but it is locked inside individual hard drives. We built a place where
+            that knowledge escapes — freely shared between students, teachers,
+            and curious minds worldwide.
+          </p>
+          <p>
+            Upload a PDF in seconds, let others preview it with AI-generated
+            summaries, and download anything without a subscription or hidden fee.
+          </p>
+        </div>
+        <div className="ab-what-aside">
+          <div className="ab-quote-card">
+            <div className="ab-quote-mark">"</div>
+            <p>Knowledge should never be locked away. It should flow freely between learners everywhere.</p>
+            <footer>— The E-Notes Team</footer>
           </div>
         </div>
-      </div>
+      </section>
 
-      <hr className="divider" />
-
-      {/* WHO IS IT FOR */}
-      <div className="section">
-        <div className="section-title">Who Is It <span>For?</span></div>
-        <div className="section-line"></div>
-        <div className="audience-grid">
-          <div className="aud-card">
-            <div className="aud-icon">🎓</div>
-            <h3>Students</h3>
-          </div>
-          <div className="aud-card">
-            <div className="aud-icon">📚</div>
-            <h3>Teachers</h3>
-          </div>
-          <div className="aud-card">
-            <div className="aud-icon">💡</div>
-            <h3>Self-Learners</h3>
-          </div>
-          <div className="aud-card">
-            <div className="aud-icon">💼</div>
-            <h3>Professionals</h3>
-          </div>
-          <div className="aud-card">
-            <div className="aud-icon">✍️</div>
-            <h3>Content Creators</h3>
-          </div>
-        </div>
-      </div>
-
-      <hr className="divider" />
-
-      {/* MISSION */}
-      <div className="section">
-        <div className="section-title">Our <span>Mission</span></div>
-        <div className="section-line"></div>
-        <div className="mission-box">
-          <p>"To make quality knowledge freely accessible to every student and learner, regardless of where they are or what they can afford."</p>
-          <small>— The E-Notes Team</small>
-        </div>
-      </div>
-
-      <hr className="divider" />
-
-      <div className="section">
-        <div className="section-title">Meet the <span>Creator</span></div>
-        <div className="section-line"></div>
-        <div className="team-card">
-          <div className="avatar">E</div>
-          <div className="team-info">
-            <h3>E-Notes Team</h3>
-            <p>Built with passion to bridge the gap between students who have great notes and those who need them. E-Notes was born from the simple belief that knowledge should never be locked away — it should flow freely between learners everywhere.</p>
-            <span className="team-badge">Udupi, Karnataka</span>
-          </div>
-        </div>
-      </div>
-
-      <hr className="divider" />
-
-      {/* CONTACT */}
-      <div className="section">
-        <div className="section-title">Get In <span>Touch</span></div>
-        <div className="section-line"></div>
-        <div className="contact-grid">
-
-          <div className="contact-card">
-            <div className="contact-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#ea4335" strokeWidth="2">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                <polyline points="22,6 12,13 2,6" />
-              </svg>
+      {/* ── FEATURES BENTO ───────────────────────────────── */}
+      <section className="ab-section">
+        <span className="ab-label">Platform features</span>
+        <h2 className="ab-section-h2">Everything you need, nothing you don't.</h2>
+        <div className="ab-bento">
+          {FEATURES.map((f, i) => (
+            <div
+              key={i}
+              className={`ab-bento-card ${i === 0 ? 'ab-bento-wide' : ''}`}
+              style={{ '--card-accent': f.color, '--card-bg': f.bg }}
+            >
+              <div className="ab-bento-icon">
+                <img src={f.icon} alt={f.label} />
+              </div>
+              <h3>{f.label}</h3>
+              <p>{f.desc}</p>
             </div>
-            <div>
-              <h4>Gmail</h4>
-              <p>support@gmail.com</p>
-            </div>
-          </div>
-
-          <div className="contact-card">
-            <div className="contact-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#e1306c" strokeWidth="2">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                <circle cx="12" cy="12" r="4" />
-                <circle cx="17.5" cy="6.5" r="1" fill="#e1306c" />
-              </svg>
-            </div>
-            <div>
-              <h4>Instagram</h4>
-              <p>@enotesapp</p>
-            </div>
-          </div>
-
+          ))}
         </div>
-      </div>
+      </section>
 
-      {/* FOOTER */}
-      <div className="footer">
-        All Rights are Reserved &nbsp;|&nbsp; <span>E-Notes</span> &nbsp;|&nbsp; Made with love in Udupi, Karnataka
-      </div>
+      {/* ── HOW IT WORKS ─────────────────────────────────── */}
+      <section className="ab-section ab-steps-section">
+        <span className="ab-label">How it works</span>
+        <h2 className="ab-section-h2">Up and running in four steps.</h2>
+        <div className="ab-steps">
+          {STEPS.map((s, i) => (
+            <div key={i} className="ab-step">
+              <span className="ab-step-n">{s.n}</span>
+              <div className="ab-step-line" />
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── WHO IS IT FOR ────────────────────────────────── */}
+      <section className="ab-section">
+        <span className="ab-label">Who it's for</span>
+        <h2 className="ab-section-h2">Designed for every kind of learner.</h2>
+        <div className="ab-audience">
+          {AUDIENCE.map((a, i) => (
+            <div key={i} className="ab-aud-card">
+              <div className="ab-aud-img">
+                <img src={a.icon} alt={a.label} />
+              </div>
+              <h3>{a.label}</h3>
+              <p>{a.sub}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── TEAM + CONTACT ───────────────────────────────── */}
+      <section className="ab-section ab-bottom-row">
+        <div className="ab-team-card">
+          <span className="ab-label">The creator</span>
+          <div className="ab-avatar">E</div>
+          <h3>E-Notes Team</h3>
+          <p>
+            Built with passion out of Udupi, Karnataka. We bridge the gap
+            between students who have great notes and those who need them.
+          </p>
+          <span className="ab-location-tag">📍 Udupi, Karnataka</span>
+        </div>
+        <div className="ab-contact-card">
+          <span className="ab-label">Get in touch</span>
+          <h3>We'd love to hear from you.</h3>
+          <div className="ab-contacts">
+            <a className="ab-contact-item" href="https://mail.google.com/mail/?view=cm&to=eha108768@gmail.com" target="_blank" rel="noreferrer">
+              <div className="ab-contact-ico" style={{ background: 'rgba(234,67,53,0.12)' }}>
+                <img src={EmailIco} alt="Email" />
+              </div>
+              <div>
+                <span className="ab-contact-name">Email</span>
+                <span className="ab-contact-val">support@gmail.com</span>
+              </div>
+            </a>
+            <a className="ab-contact-item" href="https://instagram.com/enotesapp" target="_blank" rel="noreferrer">
+              <div className="ab-contact-ico" style={{ background: 'rgba(188,24,136,0.12)' }}>
+                <img src={InstaIco} alt="Instagram" />
+              </div>
+              <div>
+                <span className="ab-contact-name">Instagram</span>
+                <span className="ab-contact-val">@enotesapp</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER ───────────────────────────────────────── */}
+      <footer className="ab-footer">
+        <span>© 2025 E-Notes</span>
+        <span className="ab-footer-dot">·</span>
+        <span>Made with care in Udupi, Karnataka</span>
+        <span className="ab-footer-dot">·</span>
+        <span>All rights reserved</span>
+      </footer>
 
     </div>
   );
-};
-
-export default About;
+}

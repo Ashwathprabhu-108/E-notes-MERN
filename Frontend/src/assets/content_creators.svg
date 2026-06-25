@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skin" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FBD38D" />
+      <stop offset="100%" stop-color="#F6AD55" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Pencil -->
+  <g transform="rotate(-40 26 26)">
+    <!-- Pencil Body -->
+    <rect x="18" y="-4" width="8" height="36" fill="#ED8936" rx="1" />
+    <rect x="21" y="-4" width="2" height="36" fill="#C05621" opacity="0.3" />
+    <!-- Eraser & Ferrule -->
+    <rect x="18" y="-8" width="8" height="4" fill="#E2E8F0" />
+    <path d="M18,-12 L26,-12 L26,-8 L18,-8 Z" fill="#F687B3" />
+    <!-- Sharpened Tip -->
+    <polygon points="18,32 26,32 22,40" fill="#FEEBC8" />
+    <polygon points="20,36 24,36 22,40" fill="#2D3748" />
+  </g>
+
+  <!-- The Hand -->
+  <!-- Main Fist/Palm Structure -->
+  <path d="M16,48 Q14,38 24,34 C28,32.5 36,33 42,37 C46,39.5 52,41 54,46 C56,51 46,56 36,56 C26,56 18,54 16,48 Z" fill="url(#skin)" />
+  
+  <!-- Thumb holding the pencil -->
+  <path d="M22,44 C20,40 24,34 30,36 C34,37.5 34,42 30,44 C27,45.5 24,46 22,44 Z" fill="#FBD38D" />
+  
+  <!-- Folded Fingers (Index, Middle detail lines) -->
+  <path d="M32,36 C36,36 38,40 36,43" fill="none" stroke="#DD6B20" stroke-width="2" stroke-linecap="round" />
+  <path d="M36,38 C40,38 42,42 40,45" fill="none" stroke="#DD6B20" stroke-width="2" stroke-linecap="round" />
+  <path d="M40,40 C44,40 46,44 44,47" fill="none" stroke="#DD6B20" stroke-width="2" stroke-linecap="round" />
+
+  <!-- Sleeve/Wrist edge -->
+  <path d="M17,51 C15,53 12,55 10,54" fill="none" stroke="#718096" stroke-width="3" stroke-linecap="round" />
+</svg>
