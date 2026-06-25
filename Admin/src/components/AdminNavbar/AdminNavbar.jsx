@@ -1,15 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import "./AdminNavbar.css";
 
-const AdminNavbar = ({ onLogout }) => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken");
-    if (onLogout) onLogout();
-    navigate("/admin/login", { replace: true });
-  };
+const AdminNavbar = () => {
 
   return (
     <nav className="admin-navbar">
@@ -28,10 +20,6 @@ const AdminNavbar = ({ onLogout }) => {
         <div className="navbar__user-info">
           <span className="navbar__role-badge">Administrator</span>
         </div>
-        <button className="navbar__logout-btn" onClick={handleLogout}>
-          <span className="logout-icon">🚪</span>
-          Logout
-        </button>
       </div>
     </nav>
   );

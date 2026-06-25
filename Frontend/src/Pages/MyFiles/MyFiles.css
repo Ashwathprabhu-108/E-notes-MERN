@@ -1,90 +1,72 @@
-/* ─── MyFiles — same dark-purple theme as Home ─────────────────────────── */
-
-.myfiles-container {
-  padding: 2rem;
-  margin: 0 auto;
-  background: #12103a;
-  min-height: 100vh;
+/* ── Base layout (same as Downloads.css) ── */
+.downloads-main {
+  padding: 20px;
+  width: 100%;
 }
 
-.myfiles-header {
-  margin-bottom: 2rem;
+.downloads-main h2 {
+  font-size: 28px;
+  color: #fff;
+  margin-bottom: 5px;
 }
 
-.myfiles-header h1 {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #ffffff;
-  margin: 0;
-}
-
-.loading,
-.error-message,
-.empty-state {
-  text-align: center;
-  padding: 3rem;
-  font-size: 1.1rem;
-  color: #9d8fd4;
-}
-
-.error-message {
-  color: #fca5a5;
-  background-color: rgba(220, 38, 38, 0.1);
-  border: 1px solid #dc2626;
-  border-radius: 0.5rem;
-  padding: 2rem;
-}
-
-.empty-state p {
-  font-size: 1.1rem;
-}
-
-/* ─── Grid ─────────────────────────────────────────────────────────────────── */
-
-.files-grid {
+.downloads-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
 }
 
-/* ─── Card ──────────────────────────────────────────────────────────────────── */
+.downloads-message {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+}
 
-.file-card {
-  background: #1a1750;
-  border: 1px solid #2e2a7a;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+.downloads-message.error {
+  color: #d9534f;
+  background-color: #f2dede;
+  border: 1px solid #ebccd1;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+/* ── Card ── */
+.download-card {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 1px solid #444;
+  border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
-.file-card:hover {
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+.download-card:hover {
+  border-color: #7c3aed;
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
   transform: translateY(-5px);
 }
 
-.file-thumbnail {
+/* ── Thumbnail ── */
+.download-thumbnail {
   width: 100%;
-  height: 200px;
+  height: 150px;
   overflow: hidden;
-  background: #2e2a7a;
+  background: #000;
 }
 
-.file-thumbnail img {
+.download-thumbnail img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.file-card:hover .file-thumbnail img {
+.download-card:hover .download-thumbnail img {
   transform: scale(1.05);
 }
-
-/* ─── Thumbnail ─────────────────────────────────────────────────────────────── */
 
 .no-thumbnail {
   width: 100%;
@@ -92,96 +74,76 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #2e2a7a 0%, #1f1a5c 100%);
-  color: #9d8fd4;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #888;
   font-weight: 500;
 }
 
-/* ─── File Info ─────────────────────────────────────────────────────────────── */
-
-.file-info {
-  padding: 1.5rem;
+/* ── Details panel ── */
+.download-details {
+  padding: 15px;
   display: flex;
   flex-direction: column;
+  gap: 10px;
   flex-grow: 1;
 }
 
-.file-title {
-  font-size: 1.1rem;
+.download-title {
+  font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
-  margin: 0 0 0.75rem 0;
+  color: #fff;
+  margin: 0;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  line-clamp: 2;
-  /* standard property — removes warning */
   -webkit-box-orient: vertical;
   overflow: hidden;
-  word-break: break-word;
 }
 
-.file-meta {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-  flex-wrap: wrap;
+.download-category {
+  margin: 0;
+  padding: 0;
 }
 
 .category-badge {
-  display: inline-block;
-  background-color: #6b4fc8;
-  color: #e9d5ff;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.8rem;
+  background-color: #7c3aed;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
   font-weight: 500;
 }
 
-/* ─── Tags ──────────────────────────────────────────────────────────────────── */
-
-.file-tags {
+.download-tags {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
   flex-wrap: wrap;
+  gap: 6px;
 }
 
 .tag {
-  display: inline-block;
-  background-color: #2e2a7a;
-  color: #c4b5fd;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-/* ─── Upload Info ───────────────────────────────────────────────────────────── */
-
-.upload-info {
-  margin-bottom: 0.75rem;
-}
-
-.uploaded-date {
-  font-size: 0.85rem;
-  color: #d1c4f2;
-  margin: 0;
+  background-color: #2d3561;
+  color: #b0b9ff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
 }
 
 .download-stats {
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #2e2a7a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #999;
+  padding-top: 10px;
+  border-top: 1px solid #333;
 }
 
 .download-count {
-  font-size: 0.9rem;
-  color: #a5f3fc;
+  color: #7c3aed;
   font-weight: 500;
 }
 
-/* ─── Action Buttons ────────────────────────────────────────────────────────── */
-
+/* ── Action Buttons (MyFiles — Edit & Delete) ── */
 .file-actions {
   display: flex;
   gap: 0.75rem;
@@ -191,10 +153,10 @@
 .edit-btn,
 .delete-btn {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 10px 16px;
   border: none;
-  border-radius: 0.5rem;
-  font-size: 0.9rem;
+  border-radius: 6px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -202,12 +164,13 @@
 }
 
 .edit-btn {
-  background: linear-gradient(135deg, #6b4fc8, #7c5fd4);
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
   color: white;
 }
 
 .edit-btn:hover {
-  background: linear-gradient(135deg, #7c5fd4, #8d6fe0);
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
   transform: scale(1.02);
 }
 
@@ -222,6 +185,7 @@
 
 .delete-btn:hover {
   background: linear-gradient(135deg, #ef4444, #f87171);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
   transform: scale(1.02);
 }
 
@@ -229,8 +193,7 @@
   transform: scale(0.98);
 }
 
-/* ─── Delete Confirmation ───────────────────────────────────────────────────── */
-
+/* ── Delete Confirmation ── */
 .delete-confirmation {
   display: flex;
   flex-direction: column;
@@ -238,8 +201,8 @@
   padding: 0.75rem;
   background-color: rgba(220, 38, 38, 0.1);
   border: 1px solid #dc2626;
-  border-radius: 0.5rem;
-  grid-column: span 2;
+  border-radius: 6px;
+  flex: 1;
 }
 
 .delete-confirmation p {
@@ -258,7 +221,7 @@
   flex: 1;
   padding: 0.5rem 0.75rem;
   border: none;
-  border-radius: 0.4rem;
+  border-radius: 4px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -285,7 +248,7 @@
   transform: scale(1.05);
 }
 
-/* ─── Modal Styles ──────────────────────────────────────────────────────────── */
+/* ── Edit Modal ── */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -315,8 +278,7 @@
   font-size: 1.5rem;
 }
 
-/* ─── Form Groups ───────────────────────────────────────────────────────────── */
-
+/* ── Form Groups ── */
 .form-group {
   margin-bottom: 1.5rem;
   display: flex;
@@ -344,8 +306,8 @@
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #6b4fc8;
-  box-shadow: 0 0 0 3px rgba(107, 79, 200, 0.1);
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
 }
 
 .form-group input::placeholder {
@@ -361,8 +323,7 @@
   color: #ffffff;
 }
 
-/* ─── Modal Buttons ─────────────────────────────────────────────────────────── */
-
+/* ── Modal Buttons ── */
 .modal-buttons {
   display: flex;
   gap: 1rem;
@@ -382,12 +343,13 @@
 }
 
 .save-btn {
-  background: linear-gradient(135deg, #6b4fc8, #7c5fd4);
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
   color: white;
 }
 
 .save-btn:hover {
-  background: linear-gradient(135deg, #7c5fd4, #8d6fe0);
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
   transform: scale(1.02);
 }
 
@@ -411,44 +373,15 @@
   transform: scale(0.98);
 }
 
-/* ─── Responsive Design ─────────────────────────────────────────────────────── */
-
-@media (max-width: 1024px) {
-  .myfiles-container {
-    padding: 1.5rem;
-  }
-
-  .files-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .modal-content {
-    max-width: 450px;
-    padding: 1.8rem;
-  }
-}
-
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .myfiles-container {
-    padding: 1rem;
+  .downloads-container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
   }
 
-  .myfiles-header h1 {
-    font-size: 1.5rem;
-  }
-
-  .files-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .file-info {
-    padding: 1rem;
-  }
-
-  .file-title {
-    font-size: 1rem;
+  .download-title {
+    font-size: 14px;
   }
 
   .file-actions {
@@ -457,8 +390,8 @@
 
   .edit-btn,
   .delete-btn {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.85rem;
+    padding: 8px 12px;
+    font-size: 13px;
   }
 
   .modal-content {
@@ -475,216 +408,19 @@
     margin-bottom: 1rem;
   }
 
-  .form-group label {
-    font-size: 0.9rem;
-  }
-
-  .form-group input,
-  .form-group select {
-    padding: 0.6rem;
-    font-size: 0.9rem;
-  }
-
   .modal-buttons {
     gap: 0.75rem;
     margin-top: 1.5rem;
   }
-
-  .save-btn,
-  .cancel-btn {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .myfiles-container {
-    padding: 0.75rem;
-  }
-
-  .myfiles-header {
-    margin-bottom: 1.5rem;
-  }
-
-  .myfiles-header h1 {
-    font-size: 1.3rem;
-  }
-
-  .files-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-
-  .file-thumbnail {
-    height: 150px;
-  }
-
-  .file-info {
-    padding: 0.75rem;
-  }
-
-  .file-title {
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .category-badge {
-    padding: 0.2rem 0.6rem;
-    font-size: 0.75rem;
-  }
-
-  .file-tags {
-    margin-bottom: 0.5rem;
-  }
-
-  .tag {
-    padding: 0.2rem 0.4rem;
-    font-size: 0.7rem;
-  }
-
-  .uploaded-date {
-    font-size: 0.8rem;
-  }
-
-  .download-count {
-    font-size: 0.85rem;
-  }
-
-  .download-stats {
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
-
-  .file-actions {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .edit-btn,
-  .delete-btn {
-    width: 100%;
-    padding: 0.6rem;
-    font-size: 0.8rem;
-  }
-
-  .delete-confirmation {
-    grid-column: auto;
-    padding: 0.5rem;
-    font-size: 0.8rem;
-  }
-
-  .delete-confirmation p {
-    font-size: 0.8rem;
-  }
-
-  .confirm-delete-btn,
-  .cancel-delete-btn {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.8rem;
-  }
-
-  .modal-content {
-    width: 95%;
-    max-width: 350px;
-    padding: 1rem;
-  }
-
-  .modal-content h2 {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-  }
-
-  .form-group {
-    margin-bottom: 0.8rem;
-  }
-
-  .form-group label {
-    font-size: 0.85rem;
-    margin-bottom: 0.4rem;
-  }
-
-  .form-group input,
-  .form-group select {
-    padding: 0.5rem;
-    font-size: 0.85rem;
-  }
-
-  .modal-buttons {
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-
-  .save-btn,
-  .cancel-btn {
-    padding: 0.5rem;
-    font-size: 0.8rem;
-  }
 }
 
 @media (max-width: 480px) {
-  .myfiles-container {
-    padding: 0.5rem;
-  }
-
-  .myfiles-header {
-    margin-bottom: 1rem;
-  }
-
-  .myfiles-header h1 {
-    font-size: 1.2rem;
-    margin: 0;
-  }
-
-  .files-grid {
+  .downloads-container {
     grid-template-columns: 1fr;
-    gap: 1rem;
   }
 
-  .file-card {
-    border-radius: 0.6rem;
-  }
-
-  .file-thumbnail {
-    height: 140px;
-  }
-
-  .file-info {
-    padding: 0.6rem;
-  }
-
-  .file-title {
-    font-size: 0.9rem;
-    margin-bottom: 0.4rem;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
-  }
-
-  .category-badge {
-    padding: 0.15rem 0.5rem;
-    font-size: 0.7rem;
-  }
-
-  .file-tags {
-    margin-bottom: 0.4rem;
-    gap: 0.3rem;
-  }
-
-  .tag {
-    padding: 0.15rem 0.3rem;
-    font-size: 0.65rem;
-  }
-
-  .uploaded-date {
-    font-size: 0.75rem;
-  }
-
-  .download-count {
-    font-size: 0.8rem;
-  }
-
-  .download-stats {
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.5rem;
+  .download-thumbnail {
+    height: 130px;
   }
 
   .file-actions {
@@ -695,29 +431,6 @@
   .edit-btn,
   .delete-btn {
     width: 100%;
-    padding: 0.5rem 0.6rem;
-    font-size: 0.75rem;
-    border-radius: 0.4rem;
-  }
-
-  .delete-confirmation {
-    padding: 0.4rem;
-  }
-
-  .delete-confirmation p {
-    font-size: 0.75rem;
-    margin-bottom: 0.3rem;
-  }
-
-  .confirmation-buttons {
-    gap: 0.3rem;
-  }
-
-  .confirm-delete-btn,
-  .cancel-delete-btn {
-    padding: 0.35rem 0.5rem;
-    font-size: 0.7rem;
-    border-radius: 0.3rem;
   }
 
   .modal-overlay {
@@ -726,75 +439,24 @@
 
   .modal-content {
     width: 100%;
-    max-width: 320px;
-    padding: 0.8rem;
+    max-width: 340px;
+    padding: 1rem;
     border-radius: 0.6rem;
   }
 
   .modal-content h2 {
-    font-size: 1rem;
-    margin-bottom: 0.8rem;
-  }
-
-  .form-group {
-    margin-bottom: 0.6rem;
-  }
-
-  .form-group label {
-    font-size: 0.8rem;
-    margin-bottom: 0.3rem;
-  }
-
-  .form-group input,
-  .form-group select {
-    padding: 0.4rem;
-    font-size: 0.8rem;
-    border-radius: 0.4rem;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
   }
 
   .modal-buttons {
     flex-direction: column;
-    gap: 0.4rem;
-    margin-top: 0.8rem;
+    gap: 0.5rem;
+    margin-top: 1rem;
   }
 
   .save-btn,
   .cancel-btn {
     width: 100%;
-    padding: 0.5rem;
-    font-size: 0.75rem;
-  }
-}
-
-@media (max-width: 360px) {
-  .myfiles-container {
-    padding: 0.5rem;
-  }
-
-  .myfiles-header h1 {
-    font-size: 1rem;
-  }
-
-  .file-thumbnail {
-    height: 120px;
-  }
-
-  .file-title {
-    font-size: 0.85rem;
-  }
-
-  .modal-content {
-    max-width: 290px;
-  }
-
-  .modal-content h2 {
-    font-size: 0.95rem;
-    margin-bottom: 0.6rem;
-  }
-
-  .form-group input,
-  .form-group select {
-    padding: 0.35rem;
-    font-size: 0.75rem;
   }
 }

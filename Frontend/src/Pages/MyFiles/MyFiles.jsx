@@ -159,84 +159,67 @@ const MyFiles = () => {
   };
 
   if (loading) {
-    return (
-      <div className="myfiles-container">
-        <div className="loading">Loading your files...</div>
-      </div>
-    );
+    return <div className="downloads-message">Loading your files...</div>;
   }
 
   if (error) {
-    return (
-      <div className="myfiles-container">
-        <div className="error-message">{error}</div>
-      </div>
-    );
+    return <div className="downloads-message error">{error}</div>;
   }
 
   if (files.length === 0) {
     return (
-      <div className="myfiles-container">
-        <div className="myfiles-header">
-          <h1>My Files</h1>
-          <p>Upload files to see them here</p>
-        </div>
-        <div className="empty-state">
-          <p>You haven't uploaded any files yet. Start by uploading your first file!</p>
+      <div className="downloads-main">
+        <h2>My Files</h2>
+        <div className="downloads-message">
+          You haven't uploaded any files yet. Start by uploading your first file!
         </div>
       </div>
     );
   }
 
   return (
-    <div className="myfiles-container">
-      <div className="myfiles-header">
-        <h1>My Files</h1>
-      </div>
+    <div className="downloads-main">
+      <h2>My Files</h2>
 
-      <div className="files-grid">
+      <div className="downloads-container">
         {files.map((file) => (
-          <div key={file._id} className="file-card">
+          <div key={file._id} className="download-card">
             {/* Thumbnail */}
-            <div 
-              className="file-thumbnail"
+            <div
+              className="download-thumbnail"
               onClick={() => navigate(`/preview/${file._id}`)}
               style={{ cursor: 'pointer' }}
               title="Click to preview"
             >
               {file.thumbnail?.url ? (
-                <img src={file.thumbnail.url} alt={file.title} />
+                <img
+                  src={file.thumbnail.url}
+                  alt={file.title}
+                  onError={(e) => e.target.src = 'https://via.placeholder.com/200x150?text=No+Thumbnail'}
+                />
               ) : (
                 <div className="no-thumbnail">No Image</div>
               )}
             </div>
 
-            {/* File Info */}
-            <div className="file-info">
-              <h3 className="file-title">{file.title}</h3>
+            {/* File Details */}
+            <div className="download-details">
+              <h3 className="download-title">{file.title}</h3>
 
-              <div className="file-meta">
+              <p className="download-category">
                 <span className="category-badge">{file.category}</span>
-              </div>
+              </p>
 
               {/* Tags */}
               {file.tags && file.tags.length > 0 && (
-                <div className="file-tags">
+                <div className="download-tags">
                   {file.tags.slice(0, 2).map((tag, idx) => (
-                    <span key={idx} className="tag">
-                      {tag}
-                    </span>
+                    <span key={idx} className="tag">{tag}</span>
                   ))}
                   {file.tags.length > 2 && <span className="tag">+{file.tags.length - 2}</span>}
                 </div>
               )}
 
-              {/* Upload Date */}
-              <div className="upload-info">
-                <p className="uploaded-date">Uploaded on {formatDate(file.createdAt)}</p>
-              </div>
-
-              {/* Download Count */}
               <div className="download-stats">
                 <span className="download-count">{file.downloadCount} downloads</span>
               </div>

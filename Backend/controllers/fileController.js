@@ -347,7 +347,10 @@ export const getMyDownloads = async (req, res) => {
   try {
     const userId = req.user.id;
     const User = (await import("../models/User.js")).default;
-    const user = await User.findById(userId).populate("downloads");
+    const user = await User.findById(userId).populate({
+      path: "downloads",
+      populate: { path: "uploadedBy", select: "username" }
+    });
     if (!user) return res.status(404).json({ message: "User not found." });
     res.status(200).json(user.downloads || []);
   } catch (error) {

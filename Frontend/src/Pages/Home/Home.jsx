@@ -80,7 +80,7 @@ const Home = () => {
       return;
     }
     const token = localStorage.getItem('token');
-    
+
     if (!token) {
       navigate('/login');
       return;
@@ -179,53 +179,31 @@ const Home = () => {
   });
 
   if (loading) {
-    return (
-      <div className="home-container">
-        <div className="loading">Loading files...</div>
-      </div>
-    );
+    return <div className="downloads-message">Loading files...</div>;
   }
 
   if (error) {
-    return (
-      <div className="home-container">
-        <div className="error-message">{error}</div>
-      </div>
-    );
+    return <div className="downloads-message error">{error}</div>;
   }
 
   if (files.length === 0) {
-    return (
-      <div className="home-container">
-        <div className="empty-state">
-          <p>No files available yet.</p>
-        </div>
-      </div>
-    );
+    return <div className="downloads-message">No files available yet.</div>;
   }
 
   if (filteredFiles.length === 0) {
-    return (
-      <div className="home-container">
-        <div className="no-files-found">
-          <p>No files found matching your search or filter.</p>
-        </div>
-      </div>
-    );
+    return <div className="downloads-message">No files found matching your search or filter.</div>;
   }
 
   return (
-    <div className="home-container">
-      <div className="home-header">
-        <h1>All Files</h1>
-      </div>
+    <div className="downloads-main">
+      <h2>All Files</h2>
 
-      <div className="files-grid">
+      <div className="downloads-container">
         {filteredFiles.map((file) => (
-          <div key={file._id} className="file-card">
+          <div key={file._id} className="download-card">
             {/* Thumbnail */}
             <div
-              className="file-thumbnail"
+              className="download-thumbnail"
               onClick={() => {
                 const token = localStorage.getItem('token');
                 if (!token) {
@@ -240,43 +218,39 @@ const Home = () => {
               title="Click to preview"
             >
               {file.thumbnail?.url ? (
-                <img src={file.thumbnail.url} alt={file.title} />
+                <img
+                  src={file.thumbnail.url}
+                  alt={file.title}
+                  onError={(e) => e.target.src = 'https://via.placeholder.com/200x150?text=No+Thumbnail'}
+                />
               ) : (
                 <div className="no-thumbnail">No Image</div>
               )}
             </div>
 
-            {/* File Info */}
-            <div className="file-info">
-              <h3 className="file-title">{file.title}</h3>
+            {/* File Details */}
+            <div className="download-details">
+              <h3 className="download-title">{file.title}</h3>
 
-              <div className="file-meta">
+              <p className="download-category">
                 <span className="category-badge">{file.category}</span>
-              </div>
+              </p>
 
               {/* Tags */}
               {file.tags && file.tags.length > 0 && (
-                <div className="file-tags">
+                <div className="download-tags">
                   {file.tags.slice(0, 2).map((tag, idx) => (
-                    <span key={idx} className="tag">
-                      {tag}
-                    </span>
+                    <span key={idx} className="tag">{tag}</span>
                   ))}
                   {file.tags.length > 2 && <span className="tag">+{file.tags.length - 2}</span>}
                 </div>
               )}
 
-              {/* Upload Info */}
-              <div className="upload-info">
-                <p className="uploaded-by">
-                  By <strong>{file.uploadedBy?.username || 'Unknown'}</strong>
-                </p>
-                <p className="uploaded-date">{formatDate(file.createdAt)}</p>
-              </div>
-
-              {/* Download Count */}
               <div className="download-stats">
                 <span className="download-count">{file.downloadCount} downloads</span>
+                {file.uploadedBy && file.uploadedBy.username && (
+                  <span className="uploaded-by">by {file.uploadedBy.username}</span>
+                )}
               </div>
 
               {/* Action Buttons */}
@@ -296,7 +270,7 @@ const Home = () => {
                   )}
                 </div>
 
-                {/* Save Later Icon Placeholder */}
+                {/* Save Later Icon */}
                 <div className="action-button-wrapper">
                   <button
                     className="icon-btn save-later"

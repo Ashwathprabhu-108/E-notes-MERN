@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SavedFiles.css';
-import saved from "../../assets/saved-icon.svg";
 import Save_later from "../../assets/saved-bookmark-icon.svg";
 
 const SavedFiles = () => {
@@ -141,108 +140,97 @@ const SavedFiles = () => {
   };
 
   if (loading) {
-    return (
-      <div className="saved-files-container">
-        <div className="loading">Loading saved files...</div>
-      </div>
-    );
+    return <div className="downloads-message">Loading saved files...</div>;
   }
 
   if (error) {
-    return (
-      <div className="saved-files-container">
-        <div className="error-message">{error}</div>
-      </div>
-    );
+    return <div className="downloads-message error">{error}</div>;
   }
 
   if (savedFilesData.length === 0) {
     return (
-      <div className="saved-files-container">
-        <div className="saved-files-header">
-          <h1>Saved Files</h1>
-        </div>
-        <div className="empty-state">
-          <p>No saved files yet. Start saving files from the Home page!</p>
+      <div className="downloads-main">
+        <h2>Saved Files</h2>
+        <div className="downloads-message">
+          No saved files yet. Start saving files from the Home page!
         </div>
       </div>
     );
   }
 
   return (
-    <div className="saved-files-container">
-      <div className="saved-files-header">
-        <h1>Saved Files</h1>
-      </div>
+    <div className="downloads-main">
+      <h2>Saved Files</h2>
 
-      <div className="files-grid">
+      <div className="downloads-container">
         {savedFilesData.map((file) => (
-          <div key={file._id} className="file-card">
+          <div key={file._id} className="download-card">
             {/* Thumbnail */}
-            <div 
-              className="file-thumbnail"
+            <div
+              className="download-thumbnail"
               onClick={() => navigate(`/preview/${file._id}`)}
               style={{ cursor: 'pointer' }}
               title="Click to preview"
             >
               {file.thumbnail?.url ? (
-                <img src={file.thumbnail.url} alt={file.title} />
+                <img
+                  src={file.thumbnail.url}
+                  alt={file.title}
+                  onError={(e) => e.target.src = 'https://via.placeholder.com/200x150?text=No+Thumbnail'}
+                />
               ) : (
                 <div className="no-thumbnail">No Image</div>
               )}
             </div>
 
-            {/* File Info */}
-            <div className="file-info">
-              <h3 className="file-title">{file.title}</h3>
+            {/* File Details */}
+            <div className="download-details">
+              <h3 className="download-title">{file.title}</h3>
 
-              <div className="file-meta">
+              <p className="download-category">
                 <span className="category-badge">{file.category}</span>
-              </div>
+              </p>
 
               {/* Tags */}
               {file.tags && file.tags.length > 0 && (
-                <div className="file-tags">
+                <div className="download-tags">
                   {file.tags.slice(0, 2).map((tag, idx) => (
-                    <span key={idx} className="tag">
-                      {tag}
-                    </span>
+                    <span key={idx} className="tag">{tag}</span>
                   ))}
                   {file.tags.length > 2 && <span className="tag">+{file.tags.length - 2}</span>}
                 </div>
               )}
 
-              {/* Upload Info */}
-              <div className="upload-info">
-                <p className="uploaded-by">
-                  By <strong>{file.uploadedBy?.username || 'Unknown'}</strong>
-                </p>
-                <p className="uploaded-date">{formatDate(file.createdAt)}</p>
-              </div>
-
-              {/* Download Count */}
               <div className="download-stats">
                 <span className="download-count">{file.downloadCount} downloads</span>
+                {file.uploadedBy && file.uploadedBy.username && (
+                  <span className="uploaded-by">by {file.uploadedBy.username}</span>
+                )}
               </div>
 
               {/* Action Buttons */}
               <div className="file-actions">
-                <button
-                  className="download-btn"
-                  onClick={() => handleDownload(file._id, file.document.name)}
-                  title="Download this file"
-                >
-                  Download
-                </button>
+                {/* Download — grows to fill available width */}
+                <div className="action-button-wrapper">
+                  <button
+                    className="download-btn"
+                    onClick={() => handleDownload(file._id, file.document.name)}
+                    title="Download this file"
+                  >
+                    Download
+                  </button>
+                </div>
 
-                {/* Remove from saved */}
-                <button
-                  className="icon-btn unsave-btn"
-                  title="Remove from saved"
-                  onClick={() => handleUnsave(file._id)}
-                >
-                  <img src={Save_later} alt="Remove from saved" width="16" height="16" />
-                </button>
+                {/* Unsave icon — stays compact */}
+                <div className="action-button-wrapper">
+                  <button
+                    className="icon-btn unsave-btn"
+                    title="Remove from saved"
+                    onClick={() => handleUnsave(file._id)}
+                  >
+                    <img src={Save_later} alt="Remove from saved" width="16" height="16" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
