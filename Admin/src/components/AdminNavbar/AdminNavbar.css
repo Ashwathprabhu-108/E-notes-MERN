@@ -1,9 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ═══════════════════════════════════════════════════════════
+   ADMIN NAVBAR
+═══════════════════════════════════════════════════════════ */
 .admin-navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #6b4fc8 0%, #7c5fd4 50%, #6b4fc8 100%);
-  padding: 0 24px;
+  background: rgba(10, 8, 30, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 0 28px;
   width: 100%;
   box-sizing: border-box;
   position: fixed;
@@ -11,12 +18,13 @@
   left: 0;
   right: 0;
   z-index: 200;
-  box-shadow: 0 4px 24px rgba(107, 79, 200, 0.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.2);
   height: var(--navbar-height, 70px);
   gap: 16px;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
+/* ── Left: Logo + Brand ── */
 .navbar__left {
   display: flex;
   align-items: center;
@@ -28,54 +36,39 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1d4dd2, #4061ba);
-  width: 50px;
-  height: 50px;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  width: 42px;
+  height: 42px;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transition: all 0.3s ease;
-  font-size: 24px;
-  cursor: default;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.45);
+  flex-shrink: 0;
 }
 
-.navbar__logo:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-}
-
-.navbar__logo-icon {
+.navbar__brand {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .navbar__title {
   color: #ffffff;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 800;
-  letter-spacing: 1px;
-  margin: 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  white-space: nowrap;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-.navbar__center {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.navbar__subtitle {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 13px;
-  font-weight: 500;
   letter-spacing: 0.5px;
-  text-transform: uppercase;
-  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  line-height: 1;
+  font-family: 'Inter', sans-serif;
 }
 
+.navbar__tagline {
+  font-size: 10px;
+  color: rgba(167, 139, 250, 0.7);
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* ── Right: Actions ── */
 .navbar__actions {
   display: flex;
   align-items: center;
@@ -83,147 +76,78 @@
   flex-shrink: 0;
 }
 
-.navbar__user-info {
-  display: flex;
-  align-items: center;
-}
-
-.navbar__role-badge {
-  background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  white-space: nowrap;
-  letter-spacing: 0.5px;
-  backdrop-filter: blur(8px);
-}
-
-.navbar__logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: linear-gradient(135deg, #ef4444, #f87171);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: 'Segoe UI', sans-serif;
-  white-space: nowrap;
-}
-
-.logout-icon {
+.navbar__notification {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(124, 58, 237, 0.08);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.navbar__logout-btn:hover {
-  background: linear-gradient(135deg, #dc2626, #ef4444);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+.navbar__notification:hover {
+  background: rgba(124, 58, 237, 0.18);
+  border-color: rgba(124, 58, 237, 0.4);
 }
 
-.navbar__logout-btn:active {
-  transform: translateY(0);
+.navbar__user-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 6px;
+  background: rgba(124, 58, 237, 0.08);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  border-radius: 50px;
+  cursor: default;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .admin-navbar {
-    padding: 0 16px;
-    gap: 12px;
-  }
-
-  .navbar__title {
-    font-size: 20px;
-  }
-
-  .navbar__subtitle {
-    font-size: 11px;
-  }
-
-  .navbar__logo {
-    width: 44px;
-    height: 44px;
-    font-size: 20px;
-  }
+.navbar__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
 }
 
+.navbar__user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.navbar__user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+  line-height: 1;
+}
+
+.navbar__user-role {
+  font-size: 10px;
+  color: #7c6fb0;
+  line-height: 1;
+}
+
+/* ── Responsive ── */
 @media (max-width: 768px) {
-  .admin-navbar {
-    padding: 0 12px;
-    gap: 8px;
-  }
-
-  .navbar__left {
-    gap: 8px;
-  }
-
-  .navbar__title {
-    font-size: 18px;
-  }
-
-  .navbar__subtitle {
-    display: none;
-  }
-
-  .navbar__logo {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-  }
-
-  .navbar__role-badge {
-    font-size: 11px;
-    padding: 3px 10px;
-  }
-
-  .navbar__logout-btn {
-    font-size: 12px;
-    padding: 6px 12px;
-  }
+  .admin-navbar { padding: 0 16px; }
+  .navbar__tagline { display: none; }
+  .navbar__user-name { display: none; }
+  .navbar__user-role { display: none; }
+  .navbar__user-chip { padding: 6px; }
 }
 
 @media (max-width: 480px) {
-  .admin-navbar {
-    padding: 0 8px;
-    gap: 6px;
-    height: 60px;
-  }
-
-  .navbar__title {
-    font-size: 16px;
-    letter-spacing: 0px;
-  }
-
-  .navbar__left {
-    gap: 6px;
-  }
-
-  .navbar__logo {
-    width: 38px;
-    height: 38px;
-    font-size: 16px;
-  }
-
-  .navbar__role-badge {
-    display: none;
-  }
-
-  .navbar__logout-btn {
-    font-size: 11px;
-    padding: 5px 10px;
-  }
-
-  .logout-icon {
-    display: none;
-  }
+  .navbar__notification { display: none; }
+  .navbar__title { font-size: 16px; }
 }

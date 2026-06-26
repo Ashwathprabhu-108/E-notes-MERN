@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Flag, CheckCircle, Clock, Trash2, AlertTriangle } from "lucide-react";
 import "./AdminReports.css";
 
 const AdminReports = () => {
@@ -89,9 +90,9 @@ const AdminReports = () => {
 
   const getStatusBadge = (resolved) => {
     if (resolved) {
-      return <span className="status-badge resolved">✓ Resolved</span>;
+      return <span className="status-badge resolved"><CheckCircle size={12} strokeWidth={2} /> Resolved</span>;
     }
-    return <span className="status-badge pending">⏱️ Pending</span>;
+    return <span className="status-badge pending"><Clock size={12} strokeWidth={2} /> Pending</span>;
   };
 
   if (loading) {
@@ -105,8 +106,12 @@ const AdminReports = () => {
   return (
     <div className="admin-reports">
       <div className="reports-container">
-        <h1>🚩 Reports Management</h1>
-        <p className="subtitle">Manage user reports and violations</p>
+        <div className="reports-header">
+          <div className="reports-title-icon">
+            <Flag size={20} color="#fff" strokeWidth={2} />
+          </div>
+          <h1>Reports</h1>
+        </div>
 
         {error && <div className="error-message">{error}</div>}
 
@@ -155,14 +160,14 @@ const AdminReports = () => {
                       className="resolve-btn"
                       onClick={() => handleMarkResolved(report._id)}
                     >
-                      ✓ Mark as Resolved
+                      <CheckCircle size={13} strokeWidth={2} /> Mark Resolved
                     </button>
                   )}
                   <button
                     className="delete-btn"
                     onClick={() => setConfirmDelete(report._id)}
                   >
-                    🗑️ Delete
+                    <Trash2 size={13} strokeWidth={2} />
                   </button>
                 </div>
               </div>
@@ -173,8 +178,11 @@ const AdminReports = () => {
         {confirmDelete && (
           <div className="modal-overlay" onClick={() => setConfirmDelete(null)}>
             <div className="modal" onClick={(e) => e.stopPropagation()}>
-              <h2>Confirm Delete</h2>
-              <p>Are you sure you want to delete this report? This action cannot be undone.</p>
+              <div style={{ display:'flex', justifyContent:'center', marginBottom:12 }}>
+                <AlertTriangle size={26} color="#f59e0b" strokeWidth={1.8} />
+              </div>
+              <h2>Delete Report?</h2>
+              <p>This action cannot be undone.</p>
               <div className="modal-actions">
                 <button
                   className="btn-cancel"

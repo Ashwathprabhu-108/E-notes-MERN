@@ -63,6 +63,8 @@ const MyFiles = () => {
     };
 
     fetchMyFiles();
+    const interval = setInterval(fetchMyFiles, 30_000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleEdit = (file) => {

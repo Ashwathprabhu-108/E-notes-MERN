@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Users, Search, Trash2, CheckCircle, Ban, AlertTriangle, X } from "lucide-react";
 import "./AdminUsers.css";
 
 const AdminUsers = () => {
@@ -116,10 +117,11 @@ const AdminUsers = () => {
         {/* ── Page Header ───────────────────────────────────── */}
         <div className="au-page-header">
           <div className="au-page-title">
-            <div className="au-title-icon">👥</div>
+            <div className="au-title-icon">
+              <Users size={22} color="#fff" strokeWidth={2} />
+            </div>
             <div>
-              <h1>Manage Users</h1>
-              <p className="au-breadcrumb">Admin Panel · User Management</p>
+              <h1>Users</h1>
             </div>
           </div>
 
@@ -143,26 +145,21 @@ const AdminUsers = () => {
         {/* ── Toolbar ───────────────────────────────────────── */}
         <div className="au-toolbar">
           <div className="au-search-wrap">
-            <svg className="au-search-icon" viewBox="0 0 20 20" fill="none">
-              <circle cx="9" cy="9" r="6" stroke="#7c3aed" strokeWidth="1.8"/>
-              <path d="M13.5 13.5L17 17" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round"/>
-            </svg>
+            <Search size={15} className="au-search-icon" color="#7c3aed" strokeWidth={2} />
             <input
               className="au-search-input"
               type="text"
-              placeholder="Search by username or email…"
+              placeholder="Search by name or email…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
             {search && (
-              <button className="au-search-clear" onClick={() => setSearch("")}>✕</button>
+              <button className="au-search-clear" onClick={() => setSearch("")}>
+                <X size={13} strokeWidth={2.5} />
+              </button>
             )}
           </div>
-          <div className="au-result-count">
-            {search
-              ? `${filteredUsers.length} result${filteredUsers.length !== 1 ? "s" : ""} for "${search}"`
-              : `Showing all ${users.length} users`}
-          </div>
+
         </div>
 
         {error && <div className="au-error">{error}</div>}
@@ -185,7 +182,7 @@ const AdminUsers = () => {
                 <tr>
                   <td colSpan={6} className="au-empty">
                     <div className="au-empty-inner">
-                      <span className="au-empty-icon">🔍</span>
+                      <Search size={28} color="#4a4080" strokeWidth={1.5} />
                       <p>{search ? `No users found for "${search}"` : "No users yet"}</p>
                     </div>
                   </td>
@@ -222,14 +219,18 @@ const AdminUsers = () => {
                           disabled={togglingId === user._id}
                           title={user.isDisabled ? "Enable user" : "Disable user"}
                         >
-                          {togglingId === user._id ? "…" : user.isDisabled ? "✓ Enable" : "⊘ Disable"}
+                          {togglingId === user._id
+                            ? "…"
+                            : user.isDisabled
+                            ? <><CheckCircle size={13} strokeWidth={2}/> Enable</>
+                            : <><Ban size={13} strokeWidth={2}/> Disable</>}
                         </button>
                         <button
                           className="au-btn au-btn-delete"
                           onClick={() => setConfirmDelete(user._id)}
                           title="Delete user"
                         >
-                          🗑
+                          <Trash2 size={14} strokeWidth={2} />
                         </button>
                       </div>
                     </td>
@@ -245,7 +246,9 @@ const AdminUsers = () => {
       {confirmDelete && (
         <div className="au-modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div className="au-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="au-modal-icon">⚠️</div>
+            <div className="au-modal-icon">
+              <AlertTriangle size={28} color="#f59e0b" strokeWidth={1.8} />
+            </div>
             <h3>Delete User?</h3>
             <p>This will permanently delete the user and <strong>all their files</strong>. This action cannot be undone.</p>
             <div className="au-modal-actions">

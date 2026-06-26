@@ -72,6 +72,8 @@ const Home = () => {
     };
 
     fetchFilesAndSavedStatus();
+    const interval = setInterval(fetchFilesAndSavedStatus, 30_000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleDownload = async (fileId, fileName) => {

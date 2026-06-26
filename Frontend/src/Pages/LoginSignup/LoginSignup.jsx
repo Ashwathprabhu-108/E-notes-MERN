@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './LoginSignup.css';
 import UsernameIcon from '../../assets/Username.svg';
@@ -11,7 +11,10 @@ import DontShowPassword  from '../../assets/eye-blind-icon.svg';
 
 export default function LoginSignup() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+
+  // Already logged in → go straight to Home
+  if (user) return <Navigate to="/" replace />;
 
   const [tab, setTab]                           = useState('login');
   const [showPassword, setShowPassword]         = useState(false);
@@ -62,7 +65,7 @@ export default function LoginSignup() {
       const data = await res.json();
       if (!res.ok) return setError(data.message || 'Something went wrong.');
       login(data.token, data.user);
-      navigate('/');
+      navigate('/', { replace: true });
     } catch {
       setError('Network error. Please try again.');
     } finally {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Flag, Trash2, ChevronRight } from "lucide-react";
 import "./AdminUserFiles.css";
 
 const AdminUserFiles = () => {
@@ -170,14 +171,13 @@ const AdminUserFiles = () => {
       <div className="files-container">
         <div className="breadcrumb">
           <button onClick={() => navigate("/admin/users")}>Users</button>
-          <span>&gt;</span>
+          <ChevronRight size={14} color="#5a4f8a" />
           <span>{username}</span>
-          <span>&gt;</span>
+          <ChevronRight size={14} color="#5a4f8a" />
           <span>Files</span>
         </div>
 
-        <h1>Files by {username}</h1>
-        <p className="subtitle">Total Files: {files.length}</p>
+        <h1>Files — {username}</h1>
 
         {error && <div className="error-message">{error}</div>}
 
@@ -226,7 +226,7 @@ const AdminUserFiles = () => {
                         onClick={() => handleViewReports(file._id)}
                         title="View reports"
                       >
-                        🚩
+                        <Flag size={13} strokeWidth={2} />
                       </button>
                     )}
 
@@ -235,7 +235,7 @@ const AdminUserFiles = () => {
                       onClick={() => setConfirmDelete(file._id)}
                       title="Delete file"
                     >
-                      🗑
+                      <Trash2 size={13} strokeWidth={2} />
                     </button>
                   </td>
                 </tr>

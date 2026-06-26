@@ -55,6 +55,8 @@ const Downloads = () => {
     };
 
     fetchDownloads();
+    const interval = setInterval(fetchDownloads, 30_000);
+    return () => clearInterval(interval);
   }, [user]);
 
   const handleDownload = (fileId, fileName) => {

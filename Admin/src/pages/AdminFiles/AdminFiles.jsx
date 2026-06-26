@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FileText, Trash2, Flag, Download, AlertTriangle } from "lucide-react";
 import "./AdminFiles.css";
 
 const AdminFiles = () => {
@@ -91,13 +92,13 @@ const AdminFiles = () => {
 
   return (
     <div className="admin-files">
-      <div className="files-header">
-        <div>
-          <h1>📄 File Management</h1>
-          <p className="subtitle">
-            {files.length} file{files.length !== 1 ? "s" : ""} on the platform
-          </p>
-        </div>
+        <div className="files-header">
+          <div>
+            <h1>
+              <FileText size={22} style={{ verticalAlign: "middle", marginRight: 8 }} />
+              Files
+            </h1>
+          </div>
         <input
           type="text"
           className="search-input"
@@ -168,13 +169,16 @@ const AdminFiles = () => {
 
                   {/* Downloads */}
                   <td className="download-count">
-                    ⬇️ {file.downloadCount}
+                    <Download size={13} strokeWidth={2} style={{ verticalAlign: "middle", marginRight: 4 }} />
+                    {file.downloadCount}
                   </td>
 
                   {/* Reports */}
                   <td>
                     {file.reportCount > 0 ? (
-                      <span className="report-badge">🚩 {file.reportCount}</span>
+                      <span className="report-badge">
+                        <Flag size={11} strokeWidth={2} /> {file.reportCount}
+                      </span>
                     ) : (
                       <span className="no-reports">—</span>
                     )}
@@ -190,7 +194,7 @@ const AdminFiles = () => {
                       onClick={() => setConfirmDelete(file._id)}
                       title="Delete file"
                     >
-                      🗑️ Delete
+                      <Trash2 size={14} strokeWidth={2} /> Delete
                     </button>
                   </td>
                 </tr>
@@ -203,13 +207,12 @@ const AdminFiles = () => {
       {/* Confirm Delete Modal */}
       {confirmDelete && (
         <div className="modal-overlay" onClick={() => setConfirmDelete(null)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2>🗑️ Delete File?</h2>
-            <p>
-              This will permanently delete the file and all its associated
-              reports from Cloudinary and the database. This action cannot be
-              undone.
-            </p>
+            <div className="modal"  onClick={(e) => e.stopPropagation()}>
+              <div style={{ display:'flex', justifyContent:'center', marginBottom:12 }}>
+                <AlertTriangle size={28} color="#f59e0b" strokeWidth={1.8} />
+              </div>
+              <h2>Delete File?</h2>
+              <p>This action cannot be undone.</p>
             <div className="modal-actions">
               <button className="btn-cancel" onClick={() => setConfirmDelete(null)}>
                 Cancel

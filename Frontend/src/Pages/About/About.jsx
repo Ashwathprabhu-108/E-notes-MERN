@@ -14,26 +14,26 @@ import EmailIco   from '../../assets/Email.svg';
 import InstaIco   from '../../assets/Instagram.svg';
 
 const FEATURES = [
-  { icon: UploadIcon, color: '#7c6af7', bg: 'rgba(124,106,247,0.12)', label: 'Upload Notes',     desc: 'Share PDFs and notes with anyone, instantly. No size limits, no paywalls.' },
-  { icon: DlIcon,     color: '#34d399', bg: 'rgba(52,211,153,0.12)',  label: 'Download Files',   desc: 'One-click downloads. No account required for browsing or downloading.' },
-  { icon: FileIcon,   color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  label: 'Smart Preview',    desc: 'AI-generated summaries let you judge a file before you commit to downloading.' },
-  { icon: SearchIcon, color: '#60a5fa', bg: 'rgba(96,165,250,0.12)',  label: 'Instant Search',   desc: 'Find notes by topic, subject, or contributor name in milliseconds.' },
-  { icon: Save,       color: '#f472b6', bg: 'rgba(244,114,182,0.12)', label: 'Save for Later',   desc: 'Bookmark anything to your personal library and access it from any device.' },
-];
-
-const AUDIENCE = [
-  { icon: StudentIco, label: 'Students',         sub: 'Exam prep & revision' },
-  { icon: TeacherIco, label: 'Teachers',          sub: 'Share course material' },
-  { icon: LearnerIco, label: 'Self-Learners',     sub: 'Curiosity without limits' },
-  { icon: ProIco,     label: 'Professionals',     sub: 'Upskill on the job' },
-  { icon: CreatorIco, label: 'Content Creators',  sub: 'Research & references' },
+  { icon: UploadIcon, color: '#7c6af7', bg: 'rgba(124,106,247,0.12)', label: 'Upload Notes',   desc: 'Share PDFs and study material with anyone, instantly. No size limits, no paywalls.' },
+  { icon: DlIcon,     color: '#34d399', bg: 'rgba(52,211,153,0.12)',  label: 'Download Files', desc: 'One-click downloads. No account required for basic access.' },
+  { icon: FileIcon,   color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  label: 'Smart Preview',  desc: 'AI-generated summaries so you know what you\'re downloading before you get it.' },
+  { icon: SearchIcon, color: '#60a5fa', bg: 'rgba(96,165,250,0.12)',  label: 'Instant Search', desc: 'Find notes by topic, subject, or uploader in milliseconds.' },
+  { icon: Save,       color: '#f472b6', bg: 'rgba(244,114,182,0.12)', label: 'Save for Later', desc: 'Bookmark anything to your personal library and access it from any device.' },
 ];
 
 const STEPS = [
-  { n: '01', title: 'Create an account',   body: 'Sign up in seconds with your email or Google. It is completely free.' },
-  { n: '02', title: 'Browse or upload',    body: 'Explore the library or contribute your own notes and study material.' },
-  { n: '03', title: 'Preview content',     body: 'Read the full PDF inside the built-in viewer before downloading.' },
-  { n: '04', title: 'Download & bookmark', body: 'Save offline copies or pin files to your personal bookmark list.' },
+  { n: '01', title: 'Create an account',    body: 'Sign up in seconds with email or Google. Completely free.' },
+  { n: '02', title: 'Browse or upload',     body: 'Explore the library or contribute your own notes.' },
+  { n: '03', title: 'Preview content',      body: 'Read the full PDF inside the built-in viewer before downloading.' },
+  { n: '04', title: 'Download & bookmark',  body: 'Save files offline or pin them to your personal library.' },
+];
+
+const AUDIENCE = [
+  { icon: StudentIco, label: 'Students',        sub: 'Exam prep & revision' },
+  { icon: TeacherIco, label: 'Teachers',         sub: 'Share course material' },
+  { icon: LearnerIco, label: 'Self-Learners',    sub: 'Curiosity without limits' },
+  { icon: ProIco,     label: 'Professionals',    sub: 'Upskill on the job' },
+  { icon: CreatorIco, label: 'Content Creators', sub: 'Research & references' },
 ];
 
 export default function About() {
@@ -52,61 +52,67 @@ export default function About() {
   return (
     <div className="ab-root">
 
-      {/* ── HERO ─────────────────────────────────────────── */}
+      {/* ── HERO ── two-column ───────────────────────── */}
       <section className="ab-hero">
-        <span className="ab-eyebrow">About E-Notes</span>
-        <h1 className="ab-hero-h1">
-          Knowledge that<br />
-          <em>flows freely.</em>
-        </h1>
-        <p className="ab-hero-sub">
-          A community-powered platform where anyone can upload, discover,
-          and download notes on any topic — no cost, no catch.
-        </p>
-        <div className="ab-stat-row">
-          <div className="ab-stat-pill">
+        <div className="ab-hero-left">
+          <span className="ab-eyebrow">
+            <span className="ab-eyebrow-dot" />
+            About E-Notes
+          </span>
+          <h1 className="ab-hero-h1">
+            Knowledge that<br />
+            <em>flows freely.</em>
+          </h1>
+          <p className="ab-hero-sub">
+            A community-powered platform where anyone can upload, discover,
+            and download notes on any topic — no cost, no catch.
+          </p>
+        </div>
+
+        <div className="ab-stat-panel">
+          <div className="ab-stat-item">
             <span className="ab-stat-n">{stats.files.toLocaleString()}</span>
             <span className="ab-stat-l">Notes uploaded</span>
           </div>
-          <div className="ab-stat-divider" />
-          <div className="ab-stat-pill">
+          <div className="ab-stat-item">
             <span className="ab-stat-n">{stats.downloads.toLocaleString()}</span>
             <span className="ab-stat-l">Total downloads</span>
           </div>
-          <div className="ab-stat-divider" />
-          <div className="ab-stat-pill">
+          <div className="ab-stat-item">
             <span className="ab-stat-n">100%</span>
             <span className="ab-stat-l">Free forever</span>
           </div>
         </div>
       </section>
 
-      {/* ── WHAT IS E-NOTES ──────────────────────────────── */}
-      <section className="ab-section ab-what">
-        <div className="ab-what-text">
-          <span className="ab-label">What is E-Notes?</span>
-          <h2>Built for learners,<br />by learners.</h2>
-          <p>
-            E-Notes started with a simple frustration: great study material exists,
-            but it is locked inside individual hard drives. We built a place where
-            that knowledge escapes — freely shared between students, teachers,
-            and curious minds worldwide.
-          </p>
-          <p>
-            Upload a PDF in seconds, let others preview it with AI-generated
-            summaries, and download anything without a subscription or hidden fee.
-          </p>
-        </div>
-        <div className="ab-what-aside">
+      {/* ── WHAT IS E-NOTES ─────────────────────────── */}
+      <section className="ab-section">
+        <div className="ab-what">
+          <div className="ab-what-text">
+            <span className="ab-label">What is E-Notes?</span>
+            <h2>Built for learners,<br />by learners.</h2>
+            <p>
+              E-Notes started from a simple frustration: great study material exists
+              everywhere, but it stays locked inside individual hard drives. We built
+              a place where knowledge escapes — freely shared between students,
+              teachers, and curious minds worldwide.
+            </p>
+            <p>
+              Upload a PDF in seconds, let others preview it with AI-generated
+              summaries, and download anything without a subscription or hidden fee.
+            </p>
+          </div>
           <div className="ab-quote-card">
             <div className="ab-quote-mark">"</div>
-            <p>Knowledge should never be locked away. It should flow freely between learners everywhere.</p>
+            <p>Knowledge should never be locked away. It should flow freely between every learner, everywhere.</p>
             <footer>— The E-Notes Team</footer>
           </div>
         </div>
       </section>
 
-      {/* ── FEATURES BENTO ───────────────────────────────── */}
+      <hr className="ab-divider" />
+
+      {/* ── FEATURES ────────────────────────────────── */}
       <section className="ab-section">
         <span className="ab-label">Platform features</span>
         <h2 className="ab-section-h2">Everything you need, nothing you don't.</h2>
@@ -114,7 +120,7 @@ export default function About() {
           {FEATURES.map((f, i) => (
             <div
               key={i}
-              className={`ab-bento-card ${i === 0 ? 'ab-bento-wide' : ''}`}
+              className="ab-bento-card"
               style={{ '--card-accent': f.color, '--card-bg': f.bg }}
             >
               <div className="ab-bento-icon">
@@ -127,23 +133,24 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ─────────────────────────────────── */}
-      <section className="ab-section ab-steps-section">
-        <span className="ab-label">How it works</span>
-        <h2 className="ab-section-h2">Up and running in four steps.</h2>
-        <div className="ab-steps">
-          {STEPS.map((s, i) => (
-            <div key={i} className="ab-step">
-              <span className="ab-step-n">{s.n}</span>
-              <div className="ab-step-line" />
-              <h3>{s.title}</h3>
-              <p>{s.body}</p>
-            </div>
-          ))}
+      {/* ── HOW IT WORKS ────────────────────────────── */}
+      <div className="ab-steps-section">
+        <div className="ab-steps-inner">
+          <span className="ab-label">How it works</span>
+          <h2 className="ab-section-h2">Up and running in four steps.</h2>
+          <div className="ab-steps">
+            {STEPS.map((s, i) => (
+              <div key={i} className="ab-step">
+                <span className="ab-step-n">{s.n}</span>
+                <h3>{s.title}</h3>
+                <p>{s.body}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </section>
+      </div>
 
-      {/* ── WHO IS IT FOR ────────────────────────────────── */}
+      {/* ── WHO IS IT FOR ───────────────────────────── */}
       <section className="ab-section">
         <span className="ab-label">Who it's for</span>
         <h2 className="ab-section-h2">Designed for every kind of learner.</h2>
@@ -160,45 +167,63 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── TEAM + CONTACT ───────────────────────────────── */}
-      <section className="ab-section ab-bottom-row">
-        <div className="ab-team-card">
-          <span className="ab-label">The creator</span>
-          <div className="ab-avatar">E</div>
-          <h3>E-Notes Team</h3>
-          <p>
-            Built with passion out of Udupi, Karnataka. We bridge the gap
-            between students who have great notes and those who need them.
-          </p>
-          <span className="ab-location-tag">📍 Udupi, Karnataka</span>
-        </div>
-        <div className="ab-contact-card">
-          <span className="ab-label">Get in touch</span>
-          <h3>We'd love to hear from you.</h3>
-          <div className="ab-contacts">
-            <a className="ab-contact-item" href="https://mail.google.com/mail/?view=cm&to=eha108768@gmail.com" target="_blank" rel="noreferrer">
-              <div className="ab-contact-ico" style={{ background: 'rgba(234,67,53,0.12)' }}>
-                <img src={EmailIco} alt="Email" />
-              </div>
-              <div>
-                <span className="ab-contact-name">Email</span>
-                <span className="ab-contact-val">support@gmail.com</span>
-              </div>
-            </a>
-            <a className="ab-contact-item" href="https://instagram.com/enotesapp" target="_blank" rel="noreferrer">
-              <div className="ab-contact-ico" style={{ background: 'rgba(188,24,136,0.12)' }}>
-                <img src={InstaIco} alt="Instagram" />
-              </div>
-              <div>
-                <span className="ab-contact-name">Instagram</span>
-                <span className="ab-contact-val">@enotesapp</span>
-              </div>
-            </a>
+      <hr className="ab-divider" />
+
+      {/* ── TEAM + CONTACT ──────────────────────────── */}
+      <section className="ab-section">
+        <div className="ab-bottom-row">
+          <div className="ab-team-card">
+            <span className="ab-label">The creator</span>
+            <div className="ab-team-body">
+              <div className="ab-avatar">E</div>
+              <span className="ab-team-name">E-Notes Team</span>
+            </div>
+            <p>
+              Built with passion out of Udupi, Karnataka. We bridge the gap
+              between students who have great notes and those who need them.
+              Knowledge should never be locked away — it belongs to everyone.
+            </p>
+            <span className="ab-location-tag">📍 Udupi, Karnataka</span>
+          </div>
+
+          <div className="ab-contact-card">
+            <span className="ab-label">Get in touch</span>
+            <h3>We'd love to hear from you.</h3>
+            <div className="ab-contacts">
+              <a
+                className="ab-contact-item"
+                href="https://mail.google.com/mail/?view=cm&to=eha108768@gmail.com"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div className="ab-contact-ico" style={{ background: 'rgba(234,67,53,0.12)' }}>
+                  <img src={EmailIco} alt="Email" />
+                </div>
+                <div className="ab-contact-info">
+                  <span className="ab-contact-name">Email</span>
+                  <span className="ab-contact-val">eha108768@gmail.com</span>
+                </div>
+              </a>
+              <a
+                className="ab-contact-item"
+                href="https://instagram.com/enotesapp"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div className="ab-contact-ico" style={{ background: 'rgba(188,24,136,0.12)' }}>
+                  <img src={InstaIco} alt="Instagram" />
+                </div>
+                <div className="ab-contact-info">
+                  <span className="ab-contact-name">Instagram</span>
+                  <span className="ab-contact-val">@enotesapp</span>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── FOOTER ───────────────────────────────────────── */}
+      {/* ── FOOTER ──────────────────────────────────── */}
       <footer className="ab-footer">
         <span>© 2025 E-Notes</span>
         <span className="ab-footer-dot">·</span>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
 import logo from "../../assets/E-Notes.png";
 import SearchIcon from "../../assets/Search.svg";
@@ -11,14 +11,24 @@ const Navbar = () => {
   const categories = ["All", "Academic", "Technology", "Business", "Science", "Arts & Humanities", "Law", "Medical", "Other"];
   const { searchQuery, setSearchQuery, selectedCategory, setSelectedCategory } = useSearchFilter();
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const navigateToHomeIfNeeded = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+    }
+  };
 
   const handleCategoryClick = (e, category) => {
     e.preventDefault();
     setSelectedCategory(category);
+    navigateToHomeIfNeeded();
   };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+    navigateToHomeIfNeeded();
   };
 
   return (
