@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './About.css';
+import API_BASE_URL from '../../config/api';
 import Save       from '../../assets/saved-bookmark-icon.svg';
 import UploadIcon from '../../assets/Upload.svg';
 import FileIcon   from '../../assets/file_preview.svg';
@@ -40,7 +41,7 @@ export default function About() {
   const [stats, setStats] = useState({ files: 0, downloads: 0 });
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/files')
+    fetch(`${API_BASE_URL}/api/files`)
       .then(r => r.json())
       .then(files => setStats({
         files: files.length,

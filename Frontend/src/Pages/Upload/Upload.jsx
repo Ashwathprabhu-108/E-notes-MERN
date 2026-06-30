@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "./Upload.css";
 import UploadIcon from "../../assets/Upload.svg";
+import API_BASE_URL from "../../config/api";
 
 const categories = [
   "Academic",
@@ -143,7 +144,7 @@ const Upload = () => {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/api/files/upload", {
+      const res = await fetch(`${API_BASE_URL}/api/files/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

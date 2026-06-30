@@ -4,6 +4,7 @@ import PasswordIcon from '../../assets/Password.svg';
 import ShowPassword from '../../assets/eye-icon.svg';
 import DontShowPassword from '../../assets/eye-blind-icon.svg';
 import './ResetPassword.css';
+import API_BASE_URL from '../../config/api';
 
 export default function ResetPassword() {
   const { token } = useParams();
@@ -28,7 +29,7 @@ export default function ResetPassword() {
 
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:5000/api/auth/reset-password/${token}`, {
+      const res = await fetch(`${API_BASE_URL}/api/auth/reset-password/${token}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),

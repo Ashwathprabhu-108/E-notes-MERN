@@ -5,6 +5,7 @@ import Saved from "../../assets/saved-icon.svg";
 import Save_later from "../../assets/saved-bookmark-icon.svg";
 import { useSearchFilter } from '../../context/SearchFilterContext';
 import { useAuth } from '../../context/AuthContext';
+import API_BASE_URL from '../../config/api';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Home = () => {
         const token = localStorage.getItem('token');
 
         // Fetch all files
-        const filesResponse = await fetch('http://localhost:5000/api/files', {
+        const filesResponse = await fetch(`${API_BASE_URL}/api/files`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -42,7 +43,7 @@ const Home = () => {
         // Fetch saved files if user is authenticated
         if (token) {
           try {
-            const userResponse = await fetch('http://localhost:5000/api/auth/me', {
+            const userResponse = await fetch(`${API_BASE_URL}/api/auth/me`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
@@ -89,7 +90,7 @@ const Home = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/files/download/${fileId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/files/download/${fileId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -133,7 +134,7 @@ const Home = () => {
       const fileIdString = String(fileId);
       const isSaved = savedFiles.some(id => String(id) === fileIdString);
       const endpoint = isSaved ? 'unsave' : 'save';
-      const url = `http://localhost:5000/api/files/${endpoint}/${fileId}`;
+      const url = `${API_BASE_URL}/api/files/${endpoint}/${fileId}`;
 
       const response = await fetch(url, {
         method: 'POST',

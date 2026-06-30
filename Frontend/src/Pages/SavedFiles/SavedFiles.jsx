@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SavedFiles.css';
 import Save_later from "../../assets/saved-bookmark-icon.svg";
+import API_BASE_URL from '../../config/api';
 
 const SavedFiles = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const SavedFiles = () => {
         }
 
         // Fetch user data with saved files
-        const userResponse = await fetch('http://localhost:5000/api/auth/me', {
+        const userResponse = await fetch(`${API_BASE_URL}/api/auth/me`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -41,7 +42,7 @@ const SavedFiles = () => {
         const savedFileIds = userData.savedFiles || [];
 
         // Fetch all files to get complete details
-        const filesResponse = await fetch('http://localhost:5000/api/files', {
+        const filesResponse = await fetch(`${API_BASE_URL}/api/files`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ const SavedFiles = () => {
     try {
       const token = localStorage.getItem('token');
 
-      const response = await fetch(`http://localhost:5000/api/files/download/${fileId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/files/download/${fileId}`, {
         method: 'GET',
         headers: {
           ...(token && { 'Authorization': `Bearer ${token}` }),
@@ -115,7 +116,7 @@ const SavedFiles = () => {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/files/unsave/${fileId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/files/unsave/${fileId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

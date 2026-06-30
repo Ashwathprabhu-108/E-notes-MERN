@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './LoginSignup.css';
+import API_BASE_URL from '../../config/api';
 import UsernameIcon from '../../assets/Username.svg';
 import EmailIcon    from '../../assets/Email.svg';
 import PasswordIcon from '../../assets/Password.svg';
@@ -54,7 +55,7 @@ export default function LoginSignup() {
       if (form.password !== form.confirmPassword) return setError('Passwords do not match.');
     }
 
-    const url  = isSignup ? 'http://localhost:5000/api/auth/signup' : 'http://localhost:5000/api/auth/signin';
+    const url  = isSignup ? `${API_BASE_URL}/api/auth/signup` : `${API_BASE_URL}/api/auth/signin`;
     const body = isSignup
       ? { username: form.username, email: form.email, password: form.password }
       : { username: form.username, password: form.password };
@@ -74,7 +75,7 @@ export default function LoginSignup() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:5000/api/auth/google';
+    window.location.href = `${API_BASE_URL}/api/auth/google`;
   };
 
   const openForgot = () => {
@@ -90,7 +91,7 @@ export default function LoginSignup() {
     if (!fpEmail)    return setFpError('Please enter your email.');
     try {
       setFpLoading(true);
-      const res  = await fetch('http://localhost:5000/api/auth/verify-identity', {
+      const res  = await fetch(`${API_BASE_URL}/api/auth/verify-identity`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: fpUsername, email: fpEmail }),
       });
@@ -111,7 +112,7 @@ export default function LoginSignup() {
     if (fpPassword !== fpConfirm) return setFpError('Passwords do not match.');
     try {
       setFpLoading(true);
-      const res  = await fetch('http://localhost:5000/api/auth/reset-password', {
+      const res  = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: fpUsername, email: fpEmail, password: fpPassword }),
       });

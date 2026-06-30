@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'
 import "./Downloads.css";
+import API_BASE_URL from '../../config/api';
 
 const Downloads = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Downloads = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:5000/api/files/my-downloads', {
+        const response = await fetch(`${API_BASE_URL}/api/files/my-downloads`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -62,7 +63,7 @@ const Downloads = () => {
   const handleDownload = (fileId, fileName) => {
     const token = localStorage.getItem('token');
     
-    fetch(`http://localhost:5000/api/files/download/${fileId}`, {
+    fetch(`${API_BASE_URL}/api/files/download/${fileId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
