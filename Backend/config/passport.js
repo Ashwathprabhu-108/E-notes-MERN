@@ -5,7 +5,7 @@ import User from "../models/User.js";
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:5000/api/auth/google/callback",
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || "https://e-notes-backend-e03y.onrender.com/api/auth/google/callback",
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         let user = await User.findOne({ googleId: profile.id });
@@ -17,7 +17,14 @@ passport.use(new GoogleStrategy({
                 googleId: profile.id,
                 provider: "google",
                 password: null,
+                profileImage: profile.photos?.[0]?.value || null,
             });
+        } else {
+            // Update profile image if it changed
+            if (profile.photos?.[0]?.value && user.profileImage !== profile.photos[0].value) {
+                user.profileImage = profile.photos[0].value;
+                await user.save();
+            }
         }
 
         return done(null, user);

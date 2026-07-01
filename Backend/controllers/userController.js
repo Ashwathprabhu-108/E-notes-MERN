@@ -108,6 +108,7 @@ export const getCurrentUser = async (req, res) => {
             email: user.email,
             savedFiles: user.savedFiles.map(file => file._id.toString()),
             isDisabled: user.isDisabled,
+            profileImage: user.profileImage || null,
         });
 
     } catch (error) {
