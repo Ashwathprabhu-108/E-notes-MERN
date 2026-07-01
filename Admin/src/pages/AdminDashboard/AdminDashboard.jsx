@@ -12,6 +12,7 @@ import {
   LayoutDashboard, RefreshCw, TrendingUp, Activity,
 } from "lucide-react";
 import "./AdminDashboard.css";
+import API_BASE_URL from "../../config/api";
 
 // ── Colour palettes ────────────────────────────────────────────────────
 const PIE_COLORS = ["#7c3aed", "#0ea5e9", "#10b981", "#f59e0b"];
@@ -51,9 +52,9 @@ const AdminDashboard = () => {
     setError("");
     try {
       const [s, c, cat] = await Promise.all([
-        fetch("http://localhost:5000/api/admin/stats",          { headers: AUTH_HEADER() }).then(r => r.json()),
-        fetch("http://localhost:5000/api/admin/chart-stats",    { headers: AUTH_HEADER() }).then(r => r.json()),
-        fetch("http://localhost:5000/api/admin/category-stats", { headers: AUTH_HEADER() }).then(r => r.json()),
+        fetch(`${API_BASE_URL}/api/admin/stats`,          { headers: AUTH_HEADER() }).then(r => r.json()),
+        fetch(`${API_BASE_URL}/api/admin/chart-stats`,    { headers: AUTH_HEADER() }).then(r => r.json()),
+        fetch(`${API_BASE_URL}/api/admin/category-stats`, { headers: AUTH_HEADER() }).then(r => r.json()),
       ]);
       setStats(s);
       setChartData(Array.isArray(c) ? c : []);

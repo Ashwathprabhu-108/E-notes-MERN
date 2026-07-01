@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FileText, Trash2, Flag, Download, AlertTriangle } from "lucide-react";
+import API_BASE_URL from "../../config/api";
 import "./AdminFiles.css";
 
 const AdminFiles = () => {
@@ -16,7 +17,7 @@ const AdminFiles = () => {
   const fetchFiles = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const response = await fetch("http://localhost:5000/api/admin/files", {
+      const response = await fetch(`${API_BASE_URL}/api/admin/files`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -37,7 +38,7 @@ const AdminFiles = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        `http://localhost:5000/api/admin/files/${fileId}`,
+        `${API_BASE_URL}/api/admin/files/${fileId}`,
         {
           method: "DELETE",
           headers: {

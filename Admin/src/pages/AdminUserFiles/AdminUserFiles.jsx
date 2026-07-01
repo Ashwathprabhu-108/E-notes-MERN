@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Flag, Trash2, ChevronRight } from "lucide-react";
+import API_BASE_URL from "../../config/api";
 import "./AdminUserFiles.css";
 
 const AdminUserFiles = () => {
@@ -23,7 +24,7 @@ const AdminUserFiles = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        `http://localhost:5000/api/admin/users/${userId}/files`,
+        `${API_BASE_URL}/api/admin/users/${userId}/files`,
         {
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -36,7 +37,7 @@ const AdminUserFiles = () => {
       
       // Fetch user info to get username
       const userResponse = await fetch(
-        `http://localhost:5000/api/admin/users`,
+        `${API_BASE_URL}/api/admin/users`,
         {
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -64,7 +65,7 @@ const AdminUserFiles = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        `http://localhost:5000/api/admin/files/${fileId}/reports`,
+        `${API_BASE_URL}/api/admin/files/${fileId}/reports`,
         {
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -92,7 +93,7 @@ const AdminUserFiles = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        `http://localhost:5000/api/admin/files/${fileId}`,
+        `${API_BASE_URL}/api/admin/files/${fileId}`,
         {
           method: "DELETE",
           headers: {
@@ -115,7 +116,7 @@ const AdminUserFiles = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        `http://localhost:5000/api/admin/reports/${reportId}/status`,
+        `${API_BASE_URL}/api/admin/reports/${reportId}/status`,
         {
           method: "PATCH",
           headers: {

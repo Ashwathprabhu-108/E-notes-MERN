@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Users, Search, Trash2, CheckCircle, Ban, AlertTriangle, X } from "lucide-react";
+import API_BASE_URL from "../../config/api";
 import "./AdminUsers.css";
 
 const AdminUsers = () => {
@@ -18,7 +19,7 @@ const AdminUsers = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch("http://localhost:5000/api/admin/users", {
+      const res = await fetch(`${API_BASE_URL}/api/admin/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Failed to fetch users");
@@ -34,7 +35,7 @@ const AdminUsers = () => {
     setTogglingId(userId);
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}/disable`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/disable`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -52,7 +53,7 @@ const AdminUsers = () => {
     setDeletingId(userId);
     try {
       const token = localStorage.getItem("adminToken");
-      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

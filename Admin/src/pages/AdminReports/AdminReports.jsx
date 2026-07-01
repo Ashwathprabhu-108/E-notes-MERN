@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Flag, CheckCircle, Clock, Trash2, AlertTriangle } from "lucide-react";
+import API_BASE_URL from "../../config/api";
 import "./AdminReports.css";
 
 const AdminReports = () => {
@@ -15,7 +16,7 @@ const AdminReports = () => {
   const fetchReports = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const response = await fetch("http://localhost:5000/api/admin/reports", {
+      const response = await fetch(`${API_BASE_URL}/api/admin/reports`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         },
@@ -36,7 +37,7 @@ const AdminReports = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        `http://localhost:5000/api/admin/reports/${reportId}/status`,
+        `${API_BASE_URL}/api/admin/reports/${reportId}/status`,
         {
           method: "PATCH",
           headers: {
@@ -64,7 +65,7 @@ const AdminReports = () => {
     try {
       const token = localStorage.getItem("adminToken");
       const response = await fetch(
-        `http://localhost:5000/api/admin/reports/${reportId}`,
+        `${API_BASE_URL}/api/admin/reports/${reportId}`,
         {
           method: "DELETE",
           headers: {
