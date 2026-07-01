@@ -1,15 +1,15 @@
 /* =====================================================
-   AdSidebar.css — Appears on ALL devices
+   AdSidebar.css — Responsive Google AdSense Sidebar
    ─────────────────────────────────────────────────────
    Desktop / tablets  → fixed right-side vertical panel
    Phones ≤ 430px     → fixed horizontal banner just
-                        above the bottom tab-bar sidebar
+                        above the bottom tab-bar
    ===================================================== */
 
 /* ── Base: Desktop right sidebar ─────────────────── */
 .ad-sidebar {
   width: 160px;
-  min-height: calc(100vh - 120px); /* subtract navbar */
+  min-height: calc(100vh - 120px);
   background-color: #12122a;
   display: flex;
   flex-direction: column;
@@ -18,43 +18,45 @@
   box-sizing: border-box;
   position: fixed;
   right: 0;
-  top: 120px;  /* same as --navbar-height */
+  top: 120px;
   bottom: 0;
   z-index: 150;
   border-left: 1px solid rgba(255, 255, 255, 0.08);
-  overflow-y: auto;
+  overflow: hidden;
   transition: width 0.3s ease, top 0.3s ease;
 }
 
+/* ── Wrapper ──────────────────────────────────────── */
 .ad-slot-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   width: 100%;
-  padding: 0 10px;
+  padding: 0 8px;
+  box-sizing: border-box;
 }
 
+/* ── AdSense ins tag ──────────────────────────────── */
 .ad-slot {
   width: 100%;
+  min-height: 250px;
   flex: 1;
   background: #1e1b4b;
   border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #9d8fd4;
-  font-size: 0.75rem;
   border: 1px solid rgba(93, 196, 106, 0.15);
-  text-align: center;
-  padding: 8px;
+  overflow: hidden;
   transition: background 0.2s ease;
 }
 
 .ad-slot:hover {
   background: #25215c;
 }
+
+/* ── Show/hide based on screen size ─────────────────*/
+.ad-desktop { display: flex; }
+.ad-mobile  { display: none; }
+
 
 /* ══════════════════════════════════════════════════════
    DEVICE BREAKPOINTS
@@ -76,25 +78,21 @@
     top: 108px;
     min-height: calc(100vh - 108px);
   }
-  .ad-slot {
-    font-size: 0.7rem;
-  }
 }
 
 /* ── iPad Pro / Nest Hub / Galaxy Z Fold 5  ≤ 1024px ── */
 @media (max-width: 1024px) {
   .ad-sidebar {
-    width: 80px;
+    width: 90px;
     top: 100px;
     min-height: calc(100vh - 100px);
-    padding: 20px 0 24px;
+    padding: 16px 0 20px;
   }
   .ad-slot-wrapper {
     padding: 0 6px;
-    gap: 6px;
   }
   .ad-slot {
-    font-size: 0.65rem;
+    min-height: 200px;
     border-radius: 8px;
   }
 }
@@ -105,10 +103,10 @@
     width: 80px;
     top: 115px;
     min-height: calc(100vh - 115px);
-    padding: 16px 0 20px;
+    padding: 14px 0 18px;
   }
   .ad-slot {
-    font-size: 0.6rem;
+    min-height: 180px;
     border-radius: 7px;
   }
 }
@@ -123,6 +121,9 @@
   .ad-slot-wrapper {
     padding: 0 4px;
   }
+  .ad-slot {
+    min-height: 150px;
+  }
 }
 
 /* ── Galaxy A51/71 / Galaxy Z Fold inner  ≤ 600px ── */
@@ -131,10 +132,10 @@
     width: 60px;
     top: 100px;
     min-height: calc(100vh - 100px);
-    padding: 12px 0 16px;
+    padding: 10px 0 14px;
   }
   .ad-slot {
-    font-size: 0.55rem;
+    min-height: 120px;
     border-radius: 6px;
     padding: 4px;
   }
@@ -144,18 +145,17 @@
    PHONES ≤ 430px
    Convert to a fixed horizontal banner just above the
    bottom tab-bar (which is 60px tall).
-   Banner sits at: bottom = 60px (above tab bar)
    ══════════════════════════════════════════════════════ */
 @media (max-width: 430px) {
   .ad-sidebar {
     /* Switch to horizontal banner */
     width: 100%;
-    height: 44px;
+    height: 60px;
     min-height: unset;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 0 12px;
+    padding: 0 8px;
     top: auto;
     left: 0;
     right: 0;
@@ -164,76 +164,68 @@
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.35);
     overflow: hidden;
-    z-index: 290; /* below sidebar z-index 300 */
+    z-index: 290;
   }
 
-  .ad-slot-wrapper {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    flex: 1;
-    padding: 0;
-    margin-top: 0;
-  }
+  /* Show mobile banner, hide desktop vertical */
+  .ad-desktop { display: none; }
+  .ad-mobile  { display: flex; flex: 1; padding: 0; }
 
-  .ad-slot {
-    flex: 1;
-    height: 30px;
+  .ad-mobile .ad-slot {
+    min-height: 50px;
+    height: 50px;
     border-radius: 6px;
-    font-size: 0.62rem;
-    padding: 4px 8px;
+    width: 100%;
   }
 }
 
 /* ── iPhone XR  ≤ 414px ── */
 @media (max-width: 414px) {
   .ad-sidebar {
-    height: 42px;
+    height: 58px;
     bottom: 60px;
   }
-  .ad-slot {
-    height: 28px;
-    font-size: 0.6rem;
+  .ad-mobile .ad-slot {
+    height: 46px;
+    min-height: 46px;
   }
 }
 
 /* ── iPhone 12 Pro / 14 Pro  ≤ 393px ── */
 @media (max-width: 393px) {
   .ad-sidebar {
-    height: 40px;
-    padding: 0 10px;
+    height: 56px;
+    padding: 0 6px;
     bottom: 60px;
   }
-  .ad-slot {
-    height: 26px;
-    font-size: 0.58rem;
+  .ad-mobile .ad-slot {
+    height: 44px;
+    min-height: 44px;
   }
 }
 
 /* ── iPhone SE  ≤ 375px ── */
 @media (max-width: 375px) {
   .ad-sidebar {
-    height: 38px;
-    padding: 0 8px;
-    bottom: 56px; /* matches 56px tab bar on SE */
+    height: 54px;
+    padding: 0 6px;
+    bottom: 56px;
   }
-  .ad-slot {
-    height: 24px;
-    font-size: 0.55rem;
+  .ad-mobile .ad-slot {
+    height: 42px;
+    min-height: 42px;
   }
 }
 
 /* ── Samsung Galaxy S8+  ≤ 360px ── */
 @media (max-width: 360px) {
   .ad-sidebar {
-    height: 36px;
+    height: 52px;
     padding: 0 6px;
-    bottom: 54px; /* matches 54px tab bar on S8+ */
+    bottom: 54px;
   }
-
-  .ad-slot {
-    height: 24px;
-    font-size: 0.52rem;
+  .ad-mobile .ad-slot {
+    height: 40px;
+    min-height: 40px;
   }
 }
