@@ -202,7 +202,7 @@ export default function About() {
                 </div>
                 <div className="ab-contact-info">
                   <span className="ab-contact-name">Email</span>
-                  <span className="ab-contact-val">eha108768@gmail.com</span>
+                  <span className="ab-contact-val">enotes.app.admin@gmail.com</span>
                 </div>
               </a>
               <a
