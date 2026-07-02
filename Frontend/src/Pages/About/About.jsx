@@ -1,39 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import './About.css';
 import API_BASE_URL from '../../config/api';
-import Save       from '../../assets/saved-bookmark-icon.svg';
+import Save from '../../assets/saved-bookmark-icon.svg';
 import UploadIcon from '../../assets/Upload.svg';
-import FileIcon   from '../../assets/file_preview.svg';
+import FileIcon from '../../assets/file_preview.svg';
 import SearchIcon from '../../assets/Search.svg';
-import DlIcon     from '../../assets/download.svg';
+import DlIcon from '../../assets/download.svg';
 import StudentIco from '../../assets/student.svg';
 import TeacherIco from '../../assets/teachers.svg';
 import LearnerIco from '../../assets/self_learners.svg';
-import ProIco     from '../../assets/Professionals.svg';
+import ProIco from '../../assets/Professionals.svg';
 import CreatorIco from '../../assets/content_creators.svg';
-import EmailIco   from '../../assets/Email.svg';
-import InstaIco   from '../../assets/Instagram.svg';
+import EmailIco from '../../assets/Email.svg';
+import InstaIco from '../../assets/Instagram.svg';
 
 const FEATURES = [
-  { icon: UploadIcon, color: '#7c6af7', bg: 'rgba(124,106,247,0.12)', label: 'Upload Notes',   desc: 'Share PDFs and study material with anyone, instantly. No size limits, no paywalls.' },
-  { icon: DlIcon,     color: '#34d399', bg: 'rgba(52,211,153,0.12)',  label: 'Download Files', desc: 'One-click downloads. No account required for basic access.' },
-  { icon: FileIcon,   color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  label: 'Smart Preview',  desc: 'AI-generated summaries so you know what you\'re downloading before you get it.' },
-  { icon: SearchIcon, color: '#60a5fa', bg: 'rgba(96,165,250,0.12)',  label: 'Instant Search', desc: 'Find notes by topic, subject, or uploader in milliseconds.' },
-  { icon: Save,       color: '#f472b6', bg: 'rgba(244,114,182,0.12)', label: 'Save for Later', desc: 'Bookmark anything to your personal library and access it from any device.' },
+  { icon: UploadIcon, color: '#7c6af7', bg: 'rgba(124,106,247,0.12)', label: 'Upload Notes', desc: 'Share PDFs and study material with anyone, instantly. No size limits, no paywalls.' },
+  { icon: DlIcon, color: '#34d399', bg: 'rgba(52,211,153,0.12)', label: 'Download Files', desc: 'One-click downloads. No account required for basic access.' },
+  { icon: FileIcon, color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', label: 'Smart Preview', desc: 'AI-generated summaries so you know what you\'re downloading before you get it.' },
+  { icon: SearchIcon, color: '#60a5fa', bg: 'rgba(96,165,250,0.12)', label: 'Instant Search', desc: 'Find notes by topic, subject, or uploader in milliseconds.' },
+  { icon: Save, color: '#f472b6', bg: 'rgba(244,114,182,0.12)', label: 'Save for Later', desc: 'Bookmark anything to your personal library and access it from any device.' },
 ];
 
 const STEPS = [
-  { n: '01', title: 'Create an account',    body: 'Sign up in seconds with email or Google. Completely free.' },
-  { n: '02', title: 'Browse or upload',     body: 'Explore the library or contribute your own notes.' },
-  { n: '03', title: 'Preview content',      body: 'Read the full PDF inside the built-in viewer before downloading.' },
-  { n: '04', title: 'Download & bookmark',  body: 'Save files offline or pin them to your personal library.' },
+  { n: '01', title: 'Create an account', body: 'Sign up in seconds with email or Google. Completely free.' },
+  { n: '02', title: 'Browse or upload', body: 'Explore the library or contribute your own notes.' },
+  { n: '03', title: 'Preview content', body: 'Read the full PDF inside the built-in viewer before downloading.' },
+  { n: '04', title: 'Download & bookmark', body: 'Save files offline or pin them to your personal library.' },
 ];
 
 const AUDIENCE = [
-  { icon: StudentIco, label: 'Students',        sub: 'Exam prep & revision' },
-  { icon: TeacherIco, label: 'Teachers',         sub: 'Share course material' },
-  { icon: LearnerIco, label: 'Self-Learners',    sub: 'Curiosity without limits' },
-  { icon: ProIco,     label: 'Professionals',    sub: 'Upskill on the job' },
+  { icon: StudentIco, label: 'Students', sub: 'Exam prep & revision' },
+  { icon: TeacherIco, label: 'Teachers', sub: 'Share course material' },
+  { icon: LearnerIco, label: 'Self-Learners', sub: 'Curiosity without limits' },
+  { icon: ProIco, label: 'Professionals', sub: 'Upskill on the job' },
   { icon: CreatorIco, label: 'Content Creators', sub: 'Research & references' },
 ];
 
@@ -47,7 +47,7 @@ export default function About() {
         files: files.length,
         downloads: files.reduce((s, f) => s + (f.downloadCount || 0), 0),
       }))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   return (
@@ -193,7 +193,7 @@ export default function About() {
             <div className="ab-contacts">
               <a
                 className="ab-contact-item"
-                href="https://mail.google.com/mail/?view=cm&to=eha108768@gmail.com"
+                href="https://mail.google.com/mail/?view=cm&to=enotes.app.admin@gmail.com"
                 target="_blank"
                 rel="noreferrer"
               >
