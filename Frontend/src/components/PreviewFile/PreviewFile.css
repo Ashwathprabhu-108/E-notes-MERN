@@ -798,10 +798,28 @@
 }
 
 /* ========== RESPONSIVE ========== */
+
+/* ---------- Large tablets / small desktops (≤ 1200px) ---------- */
+@media (max-width: 1200px) {
+  .preview-content {
+    padding: 20px 22px 24px;
+    gap: 18px;
+  }
+
+  .file-info h1 {
+    max-width: 340px;
+  }
+
+  .preview-header-card {
+    padding: 14px 18px;
+  }
+}
+
+/* ---------- Tablets (≤ 1024px) ---------- */
 @media (max-width: 1024px) {
   .preview-content {
     gap: 16px;
-    padding: 18px 20px;
+    padding: 18px 16px 22px;
   }
 
   .content-sidebar {
@@ -810,79 +828,161 @@
 
   .file-info h1 {
     font-size: 16px;
-    max-width: 260px;
+    max-width: 240px;
+  }
+
+  .preview-header-card {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .header-right {
+    gap: 8px;
+  }
+
+  .download-btn {
+    padding: 7px 14px;
+    font-size: 12.5px;
+    gap: 6px;
+  }
+
+  .report-btn {
+    padding: 7px 12px;
+    font-size: 12.5px;
+  }
+
+  .file-details-row {
+    gap: 0;
+  }
+
+  .file-detail-item {
+    padding: 0 20px 0 0;
+    margin-right: 20px;
   }
 }
 
+/* ---------- Large phones / small tablets (≤ 768px) ---------- */
 @media (max-width: 768px) {
-  .preview-header {
-    flex-wrap: wrap;
-    padding: 12px 16px;
-    gap: 10px;
+  /* Container */
+  .preview-container {
+    height: auto;
+    min-height: calc(100vh - 60px);
   }
 
-  .header-left {
-    flex: 1 1 100%;
-  }
-
+  /* Content layout stacks vertically */
   .preview-content {
     flex-direction: column;
-    padding: 16px;
+    padding: 14px 14px 20px;
+    gap: 14px;
+    overflow-y: auto;
   }
 
   .content-sidebar {
     width: 100%;
   }
 
-  .file-info h1 {
-    font-size: 15px;
-    max-width: 220px;
-  }
-
-  .download-btn, .report-btn {
-    padding: 7px 13px;
-    font-size: 12.5px;
-  }
-
-  .overview-card,
-  .topics-section,
-  .keypoints-section,
-  .difficulty-section {
-    padding: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .preview-header {
-    padding: 10px 14px;
-  }
-
-  .file-info h1 {
-    font-size: 14px;
-    max-width: 160px;
-  }
-
-  .format-badge {
-    font-size: 10px;
-    padding: 2px 7px;
-  }
-
-  .preview-content {
-    padding: 12px;
+  /* Header card */
+  .preview-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 16px;
     gap: 12px;
-  }
-
-  .overview-card,
-  .topics-section,
-  .keypoints-section,
-  .difficulty-section,
-  .sidebar-card {
-    padding: 14px;
     border-radius: var(--radius-md);
   }
 
+  .header-left {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .file-info {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .file-info h1 {
+    font-size: 15px;
+    max-width: 100%;
+  }
+
+  .format-badge {
+    font-size: 10.5px;
+    padding: 2px 8px;
+  }
+
+  .back-btn {
+    padding: 6px 12px;
+    font-size: 12.5px;
+    flex-shrink: 0;
+  }
+
+  .report-btn {
+    padding: 7px 12px;
+    font-size: 12.5px;
+  }
+
+  .download-btn {
+    padding: 7px 14px;
+    font-size: 12.5px;
+    gap: 6px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* File details row — wraps nicely */
+  .file-details-card {
+    padding: 16px 18px;
+    border-radius: var(--radius-md);
+  }
+
+  .file-details-row {
+    flex-wrap: wrap;
+    gap: 14px 0;
+  }
+
+  .file-detail-item {
+    flex: 1 1 calc(50% - 28px);
+    padding-right: 0;
+    margin-right: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 10px;
+  }
+
+  .file-detail-item:nth-child(odd) {
+    padding-right: 12px;
+    border-right: 1px solid var(--border-subtle);
+  }
+
+  .file-detail-item:last-child,
+  .file-detail-item:nth-last-child(-n+2):nth-child(odd),
+  .file-detail-item:nth-last-child(1) {
+    border-bottom: none;
+  }
+
+  /* Cards */
+  .overview-card,
+  .topics-section,
+  .keypoints-section {
+    padding: 16px 18px;
+    border-radius: var(--radius-md);
+    gap: 12px;
+  }
+
   .overview-card p {
-    font-size: 13.5px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* Topics */
+  .topics-container {
+    gap: 7px;
   }
 
   .topic-chip {
@@ -890,16 +990,311 @@
     padding: 4px 11px;
   }
 
+  /* Key points */
+  .keypoints-list {
+    gap: 9px;
+  }
+
   .keypoints-list li {
+    font-size: 13.5px;
+    padding: 9px 12px;
+    gap: 10px;
+  }
+
+  /* Report notification bar */
+  .report-message {
+    padding: 10px 16px;
     font-size: 13px;
   }
 
+  /* Report modal */
+  .report-modal-overlay {
+    padding: 16px;
+    align-items: flex-end;
+  }
+
   .report-modal {
-    padding: 24px;
-    border-radius: var(--radius-md);
+    padding: 24px 20px;
+    max-width: 100%;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    max-height: 85vh;
   }
 
   .report-modal h2 {
     font-size: 18px;
   }
+
+  .report-modal .subtitle {
+    font-size: 12.5px;
+    margin-bottom: 20px;
+  }
+
+  .report-reason-option {
+    padding: 10px 12px;
+  }
+
+  .report-reason-option span {
+    font-size: 13.5px;
+  }
+
+  .report-modal-buttons {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .cancel-btn,
+  .submit-report-btn {
+    flex: 1;
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 13.5px;
+  }
 }
+
+/* ---------- Mobile phones (≤ 480px) ---------- */
+@media (max-width: 480px) {
+  /* Container */
+  .preview-container {
+    height: auto;
+  }
+
+  /* Content */
+  .preview-content {
+    padding: 10px 10px 18px;
+    gap: 10px;
+  }
+
+  /* Header card */
+  .preview-header-card {
+    padding: 12px 12px;
+    gap: 10px;
+    border-radius: var(--radius-sm);
+  }
+
+  .back-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .file-info h1 {
+    font-size: 14px;
+  }
+
+  .format-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    letter-spacing: 0.05em;
+  }
+
+  .report-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .download-btn {
+    padding: 7px 12px;
+    font-size: 12px;
+    gap: 5px;
+  }
+
+  /* File details */
+  .file-details-card {
+    padding: 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .file-detail-item {
+    flex: 1 1 100%;
+    border-right: none !important;
+    padding-right: 0 !important;
+  }
+
+  .detail-label {
+    font-size: 10.5px;
+  }
+
+  .detail-value {
+    font-size: 13px;
+  }
+
+  /* Cards */
+  .overview-card,
+  .topics-section,
+  .keypoints-section {
+    padding: 14px;
+    gap: 10px;
+    border-radius: var(--radius-sm);
+  }
+
+  .overview-card p {
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+
+  .overview-card h2,
+  .topics-section h2,
+  .keypoints-section h2,
+  .file-details-card h2 {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  /* Topics */
+  .topic-chip {
+    font-size: 11.5px;
+    padding: 4px 10px;
+  }
+
+  /* Key points */
+  .keypoints-list li {
+    font-size: 13px;
+    padding: 8px 10px;
+    gap: 9px;
+  }
+
+  .checkmark {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+  }
+
+  /* Report notification bar */
+  .report-message {
+    padding: 9px 12px;
+    font-size: 12.5px;
+    gap: 8px;
+  }
+
+  /* Report modal */
+  .report-modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .report-modal {
+    padding: 22px 16px 24px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    max-height: 90vh;
+  }
+
+  .report-modal h2 {
+    font-size: 17px;
+  }
+
+  .report-modal .subtitle {
+    font-size: 12px;
+    margin-bottom: 18px;
+  }
+
+  .report-reasons {
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .report-reason-option {
+    padding: 9px 11px;
+    gap: 10px;
+  }
+
+  .report-reason-option span {
+    font-size: 13px;
+  }
+
+  .report-description textarea {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .report-modal-error {
+    font-size: 12.5px;
+    padding: 9px 12px;
+  }
+
+  .report-modal-buttons {
+    gap: 8px;
+  }
+
+  .cancel-btn,
+  .submit-report-btn {
+    padding: 9px 14px;
+    font-size: 13px;
+  }
+
+  /* Error / spinner screens */
+  .error-message {
+    padding: 32px 20px;
+  }
+
+  .error-message p {
+    font-size: 15px;
+  }
+
+  .error-message button {
+    padding: 9px 20px;
+    font-size: 13px;
+  }
+}
+
+/* ---------- Very small phones — iPhone SE / Galaxy A-series (≤ 360px) ---------- */
+@media (max-width: 360px) {
+  .preview-content {
+    padding: 8px 8px 16px;
+    gap: 8px;
+  }
+
+  .preview-header-card {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .header-right {
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .report-btn,
+  .download-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .file-info h1 {
+    font-size: 13px;
+  }
+
+  .overview-card,
+  .topics-section,
+  .keypoints-section,
+  .file-details-card {
+    padding: 12px;
+  }
+
+  .overview-card p {
+    font-size: 13px;
+  }
+
+  .keypoints-list li {
+    font-size: 12.5px;
+    padding: 7px 9px;
+  }
+
+  .topic-chip {
+    font-size: 11px;
+    padding: 3px 9px;
+  }
+
+  .report-modal {
+    padding: 18px 14px 20px;
+  }
+
+  .cancel-btn,
+  .submit-report-btn {
+    font-size: 12.5px;
+    padding: 9px 10px;
+  }
+}
+
