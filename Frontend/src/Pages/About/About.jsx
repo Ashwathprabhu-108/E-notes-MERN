@@ -207,7 +207,7 @@ export default function About() {
               </a>
               <a
                 className="ab-contact-item"
-                href="https://instagram.com/enotesapp"
+                href="https://www.instagram.com/enotes2026/"
                 target="_blank"
                 rel="noreferrer"
               >
