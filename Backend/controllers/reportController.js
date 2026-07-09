@@ -42,7 +42,14 @@ export const submitReport = async (req, res) => {
 export const getReports = async (req, res) => {
   try {
     const reports = await Report.find()
-      .populate("reportedFile", "title format")
+      .populate({
+        path: "reportedFile",
+        select: "title format uploadedBy",
+        populate: {
+          path: "uploadedBy",
+          select: "username email",
+        },
+      })
       .populate("reportedBy", "username email")
       .sort({ createdAt: -1 });
 

@@ -18,7 +18,6 @@ const AdminProtectedRoute = ({ children }) => {
   }
   return children;
 };
-
 // Layout wrapper shown only when logged in
 const AdminLayout = ({ children, onLogin }) => {
   const token = localStorage.getItem("adminToken");
@@ -39,7 +38,6 @@ const AdminLayout = ({ children, onLogin }) => {
 function App() {
   // Use state so logout/login triggers a re-render of the layout
   const [authKey, setAuthKey] = useState(0);
-
   const refreshLayout = () => setAuthKey(k => k + 1);
 
   return (
