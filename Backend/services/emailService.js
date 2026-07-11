@@ -1,50 +1,10 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-// ─────────────────────────────────────────────────────────────────
-// Smart transporter: uses real Gmail if configured, otherwise falls
-// back to Ethereal (a free Nodemailer test inbox that requires zero
-// setup). Preview links are logged to the backend console.
-// ─────────────────────────────────────────────────────────────────
-const getRealGmailConfigured = () =>
-  process.env.EMAIL_USER &&
-  process.env.EMAIL_USER !== "your_gmail@gmail.com" &&
-  process.env.EMAIL_PASS &&
-  process.env.EMAIL_PASS !== "your_gmail_app_password";
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendOtpEmail = async (toEmail, otp) => {
-  let transporter;
-  let isTest = false;
-
-  if (getRealGmailConfigured()) {
-    // ── Real Gmail (port 587 + STARTTLS — works on Render) ────────
-    transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,   // STARTTLS
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-  } else {
-    // ── Ethereal test account (auto-created, no setup needed) ─────
-    const testAccount = await nodemailer.createTestAccount();
-    transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false,
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
-      },
-    });
-    isTest = true;
-    console.log("\n📧 [DEV MODE] Using Ethereal test email account.");
-    console.log("   To configure real Gmail, set EMAIL_USER and EMAIL_PASS in .env\n");
-  }
-
-  const mailOptions = {
-    from: `"E-Notes" <${getRealGmailConfigured() ? process.env.EMAIL_USER : "noreply@enotes.dev"}>`,
+  await resend.emails.send({
+    from: "E-Notes <onboarding@resend.dev>",
     to: toEmail,
     subject: "Your E-Notes Verification Code",
     html: `
@@ -72,17 +32,5 @@ export const sendOtpEmail = async (toEmail, otp) => {
         </div>
       </div>
     `,
-  };
-
-  const info = await transporter.sendMail(mailOptions);
-
-  if (isTest) {
-    // ── Print the Ethereal preview URL to the backend console ─────
-    const previewUrl = nodemailer.getTestMessageUrl(info);
-    console.log("┌─────────────────────────────────────────────────────┐");
-    console.log("│  📬 OTP EMAIL PREVIEW (click to view in browser)    │");
-    console.log("├─────────────────────────────────────────────────────┤");
-    console.log(`│  ${previewUrl}`);
-    console.log("└─────────────────────────────────────────────────────┘\n");
-  }
+  });
 };
