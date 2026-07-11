@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { signUp, signIn, getCurrentUser } from "../controllers/userController.js";
 import protect from "../middleware/authMiddleware.js";
 import User from "../models/User.js";
+import { sendOtpEmail } from "../services/emailService.js";
 
 const router = express.Router();
 
@@ -33,49 +34,118 @@ router.get("/google/callback",
     }
 );
 
-// ─── STEP 1: Verify Username + Email ──────────────────────────────
-// User proves identity by providing both username AND email.
-// If they match a local account in the DB, proceed to reset.
-router.post("/verify-identity", async (req, res) => {
+// ─── STEP 1: Send OTP to Email ────────────────────────────────────
+router.post("/forgot-password", async (req, res) => {
   try {
-    const { username, email } = req.body;
+    const { email } = req.body;
 
-    if (!username || !email) {
-      return res.status(400).json({ message: "Username and email are required." });
+    if (!email) {
+      return res.status(400).json({ message: "Email is required." });
     }
 
-    const user = await User.findOne({ username, email });
+    const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ message: "No account found with that username and email combination." });
+      return res.status(404).json({ message: "No account found with that email." });
     }
 
     if (user.provider === "google") {
       return res.status(400).json({ message: "This account uses Google Sign-In. Password reset is not available." });
     }
 
-    // Identity confirmed — allow reset
-    return res.status(200).json({ message: "Identity verified. You can now set a new password." });
+    // Generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    user.resetOtp = otp;
+    user.resetOtpExpiry = expiry;
+    await user.save();
+
+    // Send OTP via email
+    await sendOtpEmail(email, otp);
+
+    return res.status(200).json({ message: "OTP sent to your email. It expires in 10 minutes." });
 
   } catch (error) {
-    console.error("Verify identity error:", error);
+    console.error("Forgot password error:", error);
     return res.status(500).json({ message: "Server error." });
   }
 });
 
-// ─── STEP 2: Reset Password ───────────────────────────────────────
+// ─── STEP 2: Verify OTP ───────────────────────────────────────────
+router.post("/verify-otp", async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp) {
+      return res.status(400).json({ message: "Email and OTP are required." });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user || user.provider === "google") {
+      return res.status(404).json({ message: "Account not found." });
+    }
+
+    if (!user.resetOtp || !user.resetOtpExpiry) {
+      return res.status(400).json({ message: "No OTP requested. Please request a new one." });
+    }
+
+    if (new Date() > user.resetOtpExpiry) {
+      user.resetOtp = null;
+      user.resetOtpExpiry = null;
+      await user.save();
+      return res.status(400).json({ message: "OTP has expired. Please request a new one." });
+    }
+
+    if (user.resetOtp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP. Please try again." });
+    }
+
+    // OTP is valid — clear it and issue a short-lived reset token
+    user.resetOtp = null;
+    user.resetOtpExpiry = null;
+    await user.save();
+
+    const resetToken = jwt.sign(
+      { userId: user._id, purpose: "password-reset" },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    return res.status(200).json({ resetToken, message: "OTP verified. You can now set a new password." });
+
+  } catch (error) {
+    console.error("Verify OTP error:", error);
+    return res.status(500).json({ message: "Server error." });
+  }
+});
+
+// ─── STEP 3: Reset Password ───────────────────────────────────────
 router.post("/reset-password", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { resetToken, password } = req.body;
 
-    if (!username || !email || !password) {
-      return res.status(400).json({ message: "All fields are required." });
+    if (!resetToken || !password) {
+      return res.status(400).json({ message: "Reset token and new password are required." });
     }
+
     if (password.length < 6) {
       return res.status(400).json({ message: "Password must be at least 6 characters." });
     }
 
-    const user = await User.findOne({ username, email });
+    let decoded;
+    try {
+      decoded = jwt.verify(resetToken, process.env.JWT_SECRET);
+    } catch {
+      return res.status(400).json({ message: "Reset link is invalid or has expired. Please start over." });
+    }
+
+    if (decoded.purpose !== "password-reset") {
+      return res.status(400).json({ message: "Invalid reset token." });
+    }
+
+    const user = await User.findById(decoded.userId);
 
     if (!user || user.provider === "google") {
       return res.status(404).json({ message: "Account not found." });

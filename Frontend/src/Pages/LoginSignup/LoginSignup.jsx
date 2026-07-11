@@ -25,9 +25,10 @@ export default function LoginSignup() {
 
   // ─── Forgot Password Modal ───────────────────────────────────────
   const [showForgot, setShowForgot]             = useState(false);
-  const [fpStep, setFpStep]                     = useState(1); // 1=verify identity, 2=new password
-  const [fpUsername, setFpUsername]             = useState('');
+  const [fpStep, setFpStep]                     = useState(1); // 1=email, 2=OTP, 3=new password
   const [fpEmail, setFpEmail]                   = useState('');
+  const [fpOtp, setFpOtp]                       = useState('');
+  const [fpResetToken, setFpResetToken]         = useState('');
   const [fpPassword, setFpPassword]             = useState('');
   const [fpConfirm, setFpConfirm]               = useState('');
   const [fpShowPass, setFpShowPass]             = useState(false);
@@ -80,23 +81,23 @@ export default function LoginSignup() {
 
   const openForgot = () => {
     setShowForgot(true); setFpStep(1);
-    setFpUsername(''); setFpEmail(''); setFpPassword(''); setFpConfirm('');
+    setFpEmail(''); setFpOtp(''); setFpResetToken('');
+    setFpPassword(''); setFpConfirm('');
     setFpError(''); setFpDone(false);
   };
 
-  // Step 1 — Verify username + email
-  const handleVerifyIdentity = async () => {
+  // Step 1 — Send OTP to email
+  const handleSendOtp = async () => {
     setFpError('');
-    if (!fpUsername) return setFpError('Please enter your username.');
-    if (!fpEmail)    return setFpError('Please enter your email.');
+    if (!fpEmail) return setFpError('Please enter your email.');
     try {
       setFpLoading(true);
-      const res  = await fetch(`${API_BASE_URL}/api/auth/verify-identity`, {
+      const res  = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: fpUsername, email: fpEmail }),
+        body: JSON.stringify({ email: fpEmail }),
       });
       const data = await res.json();
-      if (!res.ok) return setFpError(data.message || 'Verification failed.');
+      if (!res.ok) return setFpError(data.message || 'Failed to send OTP.');
       setFpStep(2);
     } catch {
       setFpError('Network error. Please try again.');
@@ -105,7 +106,28 @@ export default function LoginSignup() {
     }
   };
 
-  // Step 2 — Set new password
+  // Step 2 — Verify OTP
+  const handleVerifyOtp = async () => {
+    setFpError('');
+    if (!fpOtp || fpOtp.length !== 6) return setFpError('Please enter the 6-digit OTP.');
+    try {
+      setFpLoading(true);
+      const res  = await fetch(`${API_BASE_URL}/api/auth/verify-otp`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: fpEmail, otp: fpOtp }),
+      });
+      const data = await res.json();
+      if (!res.ok) return setFpError(data.message || 'OTP verification failed.');
+      setFpResetToken(data.resetToken);
+      setFpStep(3);
+    } catch {
+      setFpError('Network error. Please try again.');
+    } finally {
+      setFpLoading(false);
+    }
+  };
+
+  // Step 3 — Set new password
   const handleResetPassword = async () => {
     setFpError('');
     if (!fpPassword || fpPassword.length < 6) return setFpError('Password must be at least 6 characters.');
@@ -114,7 +136,7 @@ export default function LoginSignup() {
       setFpLoading(true);
       const res  = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: fpUsername, email: fpEmail, password: fpPassword }),
+        body: JSON.stringify({ resetToken: fpResetToken, password: fpPassword }),
       });
       const data = await res.json();
       if (!res.ok) return setFpError(data.message || 'Something went wrong.');
@@ -236,7 +258,11 @@ export default function LoginSignup() {
                   {fpStep > 1 ? '✓' : '1'}
                 </div>
                 <div className="fp-step-line" />
-                <div className={`fp-step-dot ${fpStep >= 2 ? 'active' : ''}`}>2</div>
+                <div className={`fp-step-dot ${fpStep >= 2 ? 'active' : ''} ${fpStep > 2 ? 'done' : ''}`}>
+                  {fpStep > 2 ? '✓' : '2'}
+                </div>
+                <div className="fp-step-line" />
+                <div className={`fp-step-dot ${fpStep >= 3 ? 'active' : ''}`}>3</div>
               </div>
             )}
 
@@ -248,20 +274,12 @@ export default function LoginSignup() {
                 <p className="fp-success-sub">You can now log in with your new password.</p>
               </div>
 
-            /* ── Step 1: Verify Identity ── */
+            /* ── Step 1: Enter Email ── */
             ) : fpStep === 1 ? (
               <>
-                <div className="fp-icon">🔍</div>
-                <h3 className="fp-title">Verify Your Identity</h3>
-                <p className="fp-desc">Enter the username and email linked to your account.</p>
-
-                <div className="field-group" style={{ marginBottom: '0.75rem' }}>
-                  <div className="field-wrap">
-                    <span className="field-icon"><img src={UsernameIcon} alt="" className="icon-img" /></span>
-                    <input className="field-input" type="text" placeholder="Your username"
-                      value={fpUsername} onChange={e => { setFpUsername(e.target.value); setFpError(''); }} />
-                  </div>
-                </div>
+                <div className="fp-icon">📧</div>
+                <h3 className="fp-title">Reset Password</h3>
+                <p className="fp-desc">Enter your registered email. We'll send you a verification code.</p>
 
                 <div className="field-group" style={{ marginBottom: '1rem' }}>
                   <div className="field-wrap">
@@ -272,17 +290,42 @@ export default function LoginSignup() {
                 </div>
 
                 {fpError && <p className="fp-error">{fpError}</p>}
-                <button className="fp-btn" onClick={handleVerifyIdentity} disabled={fpLoading}>
-                  {fpLoading ? 'Verifying…' : 'Verify Identity →'}
+                <button className="fp-btn" onClick={handleSendOtp} disabled={fpLoading}>
+                  {fpLoading ? 'Sending OTP…' : 'Send Verification Code →'}
                 </button>
               </>
 
-            /* ── Step 2: Set New Password ── */
+            /* ── Step 2: Enter OTP ── */
+            ) : fpStep === 2 ? (
+              <>
+                <div className="fp-icon">🔢</div>
+                <h3 className="fp-title">Enter Verification Code</h3>
+                <p className="fp-desc">We sent a 6-digit code to <strong>{fpEmail}</strong>. It expires in 10 minutes.</p>
+
+                <div className="field-group" style={{ marginBottom: '1rem' }}>
+                  <div className="field-wrap">
+                    <span className="field-icon">🔑</span>
+                    <input className="field-input" type="text" placeholder="6-digit OTP"
+                      maxLength={6} inputMode="numeric"
+                      value={fpOtp} onChange={e => { setFpOtp(e.target.value.replace(/\D/g, '')); setFpError(''); }} />
+                  </div>
+                </div>
+
+                {fpError && <p className="fp-error">{fpError}</p>}
+                <button className="fp-btn" onClick={handleVerifyOtp} disabled={fpLoading}>
+                  {fpLoading ? 'Verifying…' : 'Verify Code →'}
+                </button>
+                <button className="fp-resend" onClick={() => { setFpStep(1); setFpOtp(''); setFpError(''); }}>
+                  ← Resend OTP
+                </button>
+              </>
+
+            /* ── Step 3: Set New Password ── */
             ) : (
               <>
                 <div className="fp-icon">🔐</div>
                 <h3 className="fp-title">Set New Password</h3>
-                <p className="fp-desc">Choose a strong password for <strong>{fpUsername}</strong>.</p>
+                <p className="fp-desc">Choose a strong new password for your account.</p>
 
                 <div className="field-group" style={{ marginBottom: '0.75rem' }}>
                   <div className="field-wrap">
@@ -311,9 +354,6 @@ export default function LoginSignup() {
                 {fpError && <p className="fp-error">{fpError}</p>}
                 <button className="fp-btn" onClick={handleResetPassword} disabled={fpLoading}>
                   {fpLoading ? 'Saving…' : 'Reset Password'}
-                </button>
-                <button className="fp-resend" onClick={() => { setFpStep(1); setFpError(''); }}>
-                  ← Change identity
                 </button>
               </>
             )}
