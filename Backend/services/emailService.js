@@ -1,10 +1,24 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
+});
 
 export const sendOtpEmail = async (toEmail, otp) => {
-  await resend.emails.send({
-    from: "E-Notes <onboarding@resend.dev>",
+  const mailOptions = {
+    from: `"E-Notes" <${process.env.EMAIL_USER}>`,
     to: toEmail,
     subject: "Your E-Notes Verification Code",
     html: `
@@ -32,5 +46,7 @@ export const sendOtpEmail = async (toEmail, otp) => {
         </div>
       </div>
     `,
-  });
+  };
+
+  await transporter.sendMail(mailOptions);
 };
