@@ -1,4 +1,9 @@
+import dns from "dns";
 import nodemailer from "nodemailer";
+
+// Force IPv4 DNS resolution — Render free tier has no IPv6 outbound support
+dns.setDefaultResultOrder("ipv4first");
+
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
