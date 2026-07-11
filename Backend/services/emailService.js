@@ -16,9 +16,11 @@ export const sendOtpEmail = async (toEmail, otp) => {
   let isTest = false;
 
   if (getRealGmailConfigured()) {
-    // ── Real Gmail ────────────────────────────────────────────────
+    // ── Real Gmail (port 587 + STARTTLS — works on Render) ────────
     transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,   // STARTTLS
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
