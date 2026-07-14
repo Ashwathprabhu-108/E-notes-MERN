@@ -169,6 +169,17 @@ const MyFiles = () => {
     return <div className="downloads-message error">{error}</div>;
   }
 
+  if (user?.isDisabled) {
+    return (
+      <div className="downloads-main">
+        <h2>My Files</h2>
+        <div className="downloads-message error">
+          ⚠️ Your account has been disabled. Contact support.
+        </div>
+      </div>
+    );
+  }
+
   if (files.length === 0) {
     return (
       <div className="downloads-main">

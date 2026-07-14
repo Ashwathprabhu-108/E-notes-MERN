@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import './SavedFiles.css';
 import Save_later from "../../assets/saved-bookmark-icon.svg";
 import API_BASE_URL from '../../config/api';
+import { useAuth } from '../../context/AuthContext';
 
 const SavedFiles = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [savedFilesData, setSavedFilesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -148,6 +150,17 @@ const SavedFiles = () => {
 
   if (error) {
     return <div className="downloads-message error">{error}</div>;
+  }
+
+  if (user?.isDisabled) {
+    return (
+      <div className="downloads-main">
+        <h2>Saved Files</h2>
+        <div className="downloads-message error">
+          ⚠️ Your account has been disabled. Contact support.
+        </div>
+      </div>
+    );
   }
 
   if (savedFilesData.length === 0) {

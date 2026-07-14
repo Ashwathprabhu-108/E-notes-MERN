@@ -58,7 +58,7 @@ const PreviewFile = () => {
         const response = await fetch(`${API_URL}/api/files/download/${fileId}`, {
           headers
         })
-        
+
         if (!response.ok) {
           throw new Error('Download failed')
         }
@@ -127,7 +127,7 @@ const PreviewFile = () => {
         setShowReportModal(false)
         setReportReason("")
         setReportDescription("")
-        setReportMessage({ type: 'success', text: '✅ Report submitted successfully. Our team will review it.' })
+        setReportMessage({ type: 'success', text: 'Report submitted successfully. Our team will review it.' })
         setTimeout(() => setReportMessage(null), 4000)
       }
     } catch (err) {
@@ -153,7 +153,7 @@ const PreviewFile = () => {
     return (
       <div className="preview-container error">
         <div className="error-message">
-          <p>⚠️ {error}</p>
+          <p> {error}</p>
           <button onClick={() => navigate(-1)}>Go Back</button>
         </div>
       </div>
@@ -164,7 +164,7 @@ const PreviewFile = () => {
     return (
       <div className="preview-container error">
         <div className="error-message">
-          <p>⚠️ Preview not available</p>
+          <p>Preview not available</p>
           <button onClick={() => navigate(-1)}>Go Back</button>
         </div>
       </div>

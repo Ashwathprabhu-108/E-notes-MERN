@@ -62,7 +62,7 @@ const Downloads = () => {
 
   const handleDownload = (fileId, fileName) => {
     const token = localStorage.getItem('token');
-    
+
     fetch(`${API_BASE_URL}/api/files/download/${fileId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -86,6 +86,17 @@ const Downloads = () => {
     return <div className="downloads-message">Please log in to view your downloads.</div>;
   }
 
+  if (user?.isDisabled) {
+    return (
+      <div className="downloads-main">
+        <h2>My Downloads</h2>
+        <div className="downloads-message error">
+          Your account has been disabled. Contact support.
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return <div className="downloads-message">Loading...</div>;
   }
@@ -101,34 +112,34 @@ const Downloads = () => {
   return (
     <div className="downloads-main">
       <h2>My Downloads</h2>
-      
+
       <div className="downloads-container">
         {downloads.map(file => (
           <div key={file._id} className="download-card">
             {/* Thumbnail */}
             {file.thumbnail && (
-              <div 
+              <div
                 className="download-thumbnail"
                 onClick={() => navigate(`/preview/${file._id}`)}
                 style={{ cursor: 'pointer' }}
                 title="Click to preview"
               >
-                <img 
-                  src={file.thumbnail.url} 
+                <img
+                  src={file.thumbnail.url}
                   alt={file.title}
                   onError={(e) => e.target.src = 'https://via.placeholder.com/200x150?text=No+Thumbnail'}
                 />
               </div>
             )}
-            
+
             {/* File Details */}
             <div className="download-details">
               <h3 className="download-title">{file.title}</h3>
-              
+
               <p className="download-category">
                 <span className="category-badge">{file.category}</span>
               </p>
-              
+
               {file.tags && file.tags.length > 0 && (
                 <div className="download-tags">
                   {file.tags.map((tag, idx) => (
@@ -136,15 +147,15 @@ const Downloads = () => {
                   ))}
                 </div>
               )}
-              
+
               <div className="download-stats">
                 <span className="download-count">{file.downloadCount} downloads</span>
                 {file.uploadedBy && file.uploadedBy.username && (
                   <span className="uploaded-by">by {file.uploadedBy.username}</span>
                 )}
               </div>
-              
-              <button 
+
+              <button
                 onClick={() => handleDownload(file._id, file.document.name)}
                 className="download-btn"
               >

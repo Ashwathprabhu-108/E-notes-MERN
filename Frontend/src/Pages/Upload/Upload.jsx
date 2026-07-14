@@ -176,6 +176,21 @@ const Upload = () => {
     }
   };
 
+  if (user?.isDisabled) {
+    return (
+      <div className="upload-root">
+        <div className="upload-card">
+          <div className="upload-header">
+            <h2>Upload Notes</h2>
+          </div>
+          <div className="uploads-message error" style={{ padding: '2rem', textAlign: 'center', color: '#f87171', fontSize: '1rem' }}>
+            ⚠️ Your account has been disabled. Contact support.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="upload-root">
       <div className="upload-card">
