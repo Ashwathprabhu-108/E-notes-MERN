@@ -184,7 +184,7 @@ const Upload = () => {
             <h2>Upload Notes</h2>
           </div>
           <div className="uploads-message error" style={{ padding: '2rem', textAlign: 'center', color: '#f87171', fontSize: '1rem' }}>
-            ⚠️ Your account has been disabled. Contact support.
+            Your account has been disabled. Contact support.
           </div>
         </div>
       </div>

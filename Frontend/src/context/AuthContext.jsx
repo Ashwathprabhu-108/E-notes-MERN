@@ -54,6 +54,8 @@ export function AuthProvider({ children }) {
       }
     };
     fetchCurrentUser();
+    const interval = setInterval(fetchCurrentUser, 30_000);
+    return () => clearInterval(interval);
   }, []);
 
   return (

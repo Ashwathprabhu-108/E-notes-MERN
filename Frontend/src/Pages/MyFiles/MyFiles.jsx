@@ -174,7 +174,7 @@ const MyFiles = () => {
       <div className="downloads-main">
         <h2>My Files</h2>
         <div className="downloads-message error">
-          ⚠️ Your account has been disabled. Contact support.
+          Your account has been disabled. Contact support.
         </div>
       </div>
     );
