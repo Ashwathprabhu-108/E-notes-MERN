@@ -264,14 +264,7 @@ const PreviewFile = () => {
                 <span className="detail-label">Downloads</span>
                 <span className="detail-value">{preview.downloadCount || 0}</span>
               </div>
-              {summarySafe.difficultyLevel && (
-                <div className="file-detail-item">
-                  <span className="detail-label">Difficulty</span>
-                  <span className={`difficulty-badge ${getDifficultyColor(summarySafe.difficultyLevel)}`}>
-                    {summarySafe.difficultyLevel}
-                  </span>
-                </div>
-              )}
+
             </div>
           </div>
 
