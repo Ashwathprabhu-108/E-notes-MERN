@@ -239,8 +239,8 @@ const PreviewFile = () => {
               <div className="report-btn-wrapper">
                 <button className="report-btn" onClick={handleReportClick}>🚩 Report</button>
                 {reportStatus && (
-                  <div className={`report-status-badge report-status-${reportStatus}`}>
-                    <span>{reportStatus === 'pending' ? 'Pending' : 'Resolved'}</span>
+                  <div className={`report-status-tooltip report-status-${reportStatus}`}>
+                    {reportStatus === 'pending' ? 'Pending' : 'Resolved'}
                   </div>
                 )}
               </div>
