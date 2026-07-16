@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import "./PreviewFile.css"
 import { useAuth } from '../../context/AuthContext'
-import ReportStatusIcon from '../../assets/report-status.svg'
 
 const PreviewFile = () => {
   const { fileId } = useParams()
@@ -241,7 +240,6 @@ const PreviewFile = () => {
                 <button className="report-btn" onClick={handleReportClick}>🚩 Report</button>
                 {reportStatus && (
                   <div className={`report-status-badge report-status-${reportStatus}`}>
-                    <img src={ReportStatusIcon} alt="status" className="report-status-icon" />
                     <span>{reportStatus === 'pending' ? 'Pending' : 'Resolved'}</span>
                   </div>
                 )}
