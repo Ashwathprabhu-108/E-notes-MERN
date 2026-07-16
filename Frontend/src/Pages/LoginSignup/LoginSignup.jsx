@@ -275,7 +275,6 @@ export default function LoginSignup() {
             /* ── Step 1: Enter Email ── */
             ) : fpStep === 1 ? (
               <>
-                <div className="fp-icon">📧</div>
                 <h3 className="fp-title">Reset Password</h3>
 
 
@@ -296,7 +295,6 @@ export default function LoginSignup() {
             /* ── Step 2: Enter OTP ── */
             ) : fpStep === 2 ? (
               <>
-                <div className="fp-icon">🔢</div>
                 <h3 className="fp-title">Enter Verification Code</h3>
 
 
@@ -321,7 +319,6 @@ export default function LoginSignup() {
             /* ── Step 3: Set New Password ── */
             ) : (
               <>
-                <div className="fp-icon">🔐</div>
                 <h3 className="fp-title">Set New Password</h3>
 
 
