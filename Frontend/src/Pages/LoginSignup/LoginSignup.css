@@ -608,14 +608,7 @@
   color: #fff;
 }
 
-/* Line connector between step dots */
-.fp-step-line {
-  flex: 1;
-  height: 2px;
-  background: #3b2f8a;
-  border-radius: 2px;
-  max-width: 40px;
-}
+
 
 
 /* OTP code input */

@@ -257,11 +257,9 @@ export default function LoginSignup() {
                 <div className={`fp-step-dot ${fpStep >= 1 ? 'active' : ''} ${fpStep > 1 ? 'done' : ''}`}>
                   {fpStep > 1 ? '✓' : '1'}
                 </div>
-                <div className="fp-step-line" />
                 <div className={`fp-step-dot ${fpStep >= 2 ? 'active' : ''} ${fpStep > 2 ? 'done' : ''}`}>
                   {fpStep > 2 ? '✓' : '2'}
                 </div>
-                <div className="fp-step-line" />
                 <div className={`fp-step-dot ${fpStep >= 3 ? 'active' : ''}`}>3</div>
               </div>
             )}
@@ -279,7 +277,7 @@ export default function LoginSignup() {
               <>
                 <div className="fp-icon">📧</div>
                 <h3 className="fp-title">Reset Password</h3>
-                <p className="fp-desc">Enter your registered email. We'll send you a verification code.</p>
+
 
                 <div className="field-group" style={{ marginBottom: '1rem' }}>
                   <div className="field-wrap">
@@ -300,7 +298,7 @@ export default function LoginSignup() {
               <>
                 <div className="fp-icon">🔢</div>
                 <h3 className="fp-title">Enter Verification Code</h3>
-                <p className="fp-desc">We sent a 6-digit code to <strong>{fpEmail}</strong>. It expires in 10 minutes.</p>
+
 
                 <div className="field-group" style={{ marginBottom: '1rem' }}>
                   <div className="field-wrap">
@@ -325,7 +323,7 @@ export default function LoginSignup() {
               <>
                 <div className="fp-icon">🔐</div>
                 <h3 className="fp-title">Set New Password</h3>
-                <p className="fp-desc">Choose a strong new password for your account.</p>
+
 
                 <div className="field-group" style={{ marginBottom: '0.75rem' }}>
                   <div className="field-wrap">
