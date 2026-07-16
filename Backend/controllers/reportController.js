@@ -1,5 +1,25 @@
 import Report from "../models/Report.js";
 
+// GET /api/reports/my-report/:fileId - Get current user's report status for a file
+export const getMyReportStatus = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { fileId } = req.params;
+
+    const report = await Report.findOne({ reportedFile: fileId, reportedBy: userId })
+      .select("status createdAt");
+
+    if (!report) {
+      return res.status(200).json({ reported: false });
+    }
+
+    return res.status(200).json({ reported: true, status: report.status });
+  } catch (error) {
+    console.error("Get my report status error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 // POST /api/reports - Submit a report
 export const submitReport = async (req, res) => {
   try {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import "./PreviewFile.css"
 import { useAuth } from '../../context/AuthContext'
+import ReportStatusIcon from '../../assets/report-status.svg'
 
 const PreviewFile = () => {
   const { fileId } = useParams()
@@ -15,12 +16,31 @@ const PreviewFile = () => {
   const [reportDescription, setReportDescription] = useState("")
   const [reportMessage, setReportMessage] = useState(null)
   const [reportLoading, setReportLoading] = useState(false)
+  const [reportStatus, setReportStatus] = useState(null) // null | 'pending' | 'reviewed' | 'dismissed'
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"
   const token = localStorage.getItem('token')
 
   useEffect(() => {
     fetchPreview()
   }, [fileId])
+
+  useEffect(() => {
+    if (token && fileId) fetchReportStatus()
+  }, [token, fileId])
+
+  const fetchReportStatus = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/reports/my-report/${fileId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (!res.ok) return
+      const data = await res.json()
+      if (data.reported) setReportStatus(data.status)
+      else setReportStatus(null)
+    } catch {
+      // silently ignore
+    }
+  }
 
   const fetchPreview = async () => {
     try {
@@ -127,6 +147,7 @@ const PreviewFile = () => {
         setShowReportModal(false)
         setReportReason("")
         setReportDescription("")
+        setReportStatus('pending')
         setReportMessage({ type: 'success', text: 'Report submitted successfully. Our team will review it.' })
         setTimeout(() => setReportMessage(null), 4000)
       }
@@ -216,7 +237,15 @@ const PreviewFile = () => {
               </div>
             </div>
             <div className="header-right">
-              <button className="report-btn" onClick={handleReportClick}>🚩 Report</button>
+              <div className="report-btn-wrapper">
+                <button className="report-btn" onClick={handleReportClick}>🚩 Report</button>
+                {reportStatus && (
+                  <div className={`report-status-badge report-status-${reportStatus}`}>
+                    <img src={ReportStatusIcon} alt="status" className="report-status-icon" />
+                    <span>{reportStatus === 'pending' ? 'Pending' : 'Resolved'}</span>
+                  </div>
+                )}
+              </div>
               <button className="download-btn" onClick={handleDownload}>⬇ Download Full File</button>
             </div>
           </div>
