@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import "./PreviewFile.css"
 import { useAuth } from '../../context/AuthContext'
+import { useSocket } from '../../context/SocketContext'
 
 const PreviewFile = () => {
   const { fileId } = useParams()
@@ -26,6 +27,20 @@ const PreviewFile = () => {
   useEffect(() => {
     if (token && fileId) fetchReportStatus()
   }, [token, fileId])
+
+  // Real-time: admin updated this report's status
+  const { socket } = useSocket()
+  useEffect(() => {
+    if (!socket?.current || !fileId || !user?.id) return
+    const s = socket.current
+    const handler = ({ fileId: fId, reportedBy, status }) => {
+      if (fId === fileId && reportedBy === user.id) {
+        setReportStatus(status)
+      }
+    }
+    s.on('report:statusChanged', handler)
+    return () => s.off('report:statusChanged', handler)
+  }, [socket, fileId, user])
 
   const fetchReportStatus = async () => {
     try {

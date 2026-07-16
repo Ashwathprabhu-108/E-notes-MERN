@@ -5,12 +5,14 @@ import Saved from "../../assets/saved-icon.svg";
 import Save_later from "../../assets/saved-bookmark-icon.svg";
 import { useSearchFilter } from '../../context/SearchFilterContext';
 import { useAuth } from '../../context/AuthContext';
+import { useSocket } from '../../context/SocketContext';
 import API_BASE_URL from '../../config/api';
 
 const Home = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { searchQuery, selectedCategory, resetFilters } = useSearchFilter();
+  const { socket } = useSocket();
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -18,6 +20,21 @@ const Home = () => {
   const [authToken, setAuthToken] = useState(localStorage.getItem('token'));
   const [hoverTooltip, setHoverTooltip] = useState(null);
   const isAuthenticated = !!authToken;
+
+  // Real-time: new file uploaded by anyone
+  useEffect(() => {
+    if (!socket?.current) return;
+    const s = socket.current;
+    const handler = (newFile) => {
+      setFiles((prev) => {
+        // Avoid duplicate if user is the uploader and optimistic update already ran
+        if (prev.some((f) => f._id === newFile._id)) return prev;
+        return [newFile, ...prev];
+      });
+    };
+    s.on('file:new', handler);
+    return () => s.off('file:new', handler);
+  }, [socket]);
 
   useEffect(() => {
     const fetchFilesAndSavedStatus = async () => {

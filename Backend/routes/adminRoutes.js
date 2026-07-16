@@ -260,6 +260,15 @@ router.patch("/admin/reports/:reportId/status", verifyAdminToken, async (req, re
 
     // Emit real-time stats update (pending count may have changed)
     emitStatsUpdate().catch(() => {});
+    // Notify frontend users: their report status changed
+    try {
+      const { getIO } = await import("../socket.js");
+      getIO().emit("report:statusChanged", {
+        fileId: String(report.reportedFile),
+        reportedBy: String(report.reportedBy),
+        status: report.status,
+      });
+    } catch (_) {}
 
     return res.status(200).json(report);
   } catch (error) {
