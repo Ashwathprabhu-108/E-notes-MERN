@@ -110,6 +110,70 @@
   animation: ad-spin 0.8s linear infinite;
 }
 
+/* ── Header actions group (live badge + refresh) ────────── */
+.ad-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Live status badge ───────────────────────────────────── */
+.ad-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  user-select: none;
+}
+
+.ad-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Live — green pulse */
+.ad-live-live {
+  background: rgba(16,185,129,0.12);
+  border: 1px solid rgba(16,185,129,0.35);
+  color: #34d399;
+}
+.ad-live-live .ad-live-dot {
+  background: #34d399;
+  animation: ad-pulse 1.8s ease-in-out infinite;
+}
+
+/* Connecting — amber */
+.ad-live-connecting {
+  background: rgba(245,158,11,0.10);
+  border: 1px solid rgba(245,158,11,0.30);
+  color: #fbbf24;
+}
+.ad-live-connecting .ad-live-dot {
+  background: #fbbf24;
+  animation: ad-pulse 1s ease-in-out infinite;
+}
+
+/* Offline — muted red */
+.ad-live-offline {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: #f87171;
+}
+.ad-live-offline .ad-live-dot {
+  background: #f87171;
+}
+
+@keyframes ad-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.75); }
+}
+
 /* ── Error ──────────────────────────────────────────────── */
 .ad-error {
   background: rgba(239,68,68,0.07);

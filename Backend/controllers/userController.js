@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { emitStatsUpdate } from "../statsEmitter.js";
 
 // ─── SIGN UP ──────────────────────────────────────────────
 export const signUp = async (req, res) => {
@@ -42,6 +43,9 @@ export const signUp = async (req, res) => {
                 isDisabled: newUser.isDisabled,
             },
         });
+
+        // Emit real-time stats update to admin dashboard
+        emitStatsUpdate().catch(() => {});
 
     } catch (error) {
         res.status(500).json({ message: "Server error.", error: error.message });

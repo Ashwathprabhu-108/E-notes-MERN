@@ -7,6 +7,7 @@ import User from "../models/User.js";
 import File from "../models/File.js";
 import Report from "../models/Report.js";
 import { v2 as cloudinary } from "cloudinary";
+import { emitStatsUpdate } from "../statsEmitter.js";
 
 const router = express.Router();
 
@@ -256,6 +257,9 @@ router.patch("/admin/reports/:reportId/status", verifyAdminToken, async (req, re
     if (!report) {
       return res.status(404).json({ message: "Report not found" });
     }
+
+    // Emit real-time stats update (pending count may have changed)
+    emitStatsUpdate().catch(() => {});
 
     return res.status(200).json(report);
   } catch (error) {

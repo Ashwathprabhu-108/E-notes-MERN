@@ -1,4 +1,5 @@
 import Report from "../models/Report.js";
+import { emitStatsUpdate } from "../statsEmitter.js";
 
 // GET /api/reports/my-report/:fileId - Get current user's report status for a file
 export const getMyReportStatus = async (req, res) => {
@@ -50,6 +51,9 @@ export const submitReport = async (req, res) => {
     });
 
     await newReport.save();
+
+    // Emit real-time stats update to admin dashboard
+    emitStatsUpdate().catch(() => {});
 
     return res.status(201).json({ message: "Report submitted successfully" });
   } catch (error) {

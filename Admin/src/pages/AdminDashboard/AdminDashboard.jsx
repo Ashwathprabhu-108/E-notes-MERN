@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { io } from "socket.io-client";
 import {
   AreaChart, Area,
   BarChart, Bar,
@@ -45,6 +46,7 @@ const AdminDashboard = () => {
   const [refreshing,   setRefreshing]   = useState(false);
   const [error,        setError]        = useState("");
   const [activeChart,  setActiveChart]  = useState("area");
+  const [liveStatus,   setLiveStatus]   = useState("connecting"); // 'live' | 'connecting' | 'offline'
 
   // ── Fetch all 3 endpoints in parallel ──────────────────────────────
   const fetchAll = useCallback(async (isRefresh = false) => {
@@ -69,11 +71,20 @@ const AdminDashboard = () => {
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
-  // ── Auto-refresh every 60 s ─────────────────────────────────────────
+  // ── Socket.io — real-time stats updates ─────────────────────────────
   useEffect(() => {
-    const id = setInterval(() => fetchAll(true), 60_000);
-    return () => clearInterval(id);
-  }, [fetchAll]);
+    const socket = io(API_BASE_URL, { transports: ["websocket", "polling"] });
+
+    socket.on("connect",      () => setLiveStatus("live"));
+    socket.on("disconnect",   () => setLiveStatus("offline"));
+    socket.on("connect_error",() => setLiveStatus("offline"));
+
+    socket.on("stats:update", (freshStats) => {
+      setStats((prev) => prev ? { ...prev, ...freshStats } : freshStats);
+    });
+
+    return () => socket.disconnect();
+  }, []);
 
   // ── Stat cards config ───────────────────────────────────────────────
   const statCards = stats ? [
@@ -153,14 +164,20 @@ const AdminDashboard = () => {
               <h1>Admin Dashboard</h1>
             </div>
           </div>
-          <button
-            className={`ad-refresh-btn ${refreshing ? "ad-refreshing" : ""}`}
-            onClick={() => fetchAll(true)}
-            disabled={refreshing}
-          >
-            <RefreshCw size={14} strokeWidth={2.5} className="ad-refresh-icon" />
-            {refreshing ? "Refreshing…" : "Refresh"}
-          </button>
+          <div className="ad-header-actions">
+            <div className={`ad-live-badge ad-live-${liveStatus}`}>
+              <span className="ad-live-dot" />
+              {liveStatus === "live" ? "Live" : liveStatus === "connecting" ? "Connecting…" : "Offline"}
+            </div>
+            <button
+              className={`ad-refresh-btn ${refreshing ? "ad-refreshing" : ""}`}
+              onClick={() => fetchAll(true)}
+              disabled={refreshing}
+            >
+              <RefreshCw size={14} strokeWidth={2.5} className="ad-refresh-icon" />
+              {refreshing ? "Refreshing…" : "Refresh"}
+            </button>
+          </div>
         </div>
 
         {error && <div className="ad-error">{error}</div>}

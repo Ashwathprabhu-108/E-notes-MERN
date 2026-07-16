@@ -1,6 +1,7 @@
 // fileController.js
 import { v2 as cloudinary } from "cloudinary";
 import File from "../models/File.js";
+import { emitStatsUpdate } from "../statsEmitter.js";
 import multer from "multer";
 import mammoth from "mammoth";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -153,6 +154,9 @@ export const uploadFile = async (req, res) => {
       message: "File uploaded successfully.",
       file: newFile,
     });
+
+    // Emit real-time stats update to admin dashboard
+    emitStatsUpdate().catch(() => {});
   } catch (error) {
     console.error("Upload error:", error);
     res.status(500).json({ message: "Upload failed.", error: error.message });
@@ -181,6 +185,9 @@ export const downloadFile = async (req, res) => {
     }
 
     File.findByIdAndUpdate(fileId, { $inc: { downloadCount: 1 } }).catch(console.error);
+
+    // Emit real-time stats update to admin dashboard (fire and forget)
+    setTimeout(() => emitStatsUpdate().catch(() => {}), 300);
 
     if (userId) {
       const User = (await import("../models/User.js")).default;

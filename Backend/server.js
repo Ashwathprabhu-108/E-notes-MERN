@@ -1,4 +1,5 @@
 import express from 'express'
+import http from 'http'
 import cors from 'cors'
 import 'dotenv/config'
 import connectDB from './config/db.js'
@@ -8,6 +9,7 @@ import authRoutes from "./routes/authRoutes.js"
 import fileRoutes from "./routes/files.js"
 import reportRoutes from "./routes/reportRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
+import { initSocket } from "./socket.js"
 
 // App config
 const app = express()
@@ -31,7 +33,7 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('Not allowed by CORS'))
     }
   },
   credentials: true,
@@ -50,7 +52,11 @@ app.use("/api/files", fileRoutes);
 app.use("/api", reportRoutes);
 app.use("/api", adminRoutes);
 
+// Create HTTP server and attach Socket.io
+const server = http.createServer(app)
+initSocket(server)
+
 // Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port `+port)
+server.listen(port, () => {
+  console.log(`Server is running on port ` + port)
 })
